@@ -63,6 +63,62 @@
             padding: 15px 30px;
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        .mobile-menu-button {
+            display: none;
+            padding: 8px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 10px 0;
+        }
+
+        .mobile-menu .tab {
+            padding: 12px 20px;
+            display: block;
+            width: 100%;
+            text-align: left;
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-button {
+                display: block;
+            }
+
+            .tabs {
+                display: none;
+            }
+
+            .mobile-menu.show {
+                display: block;
+            }
+
+            .actions {
+                gap: 10px;
+            }
+
+            .actions .btn-export {
+                display: none;
+            }
+
+            nav {
+                padding: 15px;
+            }
         }
         
         .logo {
@@ -653,6 +709,19 @@
         <div class="logo">
             <i class="fas fa-calculator"></i>
             <span>UltimateRECalc</span>
+        </div>
+        
+        <button class="mobile-menu-button">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="mobile-menu">
+            <div class="tab" data-tab="mortgage">Mortgage Calculator</div>
+            <div class="tab" data-tab="investment">Investment Property</div>
+            <div class="tab" data-tab="cashflow">Rental Cash Flow</div>
+            <div class="tab" data-tab="closing">Closing Costs</div>
+            <div class="tab" data-tab="buyer">Buyer Cost Sheet</div>
+            <div class="tab" data-tab="report">Generated Report</div>
         </div>
         
         <div class="actions">
@@ -2394,10 +2463,12 @@
                     try {
                         // Use html2canvas to capture the selected element
                         html2canvas(elementToExport, {
-                            scale: 2,
+                            scale: window.innerWidth <= 768 ? 1 : 2, // Reduce scale on mobile
                             logging: false,
                             useCORS: true,
-                            allowTaint: true
+                            allowTaint: true,
+                            width: elementToExport.offsetWidth, // Explicitly set width
+                            height: elementToExport.offsetHeight // Explicitly set height
                         }).then(canvas => {
                             try {
                                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
@@ -2877,6 +2948,256 @@
                 document.getElementById('buyer-total-due').textContent = '$0';
                 document.getElementById('buyer-points-cost').value = '0';
                 document.getElementById('buyer-interest').value = '0';
+            }
+
+            // Add mobile menu handler
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileMenuItems = document.querySelectorAll('.mobile-menu .tab');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('show');
+            });
+
+            mobileMenuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    mobileMenu.classList.remove('show');
+                });
+            });
+
+            // Modify PDF export function for mobile
+            function exportToPDF(contentType = 'full', source = 'report', buttonElement) {
+                // Check if we're in a restricted environment
+                if (isRestricted) {
+                    alert('Export is not available in this preview environment.');
+                    return;
+                }
+                
+                // Show loading state
+                const originalText = buttonElement.innerHTML;
+                buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+                
+                // Determine what to export based on content type and source
+                let elementToExport;
+                let fileName;
+                
+                // Store the current active tab
+                const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
+                
+                if (contentType === 'full' || source === 'report') {
+                    // Switch to report tab for full report
+                    document.querySelector('[data-tab="report"]').click();
+                    elementToExport = document.getElementById('report-section');
+                    fileName = 'UltimateRECalc_Full_Report.pdf';
+                } else {
+                    // For current view or summary, use the specific calculator's results card
+                    if (source === 'mortgage') {
+                        document.querySelector('[data-tab="mortgage"]').click();
+                        elementToExport = contentType === 'summary' 
+                            ? document.querySelector('#mortgage-calculator .details-table').closest('.card')
+                            : document.querySelector('#mortgage-calculator .card:nth-child(2)');
+                        fileName = 'UltimateRECalc_Mortgage_Analysis.pdf';
+                    } else if (source === 'investment') {
+                        document.querySelector('[data-tab="investment"]').click();
+                        elementToExport = contentType === 'summary' 
+                            ? document.querySelector('#investment-calculator .details-table').closest('.card')
+                            : document.querySelector('#investment-calculator .card:nth-child(2)');
+                        fileName = 'UltimateRECalc_Investment_Analysis.pdf';
+                    } else if (source === 'cashflow') {
+                        document.querySelector('[data-tab="cashflow"]').click();
+                        elementToExport = contentType === 'summary' 
+                            ? document.querySelector('#cashflow-calculator .details-table').closest('.card')
+                            : document.querySelector('#cashflow-calculator .card:nth-child(2)');
+                        fileName = 'UltimateRECalc_Cashflow_Analysis.pdf';
+                    }
+                }
+                
+                // Short delay to ensure the correct content is visible
+                setTimeout(() => {
+                    try {
+                        // Use html2canvas to capture the selected element
+                        html2canvas(elementToExport, {
+                            scale: window.innerWidth <= 768 ? 1 : 2, // Reduce scale on mobile
+                            logging: false,
+                            useCORS: true,
+                            allowTaint: true,
+                            width: elementToExport.offsetWidth, // Explicitly set width
+                            height: elementToExport.offsetHeight // Explicitly set height
+                        }).then(canvas => {
+                            try {
+                                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                                // Add PDF formatting options dialog
+                                const formatOptions = {
+                                    orientation: 'portrait',
+                                    pageSize: 'a4',
+                                    margins: {
+                                        top: 30,
+                                        bottom: 20,
+                                        left: 20,
+                                        right: 20
+                                    },
+                                    fontSize: {
+                                        title: 16,
+                                        subtitle: 12,
+                                        body: 10
+                                    },
+                                    colors: document.body.classList.contains('dark') 
+                                        ? {
+                                            title: '#ffffff',
+                                            subtitle: '#94a3b8',
+                                            body: '#e2e8f0',
+                                            background: '#1f2937'
+                                          }
+                                        : {
+                                            title: '#1f2937',
+                                            subtitle: '#64748b',
+                                            body: '#334155',
+                                            background: '#ffffff'
+                                          }
+                                };
+
+                                // Configure PDF settings
+                                const pdfConfig = {
+                                    orientation: formatOptions.orientation,
+                                    unit: 'mm',
+                                    format: formatOptions.pageSize,
+                                    putOnlyUsedFonts: true,
+                                    floatPrecision: 16
+                                };
+
+                                const pdf = new jspdf.jsPDF(pdfConfig);
+
+                                // Set PDF background color
+                                pdf.setFillColor(formatOptions.colors.background);
+                                pdf.rect(0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight(), 'F');
+
+                                // Add title with custom formatting
+                                pdf.setFontSize(formatOptions.fontSize.title);
+                                pdf.setTextColor(formatOptions.colors.title);
+                                const title = companyName || 'UltimateRECalc Analysis Report';
+                                pdf.text(title, pdfWidth / 2, formatOptions.margins.top, { align: 'center' });
+                                
+                                // Add subtitle (date)
+                                pdf.setFontSize(formatOptions.fontSize.subtitle);
+                                pdf.setTextColor(formatOptions.colors.subtitle);
+                                const dateStr = `Generated on ${today.toLocaleDateString()}`;
+                                pdf.text(dateStr, pdfWidth / 2, formatOptions.margins.top + 7, { align: 'center' });
+                                
+                                // Add company logo if available
+                                try {
+                                    const savedLogo = localStorage.getItem('companyLogo');
+                                    if (savedLogo) {
+                                        const logoSize = {
+                                            width: 40,
+                                            height: 20
+                                        };
+                                        pdf.addImage(
+                                            savedLogo, 
+                                            'JPEG', 
+                                            formatOptions.margins.left, 
+                                            formatOptions.margins.top - 15, 
+                                            logoSize.width, 
+                                            logoSize.height, 
+                                            undefined, 
+                                            'FAST'
+                                        );
+                                    }
+                                } catch (e) {
+                                    console.warn('Unable to add logo to PDF:', e);
+                                }
+
+                                // Calculate content area
+                                const contentStartY = formatOptions.margins.top + 15;
+                                const contentWidth = pdfWidth - (formatOptions.margins.left + formatOptions.margins.right);
+                                const contentHeight = pdfHeight - (formatOptions.margins.top + formatOptions.margins.bottom);
+                                
+                                // Add content image
+                                const contentRatio = Math.min(
+                                    contentWidth / imgWidth,
+                                    (contentHeight - 15) / imgHeight
+                                );
+                                
+                                const finalImgWidth = imgWidth * contentRatio;
+                                const finalImgHeight = imgHeight * contentRatio;
+                                const imgX = (pdfWidth - finalImgWidth) / 2;
+
+                                // Check if content fits on one page
+                                if (finalImgHeight <= contentHeight) {
+                                    pdf.addImage(
+                                        imgData, 
+                                        'JPEG', 
+                                        imgX, 
+                                        contentStartY, 
+                                        finalImgWidth, 
+                                        finalImgHeight
+                                    );
+                                } else {
+                                    // Handle multi-page content
+                                    let heightLeft = finalImgHeight;
+                                    let position = 0;
+                                    
+                                    while (heightLeft > 0) {
+                                        pdf.addImage(
+                                            imgData, 
+                                            'JPEG', 
+                                            imgX, 
+                                            position === 0 ? contentStartY : formatOptions.margins.top, 
+                                            finalImgWidth, 
+                                            finalImgHeight
+                                        );
+                                        
+                                        heightLeft -= (contentHeight - (position === 0 ? contentStartY : formatOptions.margins.top));
+                                        position -= contentHeight;
+                                        
+                                        if (heightLeft > 0) {
+                                            pdf.addPage();
+                                            // Add background color to new page
+                                            pdf.setFillColor(formatOptions.colors.background);
+                                            pdf.rect(0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight(), 'F');
+                                        }
+                                    }
+                                }
+
+                                // Add footer to all pages
+                                const pageCount = pdf.internal.getNumberOfPages();
+                                for (let i = 1; i <= pageCount; i++) {
+                                    pdf.setPage(i);
+                                    pdf.setFontSize(formatOptions.fontSize.body);
+                                    pdf.setTextColor(formatOptions.colors.subtitle);
+                                    
+                                    // Add page numbers
+                                    const footer = `Page ${i} of ${pageCount} | Powered by UltimateRECalc`;
+                                    pdf.text(
+                                        footer, 
+                                        pdfWidth / 2, 
+                                        pdfHeight - (formatOptions.margins.bottom / 2), 
+                                        { align: 'center' }
+                                    );
+                                }
+                                
+                                // Save PDF
+                                pdf.save(fileName);
+                                
+                                // Switch back to the original tab
+                                document.querySelector(`[data-tab="${activeTab}"]`).click();
+                            } catch (err) {
+                                console.error('Error in PDF generation:', err);
+                                alert('Error generating PDF. Please try again.');
+                            }
+                            
+                            // Restore button state
+                            buttonElement.innerHTML = originalText;
+                        }).catch(err => {
+                            console.error('Error capturing canvas:', err);
+                            alert('Error generating PDF. Please try again.');
+                            buttonElement.innerHTML = originalText;
+                        });
+                    } catch (err) {
+                        console.error('Error in export process:', err);
+                        alert('Error generating PDF. Please try again.');
+                        buttonElement.innerHTML = originalText;
+                    }
+                }, 100);
             }
         });
     </script>
