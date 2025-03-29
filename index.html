@@ -68,7 +68,7 @@
         
         .mobile-menu-button {
             display: none;
-            padding: 8px;
+            padding: 20px;
             background: none;
             border: none;
             color: var(--text-color);
@@ -129,6 +129,7 @@
         }
         
         .logo i {
+            align-items: center;
             margin-right: 10px;
             color: var(--primary-color);
         }
@@ -597,12 +598,13 @@
             }
 
             .actions {
-                flex-direction: column;
+                flex-direction: row-reverse;
                 align-items: flex-start;
                 gap: 10px;
             }
 
             .tabs {
+                display: none;
                 flex-direction: column;
                 align-items: flex-start;
             }
@@ -666,7 +668,7 @@
             }
 
             button {
-                padding: 6px 12px;
+                padding: 2px 6px;
             }
 
             .btn-primary, .btn-export {
@@ -709,11 +711,13 @@
         <div class="logo">
             <i class="fas fa-calculator"></i>
             <span>UltimateRECalc</span>
+            <button class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
         </div>
         
-        <button class="mobile-menu-button">
-            <i class="fas fa-bars"></i>
-        </button>
+
 
         <div class="mobile-menu">
             <div class="tab" data-tab="mortgage">Mortgage Calculator</div>
@@ -736,7 +740,7 @@
             <!-- Add logo upload button -->
             <div class="dropdown" style="margin-right: 15px;">
                 <button class="btn-primary" style="display: flex; align-items: center; gap: 5px;">
-                    <i class="fas fa-cog"></i> Settings
+                    <i class="fas fa-cog"></i> Your Logo
                 </button>
                 <div class="dropdown-content" style="width: 250px; padding: 15px;">
                     <div style="margin-bottom: 15px;">
