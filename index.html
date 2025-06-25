@@ -2,8 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="UltimateRECalc">
+    <meta name="theme-color" content="#2563eb">
     <title>UltimateRECalc - Professional Calculator Suite by Zebari Group IT</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlVsdGltYXRlUkVDYWxjIiwKICAic2hvcnRfbmFtZSI6ICJSRUNhbGMiLAogICJkZXNjcmlwdGlvbiI6ICJQcm9mZXNzaW9uYWwgUmVhbCBFc3RhdGUgQ2FsY3VsYXRvciBTdWl0ZSIsCiAgInN0YXJ0X3VybCI6ICIuLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzI1NjNlYiIsCiAgInRoZW1lX2NvbG9yIjogIiMyNTYzZWIiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNVEk0SWlCb1pXbG5hSFE5SWpFeU9DSWdkbWxsZDBKdmVEMGlNQ0F3SURFME5DQXhORFFpSUdacGJHdzlJaU16TlRrM1pqY2lQZ29nSUNBZ1BISmxZM1FnZUQwaU9DSWdlVDBpT0NJZ2QybGtkR2c5SWpFeU9DSWdhR1ZwWjJoMFBTSXhNamdpSUhKNFBTSTJJaUJtYVd4c1BTSWpNalUyTTJWaUlpOCtDaUFnSUM0OEwzTjJaejQiLAogICAgICAic2l6ZXMiOiAiMTQ0eDE0NCIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" as="script">
     <!-- Chart.js for visualizations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
     <!-- PDF Export -->
@@ -208,22 +219,42 @@
         }
         
         button {
-            padding: 8px 16px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-family: 'Poppins', sans-serif;
             font-weight: 500;
+            font-size: 16px; /* Prevents zoom on iOS */
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            min-height: 44px; /* Apple's minimum touch target */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button:active {
+            transform: translateY(1px);
         }
         
         .btn-primary {
             background-color: var(--primary-color);
             color: white;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }
         
         .btn-primary:hover {
             background-color: var(--secondary-color);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(37, 99, 235, 0.3);
         }
         
 
@@ -252,22 +283,50 @@
         
         .tabs {
             display: flex;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
             margin-top: 20px;
             margin-bottom: 30px;
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+        
+        .tabs::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
         }
         
         .tab {
-            padding: 12px 20px;
+            padding: 16px 24px;
             cursor: pointer;
-            border-bottom: 2px solid transparent;
+            border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
+            white-space: nowrap;
+            min-height: 44px; /* Apple's minimum touch target */
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            background: transparent;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            border-radius: 0;
+            box-shadow: none;
+            position: relative;
+        }
+        
+        .tab:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
         }
         
         .tab.active {
-            border-bottom: 2px solid var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
             color: var(--primary-color);
-            font-weight: 500;
+            background-color: rgba(37, 99, 235, 0.1);
+        }
+        
+        .tab:active {
+            transform: none; /* Override button active transform */
         }
         
         .calculator {
@@ -391,12 +450,32 @@
         
         input[type="number"], select {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
             background-color: var(--card-bg);
             color: var(--text-color);
             font-family: 'Poppins', sans-serif;
+            font-size: 16px; /* Prevents zoom on iOS */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        /* Improved number input for mobile */
+        input[type="number"] {
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+        
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
         
         .slider-container {
@@ -408,18 +487,43 @@
         input[type="range"] {
             flex-grow: 1;
             -webkit-appearance: none;
-            height: 6px;
+            height: 8px;
             background: var(--border-color);
-            border-radius: 3px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="range"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
         }
         
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 24px;
+            height: 24px;
             background: var(--primary-color);
             border-radius: 50%;
             cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
         
         .slider-value {
@@ -770,6 +874,39 @@
                 font-size: 0.75rem;
             }
         }
+        /* Additional mobile optimizations for save/load buttons */
+        @media (max-width: 768px) {
+            .action-text {
+                display: none;
+            }
+            
+            .actions {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            #save-calc, #load-calc {
+                padding: 10px 12px;
+                margin-right: 8px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #save-calc, #load-calc {
+                padding: 12px;
+                margin-right: 6px;
+                font-size: 16px;
+                min-width: 44px;
+            }
+            
+            .actions {
+                order: -1;
+                width: 100%;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+        }
     </style>
 </head>
 <body class="dark">
@@ -795,6 +932,14 @@
         </div>
         
         <div class="actions">
+            <button id="save-calc" title="Save Current Calculation (Ctrl+S)" class="btn-primary" style="margin-right: 10px; font-size: 14px; padding: 8px 12px;">
+                <i class="fas fa-save"></i>
+                <span class="action-text" style="margin-left: 5px;">Save</span>
+            </button>
+            <button id="load-calc" title="Load Saved Calculation (Ctrl+L)" class="btn-primary" style="margin-right: 10px; font-size: 14px; padding: 8px 12px;">
+                <i class="fas fa-folder-open"></i>
+                <span class="action-text" style="margin-left: 5px;">Load</span>
+            </button>
             <div class="theme-toggle">
                 <i class="far fa-sun"></i>
                 <div class="toggle-wrapper" id="theme-toggle">
@@ -2160,6 +2305,548 @@
 
 
 
+            // Add save/load functionality for calculations
+            function saveCalculation(name, data) {
+                try {
+                    const savedCalcs = JSON.parse(localStorage.getItem('savedCalculations') || '{}');
+                    savedCalcs[name] = {
+                        ...data,
+                        savedAt: new Date().toISOString(),
+                        id: Math.random().toString(36).substr(2, 9)
+                    };
+                    localStorage.setItem('savedCalculations', JSON.stringify(savedCalcs));
+                    showToast(`✅ Calculation saved as "${name}"`, 'success');
+                    return true;
+                } catch (e) {
+                    showToast('❌ Failed to save calculation', 'error');
+                    return false;
+                }
+            }
+
+            function loadCalculation(name) {
+                try {
+                    const savedCalcs = JSON.parse(localStorage.getItem('savedCalculations') || '{}');
+                    if (savedCalcs[name]) {
+                        populateFormFromData(savedCalcs[name]);
+                        showToast(`📋 Loaded calculation "${name}"`, 'success');
+                        return true;
+                    }
+                } catch (e) {
+                    showToast('❌ Failed to load calculation', 'error');
+                }
+                return false;
+            }
+
+            function showToast(message, type = 'info') {
+                // Create toast element
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 10000;
+                    font-size: 14px;
+                    max-width: 300px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                    backdrop-filter: blur(10px);
+                    animation: slideInRight 0.3s ease;
+                    background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                `;
+                
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                // Auto remove after 3 seconds
+                setTimeout(() => {
+                    toast.style.animation = 'slideOutRight 0.3s ease';
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl/Cmd + S to save current calculation
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    const name = prompt('Save calculation as:');
+                    if (name) {
+                        const currentTab = document.querySelector('.tab.active')?.dataset.tab;
+                        if (currentTab) {
+                            const data = extractCurrentCalculationData(currentTab);
+                            saveCalculation(name, data);
+                        }
+                    }
+                }
+                
+                // Ctrl/Cmd + L to load calculation
+                if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
+                    e.preventDefault();
+                    showSavedCalculations();
+                }
+                
+                // ESC to close any open dropdowns
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                        dropdown.style.display = 'none';
+                    });
+                }
+            });
+
+            function extractCurrentCalculationData(tabName) {
+                const data = { type: tabName };
+                
+                // Extract form data based on current tab
+                switch(tabName) {
+                    case 'mortgage':
+                        data.propertyPrice = document.getElementById('property-price')?.value;
+                        data.downPayment = document.getElementById('down-payment-slider')?.value;
+                        data.loanTerm = document.getElementById('loan-term')?.value;
+                        data.interestRate = document.getElementById('interest-rate-slider')?.value;
+                        data.propertyTax = document.getElementById('property-tax')?.value;
+                        data.homeInsurance = document.getElementById('home-insurance')?.value;
+                        data.hoa = document.getElementById('hoa')?.value;
+                        break;
+                    case 'investment':
+                        data.purchasePrice = document.getElementById('inv-purchase-price')?.value;
+                        data.annualRent = document.getElementById('annual-rent')?.value;
+                        data.expenses = document.getElementById('expenses-slider')?.value;
+                        data.vacancy = document.getElementById('vacancy-slider')?.value;
+                        data.appreciation = document.getElementById('appreciation-slider')?.value;
+                        data.holdingPeriod = document.getElementById('holding-period')?.value;
+                        break;
+                    case 'cashflow':
+                        data.rentalIncome = document.getElementById('rental-income')?.value;
+                        data.mortgagePayment = document.getElementById('mortgage-payment')?.value;
+                        data.propertyTax = document.getElementById('rental-property-tax')?.value;
+                        data.insurance = document.getElementById('rental-insurance')?.value;
+                        break;
+                }
+                
+                return data;
+            }
+
+            function populateFormFromData(data) {
+                // Populate form fields based on saved data
+                switch(data.type) {
+                    case 'mortgage':
+                        if (data.propertyPrice) document.getElementById('property-price').value = data.propertyPrice;
+                        if (data.downPayment) document.getElementById('down-payment-slider').value = data.downPayment;
+                        if (data.loanTerm) document.getElementById('loan-term').value = data.loanTerm;
+                        if (data.interestRate) document.getElementById('interest-rate-slider').value = data.interestRate;
+                        if (data.propertyTax) document.getElementById('property-tax').value = data.propertyTax;
+                        if (data.homeInsurance) document.getElementById('home-insurance').value = data.homeInsurance;
+                        if (data.hoa) document.getElementById('hoa').value = data.hoa;
+                        break;
+                }
+                
+                // Update slider displays and recalculate
+                updateSliderDisplays();
+                setTimeout(() => {
+                    calculateMortgage();
+                    calculateInvestment();
+                    calculateCashFlow();
+                }, 100);
+            }
+
+            function updateSliderDisplays() {
+                const sliders = document.querySelectorAll('input[type="range"]');
+                sliders.forEach(slider => {
+                    const display = document.getElementById(slider.id.replace('-slider', '-value'));
+                    if (display) {
+                        display.textContent = slider.value + (slider.id.includes('rate') || slider.id.includes('percent') ? '%' : '');
+                    }
+                });
+            }
+
+            // Add PWA install prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                showInstallButton();
+            });
+
+            function showInstallButton() {
+                const installButton = document.createElement('button');
+                installButton.textContent = '📱 Install App';
+                installButton.className = 'btn-primary';
+                installButton.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    z-index: 1000;
+                    font-size: 14px;
+                    padding: 10px 16px;
+                `;
+                
+                installButton.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            showToast('🎉 App installed successfully!', 'success');
+                        }
+                        deferredPrompt = null;
+                        installButton.remove();
+                    }
+                });
+                
+                document.body.appendChild(installButton);
+                
+                // Auto-hide after 10 seconds
+                setTimeout(() => {
+                    if (installButton.parentNode) {
+                        installButton.remove();
+                    }
+                }, 10000);
+            }
+
+            // Show saved calculations modal
+            function showSavedCalculations() {
+                try {
+                    const savedCalcs = JSON.parse(localStorage.getItem('savedCalculations') || '{}');
+                    const calcNames = Object.keys(savedCalcs);
+                    
+                    if (calcNames.length === 0) {
+                        showToast('📁 No saved calculations found', 'info');
+                        return;
+                    }
+                    
+                    // Create modal
+                    const modal = document.createElement('div');
+                    modal.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.5);
+                        z-index: 10000;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        backdrop-filter: blur(5px);
+                    `;
+                    
+                    const modalContent = document.createElement('div');
+                    modalContent.style.cssText = `
+                        background: var(--card-bg);
+                        border-radius: 12px;
+                        padding: 30px;
+                        max-width: 500px;
+                        width: 90%;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                        color: var(--text-color);
+                        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+                    `;
+                    
+                    let modalHTML = `
+                        <h2 style="margin: 0 0 20px 0; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-folder-open"></i> Saved Calculations
+                        </h2>
+                        <div style="margin-bottom: 20px;">
+                    `;
+                    
+                    calcNames.forEach(name => {
+                        const calc = savedCalcs[name];
+                        const date = new Date(calc.savedAt).toLocaleString();
+                        modalHTML += `
+                            <div style="padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease;" 
+                                 class="saved-calc-item" data-name="${name}">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 500; margin-bottom: 5px;">${name}</div>
+                                        <div style="font-size: 0.875rem; color: #6b7280;">${calc.type} • ${date}</div>
+                                    </div>
+                                    <div>
+                                        <button class="load-calc-btn" data-name="${name}" style="padding: 6px 12px; background: var(--primary-color); color: white; border: none; border-radius: 4px; margin-right: 5px; cursor: pointer;">Load</button>
+                                        <button class="delete-calc-btn" data-name="${name}" style="padding: 6px 12px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    modalHTML += `
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button id="close-calc-modal" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">Close</button>
+                        </div>
+                    `;
+                    
+                    modalContent.innerHTML = modalHTML;
+                    modal.appendChild(modalContent);
+                    document.body.appendChild(modal);
+                    
+                    // Add event listeners
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.remove();
+                        }
+                    });
+                    
+                    document.getElementById('close-calc-modal').addEventListener('click', () => {
+                        modal.remove();
+                    });
+                    
+                    document.querySelectorAll('.load-calc-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const name = e.target.dataset.name;
+                            if (loadCalculation(name)) {
+                                modal.remove();
+                            }
+                        });
+                    });
+                    
+                    document.querySelectorAll('.delete-calc-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const name = e.target.dataset.name;
+                            if (confirm(`Delete calculation "${name}"?`)) {
+                                try {
+                                    const savedCalcs = JSON.parse(localStorage.getItem('savedCalculations') || '{}');
+                                    delete savedCalcs[name];
+                                    localStorage.setItem('savedCalculations', JSON.stringify(savedCalcs));
+                                    showToast(`🗑️ Deleted "${name}"`, 'success');
+                                    modal.remove();
+                                } catch (e) {
+                                    showToast('❌ Failed to delete calculation', 'error');
+                                }
+                            }
+                        });
+                    });
+                    
+                    // Hover effects
+                    document.querySelectorAll('.saved-calc-item').forEach(item => {
+                        item.addEventListener('mouseenter', () => {
+                            item.style.background = 'rgba(37, 99, 235, 0.1)';
+                            item.style.borderColor = 'var(--primary-color)';
+                        });
+                        item.addEventListener('mouseleave', () => {
+                            item.style.background = 'transparent';
+                            item.style.borderColor = 'var(--border-color)';
+                        });
+                    });
+                    
+                } catch (e) {
+                    showToast('❌ Failed to load saved calculations', 'error');
+                }
+            }
+
+            // Add haptic feedback for mobile
+            function hapticFeedback(type = 'light') {
+                if (navigator.vibrate) {
+                    switch(type) {
+                        case 'light': navigator.vibrate(10); break;
+                        case 'medium': navigator.vibrate(20); break;
+                        case 'heavy': navigator.vibrate([10, 10, 10]); break;
+                    }
+                }
+            }
+
+            // Enhanced mobile interactions
+            document.addEventListener('touchstart', function(e) {
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                    hapticFeedback('light');
+                }
+            });
+
+            // Add loading states for better UX
+            function showLoadingState(element, text = 'Calculating...') {
+                if (element) {
+                    element.disabled = true;
+                    element.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
+                }
+            }
+
+            function hideLoadingState(element, originalText) {
+                if (element) {
+                    element.disabled = false;
+                    element.innerHTML = originalText;
+                }
+            }
+
+            // Add input validation and formatting
+            function formatCurrency(input) {
+                let value = input.value.replace(/[^\d.]/g, '');
+                if (value) {
+                    const numValue = parseFloat(value);
+                    if (!isNaN(numValue)) {
+                        input.value = numValue.toLocaleString();
+                    }
+                }
+            }
+
+            function validateNumberInput(input, min = 0, max = Infinity) {
+                const value = parseFloat(input.value.replace(/[^\d.]/g, ''));
+                if (isNaN(value) || value < min || value > max) {
+                    input.style.borderColor = '#ef4444';
+                    return false;
+                } else {
+                    input.style.borderColor = '';
+                    return true;
+                }
+            }
+
+            // Add real-time input validation
+            function setupInputValidation() {
+                const numberInputs = document.querySelectorAll('input[type="number"]');
+                
+                numberInputs.forEach(input => {
+                    // Add blur event for formatting
+                    input.addEventListener('blur', () => {
+                        if (input.id.includes('price') || input.id.includes('amount') || input.id.includes('income') || input.id.includes('payment')) {
+                            const value = parseFloat(input.value.replace(/[^\d.]/g, ''));
+                            if (!isNaN(value)) {
+                                // Format as currency for display
+                                input.dataset.rawValue = value;
+                            }
+                        }
+                        
+                        // Validate input
+                        const isValid = validateNumberInput(input);
+                        if (!isValid) {
+                            showToast('⚠️ Please enter a valid number', 'error');
+                        }
+                    });
+                    
+                    // Add focus event to show raw value
+                    input.addEventListener('focus', () => {
+                        if (input.dataset.rawValue) {
+                            input.value = input.dataset.rawValue;
+                        }
+                    });
+                    
+                    // Add input event for real-time feedback
+                    input.addEventListener('input', () => {
+                        input.style.borderColor = '';
+                    });
+                });
+            }
+
+            // Add smart defaults based on location (if geolocation available)
+            function setSmartDefaults() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        // This is a simple example - in reality you'd use a service to get property values by location
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        // Set defaults based on rough location (this is very simplified)
+                        if (lat > 32 && lat < 42 && lng > -125 && lng < -114) {
+                            // West Coast - higher property values
+                            document.getElementById('property-price').value = '650000';
+                            document.getElementById('inv-purchase-price').value = '550000';
+                            document.getElementById('rental-income').value = '3500';
+                        } else if (lat > 40 && lat < 45 && lng > -75 && lng < -70) {
+                            // Northeast - higher property values
+                            document.getElementById('property-price').value = '500000';
+                            document.getElementById('inv-purchase-price').value = '450000';
+                            document.getElementById('rental-income').value = '2800';
+                        }
+                        
+                        showToast('📍 Defaults adjusted for your location', 'info');
+                    }, () => {
+                        // Geolocation failed, use national averages
+                        console.log('Geolocation not available, using default values');
+                    });
+                }
+            }
+
+            // Performance optimization: Debounce calculations
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            // Auto-save functionality
+            function setupAutoSave() {
+                const autoSaveCalc = debounce(() => {
+                    const currentTab = document.querySelector('.tab.active')?.dataset.tab;
+                    if (currentTab) {
+                        const data = extractCurrentCalculationData(currentTab);
+                        try {
+                            localStorage.setItem('autoSave_' + currentTab, JSON.stringify({
+                                ...data,
+                                autoSavedAt: new Date().toISOString()
+                            }));
+                        } catch (e) {
+                            // localStorage not available
+                        }
+                    }
+                }, 2000);
+
+                // Auto-save on input changes
+                document.addEventListener('input', autoSaveCalc);
+                document.addEventListener('change', autoSaveCalc);
+            }
+
+            // Load auto-saved data on page load
+            function loadAutoSavedData() {
+                try {
+                    const currentTab = document.querySelector('.tab.active')?.dataset.tab;
+                    if (currentTab) {
+                        const autoSaved = localStorage.getItem('autoSave_' + currentTab);
+                        if (autoSaved) {
+                            const data = JSON.parse(autoSaved);
+                            const savedTime = new Date(data.autoSavedAt);
+                            const now = new Date();
+                            
+                            // Only restore if saved within last 24 hours
+                            if (now - savedTime < 24 * 60 * 60 * 1000) {
+                                populateFormFromData(data);
+                                showToast('📋 Restored your previous session', 'info');
+                            }
+                        }
+                    }
+                } catch (e) {
+                    // Ignore errors
+                }
+            }
+
+            // Add CSS animations for toasts
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+                
+                /* Enhanced focus styles for accessibility */
+                button:focus-visible, input:focus-visible, select:focus-visible {
+                    outline: 3px solid #3b82f6;
+                    outline-offset: 2px;
+                }
+                
+                /* Improved touch targets */
+                @media (max-width: 768px) {
+                    .tab, button, input[type="range"] {
+                        min-height: 44px;
+                        min-width: 44px;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
             // Add logo handling code near the top
             const logoUpload = document.getElementById('logo-upload');
             const logoPreview = document.getElementById('logo-preview');
@@ -2305,6 +2992,25 @@
                 }
                 
                 reinitializeCharts();
+            });
+
+            // Save/Load button event handlers
+            document.getElementById('save-calc').addEventListener('click', () => {
+                hapticFeedback('light');
+                const name = prompt('Save calculation as:', 'My Calculation ' + new Date().toLocaleDateString());
+                if (name) {
+                    const currentTab = document.querySelector('.tab.active')?.dataset.tab;
+                    if (currentTab) {
+                        const data = extractCurrentCalculationData(currentTab);
+                        saveCalculation(name, data);
+                        hapticFeedback('medium');
+                    }
+                }
+            });
+
+            document.getElementById('load-calc').addEventListener('click', () => {
+                hapticFeedback('light');
+                showSavedCalculations();
             });
             
             // Tab switching functionality
@@ -3038,6 +3744,28 @@
                     mobileMenu.classList.remove('show');
                 });
             });
+
+            // Initialize mobile enhancements
+            setupInputValidation();
+            setupAutoSave();
+            setSmartDefaults();
+            
+            // Load any auto-saved data
+            setTimeout(() => {
+                loadAutoSavedData();
+            }, 1000);
+
+            // Show welcome message for first-time users
+            setTimeout(() => {
+                if (!localStorage.getItem('hasVisited')) {
+                    showToast('👋 Welcome to UltimateRECalc! Use Save/Load to manage your calculations. Press Ctrl+S to save, Ctrl+L to load.', 'info');
+                    try {
+                        localStorage.setItem('hasVisited', 'true');
+                    } catch (e) {
+                        // localStorage not available
+                    }
+                }
+            }, 2000);
         });
     </script>
 </body>
