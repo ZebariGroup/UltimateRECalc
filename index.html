@@ -1080,10 +1080,7 @@
                     <i class="fas fa-folder-open"></i>
                     <span class="action-text">Load</span>
                 </button>
-                <button id="presentation-mode" title="Client Presentation Mode" class="btn-primary">
-                    <i class="fas fa-presentation-screen"></i>
-                    <span class="action-text">Present</span>
-                </button>
+
                 <div class="theme-toggle">
                     <i class="far fa-sun"></i>
                     <div class="toggle-wrapper" id="theme-toggle">
@@ -2772,10 +2769,10 @@
                         id: Math.random().toString(36).substr(2, 9)
                     };
                     localStorage.setItem('savedCalculations', JSON.stringify(savedCalcs));
-                    showToast(`✅ Calculation saved as "${name}"`, 'success');
+                    alert(`✅ Calculation saved as "${name}"`);
                     return true;
                 } catch (e) {
-                    showToast('❌ Failed to save calculation', 'error');
+                    alert('❌ Failed to save calculation');
                     return false;
                 }
             }
@@ -2785,48 +2782,15 @@
                     const savedCalcs = JSON.parse(localStorage.getItem('savedCalculations') || '{}');
                     if (savedCalcs[name]) {
                         populateFormFromData(savedCalcs[name]);
-                        showToast(`📋 Loaded calculation "${name}"`, 'success');
                         return true;
                     }
                 } catch (e) {
-                    showToast('❌ Failed to load calculation', 'error');
+                    alert('❌ Failed to load calculation');
                 }
                 return false;
             }
 
-            function showToast(message, type = 'info') {
-                // Create toast element
-                const toast = document.createElement('div');
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: 500;
-                    z-index: 10000;
-                    font-size: 14px;
-                    max-width: 300px;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                    backdrop-filter: blur(10px);
-                    animation: slideInRight 0.3s ease;
-                    background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
-                `;
-                
-                toast.textContent = message;
-                document.body.appendChild(toast);
-                
-                // Auto remove after 3 seconds
-                setTimeout(() => {
-                    toast.style.animation = 'slideOutRight 0.3s ease';
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            toast.parentNode.removeChild(toast);
-                        }
-                    }, 300);
-                }, 3000);
-            }
+
 
             // Add keyboard shortcuts
             document.addEventListener('keydown', function(e) {
