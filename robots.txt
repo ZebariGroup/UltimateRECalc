@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-
-# Sitemap
-Sitemap: https://housemath.app/sitemap.xml
-
-# Crawl rate
-Crawl-delay: 1 
