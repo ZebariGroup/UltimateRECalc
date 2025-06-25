@@ -3134,9 +3134,6 @@
                         
                         // Validate input
                         const isValid = validateNumberInput(input);
-                        if (!isValid) {
-                            showToast('⚠️ Please enter a valid number', 'error');
-                        }
                     });
                     
                     // Add focus event to show raw value
@@ -3204,7 +3201,6 @@
                             // Only restore if saved within last 24 hours
                             if (now - savedTime < 24 * 60 * 60 * 1000) {
                                 populateFormFromData(data);
-                                showToast('📋 Restored your previous session', 'info');
                             }
                         }
                     }
@@ -3968,7 +3964,6 @@
                 
                 // Celebrate big commissions!
                 if (yourNetCommission > 15000) {
-                    showToast(`💰 Excellent! That's $${Math.round(yourNetCommission).toLocaleString()} in your pocket!`, 'success');
                     hapticFeedback('heavy');
                 }
             }
@@ -4049,18 +4044,12 @@
                     comparisonChart.update();
                 }
                 
-                // Show intelligent analysis
+                // Analysis messages available in the results section
                 const analysisMessages = [
                     `📊 ${bestPricePerSqft.name} offers the best value at $${Math.round(bestPricePerSqft.pricePerSqft)}/sqft`,
                     `🏆 Based on all factors, ${recommended.name} appears to be the smartest choice`,
                     `💡 ${newestProperty.name} is the newest (${newestProperty.year}) but ${lowestHoa.name} has the lowest HOA fees`
                 ];
-                
-                setTimeout(() => {
-                    analysisMessages.forEach((message, index) => {
-                        setTimeout(() => showToast(message, 'info'), index * 2000);
-                    });
-                }, 500);
             }
 
             // Modern Export System for Beautiful Reports
@@ -4476,10 +4465,9 @@
                 loadAutoSavedData();
             }, 1000);
 
-            // Show welcome message for first-time users
+            // Set visited flag for first-time users
             setTimeout(() => {
                 if (!localStorage.getItem('hasVisited')) {
-                    showToast('👋 Welcome to UltimateRECalc! Use Save/Load to manage your calculations. Press Ctrl+S to save, Ctrl+L to load.', 'info');
                     try {
                         localStorage.setItem('hasVisited', 'true');
                     } catch (e) {
