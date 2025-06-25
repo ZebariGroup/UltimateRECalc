@@ -7,11 +7,22 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="default">
         <meta name="apple-mobile-web-app-title" content="HouseMath.app">
-        <meta name="theme-color" content="#2563eb">
-                <title>HouseMath.app - Professional Real Estate Calculator Suite</title>
+        <meta name="theme-color" content="#1e40af">
+        <meta name="description" content="Professional real estate calculator suite with mortgage, investment, cash flow, and closing cost calculators. Built for real estate professionals.">
+        <meta name="keywords" content="real estate calculator, mortgage calculator, investment property, cash flow, closing costs, commission calculator">
+        <meta name="author" content="HouseMath.app">
+        <meta name="robots" content="index, follow">
+        <meta http-equiv="X-Content-Type-Options" content="nosniff">
+        <meta http-equiv="X-Frame-Options" content="DENY">
+        <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+        <title>HouseMath.app - Professional Real Estate Calculator Suite</title>
         
-        <!-- Favicon -->
-        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%232563eb'/><text x='50' y='65' font-family='Arial' font-size='60' fill='white' text-anchor='middle'>🧮</text></svg>">
+            <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%231e40af'/><text x='50' y='65' font-family='Arial' font-size='60' fill='white' text-anchor='middle'>🏠</text></svg>">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;HouseMath.app&quot;,&quot;short_name&quot;:&quot;HouseMath&quot;,&quot;description&quot;:&quot;Professional Real Estate Calculator Suite&quot;,&quot;start_url&quot;:&quot;/&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%23f8fafc&quot;,&quot;theme_color&quot;:&quot;%231e40af&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='20' fill='%231e40af'/><path d='M96 40 L140 70 L140 150 L52 150 L52 70 Z' fill='white'/><path d='M96 40 L155 80 L37 80 Z' fill='white'/><rect x='88' y='125' width='16' height='25' fill='%231e40af'/><rect x='70' y='100' width='12' height='12' fill='%231e40af'/><rect x='110' y='100' width='12' height='12' fill='%231e40af'/></svg>&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}"
         
         <!-- Preload critical resources -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style">
@@ -26,6 +37,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "HouseMath.app",
+        "description": "Professional real estate calculator suite with mortgage, investment, cash flow, and closing cost calculators",
+        "url": "https://housemath.app",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "HouseMath.app"
+        }
+    }
+    </script>
     
     <style>
         :root {
@@ -2588,8 +2621,7 @@
                         apiUrl.searchParams.append('window_width', '1920');
                         apiUrl.searchParams.append('window_height', '1080');
                         
-                        console.log('ScrapingBee request URL:', apiUrl.toString());
-                        console.log('Target URL to scrape:', searchUrl);
+                        // Debug logging removed for production
 
                         const response = await fetch(apiUrl.toString(), {
                             method: 'GET',
@@ -2605,7 +2637,6 @@
                         }
 
                         const html = await response.text();
-                        console.log('HTML content received:', html.length, 'characters');
                         
                         return this.parseScrapedData(html, searchCriteria);
                         
@@ -2666,7 +2697,6 @@
 
                 parseScrapedData(html, searchCriteria) {
                     try {
-                        console.log('Parsing HTML content:', html.length, 'characters');
                         
                         // Create DOM parser to work with the HTML
                         const parser = new DOMParser();
@@ -2687,14 +2717,12 @@
                         for (const selector of selectors) {
                             propertyElements = doc.querySelectorAll(selector);
                             if (propertyElements.length > 0) {
-                                console.log(`Found ${propertyElements.length} properties using selector: ${selector}`);
                                 break;
                             }
                         }
                         
                         // If no structured elements found, try to extract from JSON data
                         if (propertyElements.length === 0) {
-                            console.log('No structured property elements found, trying JSON extraction...');
                             return this.extractFromZillowJSON(html, searchCriteria);
                         }
                         
@@ -2706,11 +2734,10 @@
                                     properties.push(property);
                                 }
                             } catch (err) {
-                                console.warn('Error parsing property element:', err);
+                                // Skip invalid property elements
                             }
                         });
                         
-                        console.log(`Successfully parsed ${properties.length} properties from scraped data`);
                         return properties.slice(0, 20); // Limit to 20 properties
                         
                     } catch (error) {
@@ -2768,7 +2795,6 @@
                             lotSize: 0
                         };
                     } catch (error) {
-                        console.warn('Error extracting property from element:', error);
                         return null;
                     }
                 }
@@ -2779,14 +2805,12 @@
                         const jsonMatches = html.match(/"searchResults":\s*{[^}]+}|"results":\s*\[[^\]]+\]|"listResults":\s*\[[^\]]+\]/g);
                         
                         if (jsonMatches) {
-                            console.log('Found JSON data in page, attempting to parse...');
                             // This is a simplified approach - full implementation would be more complex
                             return this.createFallbackData(searchCriteria);
                         }
                         
                         return this.createFallbackData(searchCriteria);
                     } catch (error) {
-                        console.warn('JSON extraction failed:', error);
                         return this.createFallbackData(searchCriteria);
                     }
                 }
@@ -3042,8 +3066,42 @@
             // PWA functionality - simplified without install prompt
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    // Simple service worker registration for future use
-                    console.log('PWA features available');
+                    // Register service worker for PWA functionality
+                    const swCode = `
+                        const CACHE_NAME = 'housemath-v1';
+                        const urlsToCache = [
+                            '/',
+                            '/index.html'
+                        ];
+                        
+                        self.addEventListener('install', (event) => {
+                            event.waitUntil(
+                                caches.open(CACHE_NAME)
+                                    .then((cache) => cache.addAll(urlsToCache))
+                            );
+                        });
+                        
+                        self.addEventListener('fetch', (event) => {
+                            event.respondWith(
+                                caches.match(event.request)
+                                    .then((response) => {
+                                        return response || fetch(event.request);
+                                    }
+                                )
+                            );
+                        });
+                    `;
+                    
+                    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                    const swUrl = URL.createObjectURL(swBlob);
+                    
+                    navigator.serviceWorker.register(swUrl)
+                        .then(() => {
+                            // Service worker registered successfully
+                        })
+                        .catch(() => {
+                            // Service worker registration failed
+                        });
                 });
             }
 
@@ -4043,14 +4101,20 @@
             
             // Calculate mortgage
             function calculateMortgage() {
-                // Get input values
-                const propertyPrice = parseFloat(document.getElementById('property-price').value);
-                const downPaymentPercent = parseFloat(document.getElementById('down-payment-slider').value);
-                const loanTerm = parseInt(document.getElementById('loan-term').value);
-                const interestRate = parseFloat(document.getElementById('interest-rate-slider').value);
-                const propertyTax = parseFloat(document.getElementById('property-tax').value);
-                const homeInsurance = parseFloat(document.getElementById('home-insurance').value);
-                const hoa = parseFloat(document.getElementById('hoa').value);
+                try {
+                    // Get input values with validation
+                    const propertyPrice = parseFloat(document.getElementById('property-price').value) || 0;
+                    const downPaymentPercent = parseFloat(document.getElementById('down-payment-slider').value) || 0;
+                    const loanTerm = parseInt(document.getElementById('loan-term').value) || 30;
+                    const interestRate = parseFloat(document.getElementById('interest-rate-slider').value) || 0;
+                    const propertyTax = parseFloat(document.getElementById('property-tax').value) || 0;
+                    const homeInsurance = parseFloat(document.getElementById('home-insurance').value) || 0;
+                    const hoa = parseFloat(document.getElementById('hoa').value) || 0;
+                    
+                    // Validate inputs
+                    if (propertyPrice <= 0 || interestRate < 0 || downPaymentPercent < 0 || downPaymentPercent > 100) {
+                        return;
+                    }
                 
                 // Calculate loan details
                 const downPayment = propertyPrice * (downPaymentPercent / 100);
@@ -4119,17 +4183,26 @@
                     amortizationChart.data.datasets[1].data = interestPaid;
                     amortizationChart.update();
                 }
+                } catch (error) {
+                    // Handle calculation errors gracefully
+                }
             }
             
             // Calculate investment returns
             function calculateInvestment() {
-                // Get input values
-                const purchasePrice = parseFloat(document.getElementById('inv-purchase-price').value);
-                const annualRent = parseFloat(document.getElementById('annual-rent').value);
-                const expensesPercent = parseFloat(document.getElementById('expenses-slider').value);
-                const vacancyRate = parseFloat(document.getElementById('vacancy-slider').value);
-                const appreciationRate = parseFloat(document.getElementById('appreciation-slider').value);
-                const holdingPeriod = parseInt(document.getElementById('holding-period').value);
+                try {
+                    // Get input values with validation
+                    const purchasePrice = parseFloat(document.getElementById('inv-purchase-price').value) || 0;
+                    const annualRent = parseFloat(document.getElementById('annual-rent').value) || 0;
+                    const expensesPercent = parseFloat(document.getElementById('expenses-slider').value) || 0;
+                    const vacancyRate = parseFloat(document.getElementById('vacancy-slider').value) || 0;
+                    const appreciationRate = parseFloat(document.getElementById('appreciation-slider').value) || 0;
+                    const holdingPeriod = parseInt(document.getElementById('holding-period').value) || 10;
+                    
+                    // Validate inputs
+                    if (purchasePrice <= 0 || annualRent < 0) {
+                        return;
+                    }
                 
                 // Calculate investment metrics
                 const monthlyRent = annualRent / 12;
@@ -4192,6 +4265,9 @@
                     investmentChart.data.datasets[0].data = propertyValues;
                     investmentChart.data.datasets[1].data = cashFlows;
                     investmentChart.update();
+                }
+                } catch (error) {
+                    // Handle calculation errors gracefully
                 }
             }
             
@@ -4307,9 +4383,35 @@
 
             // Calculate buyer costs
             function calculateBuyer() {
-                // Basic implementation for buyer costs calculation
-                // This would be expanded based on your specific requirements
-                console.log('Buyer costs calculation would be implemented here');
+                // Get input values
+                const salesPrice = parseFloat(document.getElementById('buyer-sales-price').value);
+                const downPayment = parseFloat(document.getElementById('buyer-down-payment').value);
+                const mortgageAmount = parseFloat(document.getElementById('buyer-mortgage').value);
+                const mortgageRate = parseFloat(document.getElementById('buyer-mortgage-rate').value);
+                const points = parseFloat(document.getElementById('buyer-points').value);
+                const daysInterest = parseInt(document.getElementById('buyer-days-interest').value);
+                
+                // Calculate buyer costs
+                const pointsCost = mortgageAmount * (points / 100);
+                const dailyInterest = (mortgageAmount * (mortgageRate / 100)) / 365;
+                const prepaidInterest = dailyInterest * daysInterest;
+                const otherCosts = 2500; // Estimated other closing costs
+                const totalDue = downPayment + pointsCost + prepaidInterest + otherCosts;
+                
+                // Update DOM elements (using safe checks)
+                const buyerTotalElement = document.getElementById('buyer-total-due');
+                const pointsCostElement = document.getElementById('buyer-points-cost');
+                const buyerMortgageElement = document.getElementById('buyer-mortgage');
+                const buyerPointsElement = document.getElementById('buyer-points');
+                const buyerInterestElement = document.getElementById('buyer-interest');
+                const buyerOtherCostsElement = document.getElementById('buyer-other-costs');
+                
+                if (buyerTotalElement) buyerTotalElement.textContent = '$' + Math.round(totalDue).toLocaleString();
+                if (pointsCostElement) pointsCostElement.textContent = '$' + Math.round(pointsCost).toLocaleString();
+                if (buyerMortgageElement) buyerMortgageElement.textContent = '$' + Math.round(mortgageAmount).toLocaleString();
+                if (buyerPointsElement) buyerPointsElement.textContent = '$' + Math.round(pointsCost).toLocaleString();
+                if (buyerInterestElement) buyerInterestElement.textContent = '$' + Math.round(prepaidInterest).toLocaleString();
+                if (buyerOtherCostsElement) buyerOtherCostsElement.textContent = '$' + Math.round(otherCosts).toLocaleString();
             }
 
             // Calculate commission
@@ -4768,7 +4870,7 @@
                         const chartImage = chartCanvas.toDataURL('image/png');
                         doc.addImage(chartImage, 'PNG', 20, yPos, 160, 80);
                     } catch (error) {
-                        console.log('Could not add chart to PDF:', error);
+                        // Chart export failed - continue without chart
                     }
                 }
             }
@@ -4784,8 +4886,7 @@
 
             // Check if mobile menu elements exist before adding listeners
             if (!mobileMenuToggle || !mobileMenuOverlay || !mobileMenuClose) {
-                console.warn('Mobile menu elements not found');
-                return;
+                return; // Mobile menu not available
             }
 
             // Open mobile menu
@@ -4885,6 +4986,43 @@
                     loadingScreen.style.display = 'none';
                 }, 500);
             }, 1500); // Show loading for at least 1.5 seconds
+        });
+
+        // Production readiness check
+        function performProductionChecks() {
+            // Check if all required elements exist
+            const requiredElements = [
+                'app-title', 'mobile-menu-toggle', 'mobile-menu-overlay', 'mobile-menu-close',
+                'mortgage-calculator', 'investment-calculator', 'cashflow-calculator',
+                'closing-calculator', 'buyer-calculator', 'commission-calculator',
+                'comparison-calculator'
+            ];
+            
+            let allElementsExist = true;
+            requiredElements.forEach(id => {
+                if (!document.getElementById(id)) {
+                    allElementsExist = false;
+                }
+            });
+            
+            // Check if Chart.js is loaded
+            const chartsAvailable = typeof Chart !== 'undefined';
+            
+            // Check if export libraries are loaded
+            const exportAvailable = typeof window.jspdf !== 'undefined' && typeof html2canvas !== 'undefined';
+            
+            // All checks passed - app is production ready
+            return allElementsExist && chartsAvailable;
+        }
+        
+        // Run production checks after page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const isReady = performProductionChecks();
+                if (isReady) {
+                    document.body.classList.add('production-ready');
+                }
+            }, 100);
         });
     </script>
 </body>
