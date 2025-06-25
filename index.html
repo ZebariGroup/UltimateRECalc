@@ -3209,18 +3209,9 @@
                 }
             }
 
-            // Add CSS animations for toasts
+            // Add accessibility and mobile styles
             const style = document.createElement('style');
             style.textContent = `
-                @keyframes slideInRight {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOutRight {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-                
                 /* Enhanced focus styles for accessibility */
                 button:focus-visible, input:focus-visible, select:focus-visible {
                     outline: 3px solid #3b82f6;
