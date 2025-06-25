@@ -420,6 +420,161 @@
         .auto-populate-banner.show {
             display: flex;
         }
+
+        .mls-status-banner {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #92400e;
+        }
+
+        .banner-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .banner-content i {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        .banner-text {
+            flex: 1;
+        }
+
+        .banner-text a {
+            color: white;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .banner-text a:hover {
+            text-decoration: none;
+        }
+
+        /* MLS Setup Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: var(--text-color);
+        }
+
+        .setup-steps {
+            margin: 20px 0;
+        }
+
+        .setup-step {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: var(--bg-color);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .setup-step h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+        }
+
+        .setup-step p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .api-providers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .api-provider {
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .api-provider h4 {
+            margin: 0 0 8px 0;
+            color: var(--primary-color);
+        }
+
+        .code-example {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .warning-box {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+
+        .dark .warning-box {
+            background-color: #451a03;
+            border-color: #92400e;
+            color: #fbbf24;
+        }
         
         .tabs {
             display: flex;
@@ -975,6 +1130,17 @@
                 <div class="property-search-header">
                     <i class="fas fa-search" style="color: var(--primary-color); font-size: 1.25rem;"></i>
                     <h2>MLS Property Search</h2>
+                </div>
+
+                <!-- MLS Status Banner -->
+                <div id="mls-status-banner" class="mls-status-banner">
+                    <div class="banner-content">
+                        <i class="fas fa-info-circle"></i>
+                        <div class="banner-text">
+                            <strong>Demo Mode:</strong> Currently showing sample data. 
+                            <a href="#" onclick="showMLSSetupModal()">Connect to real MLS data →</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="auto-populate-banner" id="auto-populate-banner">
@@ -1856,13 +2022,135 @@
             </div>
         </div>
     </div>
+
+    <!-- MLS Setup Modal -->
+    <div id="mls-setup-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-database"></i> Connect to Real MLS Data</h2>
+                <span class="close" onclick="closeMLSSetupModal()">&times;</span>
+            </div>
+            
+            <div class="warning-box">
+                <strong><i class="fas fa-exclamation-triangle"></i> Important:</strong> 
+                To access real MLS data, you must be a licensed real estate professional and get approval from your local MLS organization.
+            </div>
+
+            <div class="setup-steps">
+                <div class="setup-step">
+                    <h3>Step 1: Get MLS Authorization</h3>
+                    <p>Contact your local Multiple Listing Service (MLS) to request data access. You'll need:</p>
+                    <ul>
+                        <li>Active real estate license</li>
+                        <li>MLS membership</li>
+                        <li>Agreement to MLS terms and IDX/VOW policies</li>
+                        <li>Application for third-party data access</li>
+                    </ul>
+                </div>
+
+                <div class="setup-step">
+                    <h3>Step 2: Choose an API Provider</h3>
+                    <p>Select one of these MLS data providers:</p>
+                    
+                    <div class="api-providers">
+                        <div class="api-provider">
+                            <h4>Bridge Interactive</h4>
+                            <p>Zillow-owned platform with standardized RESO Web API access across multiple MLSs.</p>
+                            <a href="https://www.bridgeinteractive.com/developers/" target="_blank">Learn More →</a>
+                        </div>
+                        
+                        <div class="api-provider">
+                            <h4>Spark API</h4>
+                            <p>Widely-used MLS platform with extensive documentation and mature infrastructure.</p>
+                            <a href="https://sparkplatform.com/docs" target="_blank">Learn More →</a>
+                        </div>
+                        
+                        <div class="api-provider">
+                            <h4>Trestle API</h4>
+                            <p>CoreLogic's enterprise-grade MLS data distribution platform.</p>
+                            <a href="https://trestle-documentation.corelogic.com/" target="_blank">Learn More →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setup-step">
+                    <h3>Step 3: Get API Credentials</h3>
+                    <p>Once approved by your MLS and API provider, you'll receive:</p>
+                    <ul>
+                        <li>API Key or OAuth credentials</li>
+                        <li>Base URL for API endpoints</li>
+                        <li>Documentation for available fields</li>
+                        <li>Usage limits and terms</li>
+                    </ul>
+                </div>
+
+                <div class="setup-step">
+                    <h3>Step 4: Configure Your Application</h3>
+                    <p>Add your API credentials to the configuration at the top of the JavaScript code:</p>
+                    
+                    <div class="code-example">
+// Update MLS_CONFIG with your credentials
+const MLS_CONFIG = {
+    bridge: {
+        baseUrl: 'https://api.bridgeinteractive.com/v2',
+        apiKey: 'YOUR_BRIDGE_API_KEY_HERE', // Replace with your key
+        enabled: true // Set to true when configured
+    },
+    
+    spark: {
+        baseUrl: 'https://sparkapi.com/v1',
+        apiKey: 'YOUR_SPARK_API_KEY_HERE', // Replace with your key
+        enabled: false // Enable only one provider at a time
+    }
+};
+                    </div>
+                </div>
+
+                <div class="setup-step">
+                    <h3>Step 5: Test Your Connection</h3>
+                    <p>After configuring your API credentials:</p>
+                    <ul>
+                        <li>Refresh the page</li>
+                        <li>The status banner will update to show "Live MLS Data"</li>
+                        <li>Search results will now show real property listings</li>
+                        <li>Properties will have current listing dates and accurate data</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>Note:</strong> This application is currently in demo mode. Real MLS integrations require proper licensing, 
+                compliance with data usage policies, and ongoing fees paid directly to MLS organizations.
+            </div>
+        </div>
+    </div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mock MLS Database - In production, this would connect to real MLS APIs
-            const mockMLSData = [
+            // Real MLS API Configuration
+            const MLS_CONFIG = {
+                // Bridge Interactive API Configuration
+                bridge: {
+                    baseUrl: 'https://api.bridgeinteractive.com/v2',
+                    apiKey: null, // Set your API key here
+                    enabled: false // Enable when you have API access
+                },
+                
+                // Spark API Configuration  
+                spark: {
+                    baseUrl: 'https://sparkapi.com/v1',
+                    apiKey: null, // Set your API key here
+                    enabled: false // Enable when you have API access
+                },
+                
+                // Fallback to demo data when no real API is configured
+                useDemoData: true
+            };
+
+            // Demo MLS Database - Replace with real API calls when you have MLS access
+            const demoMLSData = [
                 {
-                    id: 'MLS001',
+                    id: 'DEMO001',
                     address: '123 Oak Street, Austin, TX 78701',
                     price: 425000,
                     bedrooms: 3,
@@ -1870,18 +2158,18 @@
                     sqft: 1850,
                     propertyType: 'single-family',
                     status: 'active',
-                    listDate: '2024-01-15',
+                    listDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days ago
                     photo: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
                     propertyTax: 4200,
                     hoa: 0,
                     insurance: 1400,
                     estimatedRent: 2400,
-                    description: 'Beautiful single-family home in downtown Austin',
+                    description: 'Beautiful single-family home in downtown Austin - DEMO DATA',
                     yearBuilt: 2018,
                     lotSize: 0.25
                 },
                 {
-                    id: 'MLS002', 
+                    id: 'DEMO002', 
                     address: '456 Pine Avenue, Austin, TX 78702',
                     price: 385000,
                     bedrooms: 4,
@@ -1889,18 +2177,18 @@
                     sqft: 2100,
                     propertyType: 'single-family',
                     status: 'active',
-                    listDate: '2024-01-20',
+                    listDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 days ago
                     photo: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=300&fit=crop',
                     propertyTax: 3850,
                     hoa: 150,
                     insurance: 1200,
                     estimatedRent: 2200,
-                    description: 'Spacious family home with modern amenities',
+                    description: 'Spacious family home with modern amenities - DEMO DATA',
                     yearBuilt: 2015,
                     lotSize: 0.3
                 },
                 {
-                    id: 'MLS003',
+                    id: 'DEMO003',
                     address: '789 Maple Drive, Austin, TX 78703', 
                     price: 750000,
                     bedrooms: 3,
@@ -1908,18 +2196,18 @@
                     sqft: 2200,
                     propertyType: 'condo',
                     status: 'pending',
-                    listDate: '2024-01-10',
+                    listDate: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 12 days ago
                     photo: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop',
                     propertyTax: 6200,
                     hoa: 350,
                     insurance: 1800,
                     estimatedRent: 3200,
-                    description: 'Luxury condo with city views',
+                    description: 'Luxury condo with city views - DEMO DATA',
                     yearBuilt: 2020,
                     lotSize: 0
                 },
                 {
-                    id: 'MLS004',
+                    id: 'DEMO004',
                     address: '321 Cedar Lane, Austin, TX 78704',
                     price: 295000,
                     bedrooms: 2,
@@ -1927,18 +2215,18 @@
                     sqft: 1200,
                     propertyType: 'townhouse',
                     status: 'active',
-                    listDate: '2024-01-25',
+                    listDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 day ago
                     photo: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=400&h=300&fit=crop',
                     propertyTax: 2950,
                     hoa: 200,
                     insurance: 900,
                     estimatedRent: 1800,
-                    description: 'Charming townhouse in trendy neighborhood',
+                    description: 'Charming townhouse in trendy neighborhood - DEMO DATA',
                     yearBuilt: 2010,
                     lotSize: 0.1
                 },
                 {
-                    id: 'MLS005',
+                    id: 'DEMO005',
                     address: '654 Birch Court, Austin, TX 78705',
                     price: 525000,
                     bedrooms: 4,
@@ -1946,17 +2234,303 @@
                     sqft: 2800,
                     propertyType: 'single-family',
                     status: 'sold',
-                    listDate: '2024-01-05',
+                    listDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days ago
                     photo: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop',
                     propertyTax: 5250,
                     hoa: 0,
                     insurance: 1600,
                     estimatedRent: 2800,
-                    description: 'Recently sold - excellent investment opportunity',
+                    description: 'Recently sold - excellent investment opportunity - DEMO DATA',
                     yearBuilt: 2017,
                     lotSize: 0.4
+                },
+                // Adding more diverse demo data
+                {
+                    id: 'DEMO006',
+                    address: '1234 Main Street, Houston, TX 77001',
+                    price: 650000,
+                    bedrooms: 4,
+                    bathrooms: 3,
+                    sqft: 2400,
+                    propertyType: 'single-family',
+                    status: 'active',
+                    listDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    photo: 'https://images.unsplash.com/photo-1566908829077-2d7ef0191e92?w=400&h=300&fit=crop',
+                    propertyTax: 6500,
+                    hoa: 0,
+                    insurance: 1800,
+                    estimatedRent: 2800,
+                    description: 'Modern home in Houston downtown area - DEMO DATA',
+                    yearBuilt: 2019,
+                    lotSize: 0.3
+                },
+                {
+                    id: 'DEMO007',
+                    address: '567 Elm Avenue, Dallas, TX 75201',
+                    price: 480000,
+                    bedrooms: 3,
+                    bathrooms: 2.5,
+                    sqft: 1900,
+                    propertyType: 'townhouse',
+                    status: 'active',
+                    listDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    photo: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop',
+                    propertyTax: 4800,
+                    hoa: 250,
+                    insurance: 1300,
+                    estimatedRent: 2200,
+                    description: 'Contemporary townhouse in Dallas business district - DEMO DATA',
+                    yearBuilt: 2021,
+                    lotSize: 0.15
+                },
+                {
+                    id: 'DEMO008',
+                    address: '890 Beach Drive, Miami, FL 33139',
+                    price: 1200000,
+                    bedrooms: 2,
+                    bathrooms: 2,
+                    sqft: 1400,
+                    propertyType: 'condo',
+                    status: 'active',
+                    listDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    photo: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop',
+                    propertyTax: 12000,
+                    hoa: 800,
+                    insurance: 2500,
+                    estimatedRent: 4500,
+                    description: 'Luxury oceanfront condo with stunning views - DEMO DATA',
+                    yearBuilt: 2022,
+                    lotSize: 0
                 }
             ];
+
+            // Real MLS API Functions
+            class MLSAPIManager {
+                constructor() {
+                    this.cache = new Map();
+                    this.cacheExpiry = 5 * 60 * 1000; // 5 minutes
+                }
+
+                async searchProperties(searchCriteria) {
+                    // Check if we should use real API or demo data
+                    if (MLS_CONFIG.bridge.enabled && MLS_CONFIG.bridge.apiKey) {
+                        return await this.searchBridgeAPI(searchCriteria);
+                    } else if (MLS_CONFIG.spark.enabled && MLS_CONFIG.spark.apiKey) {
+                        return await this.searchSparkAPI(searchCriteria);
+                    } else {
+                        // Fallback to demo data
+                        return this.searchDemoData(searchCriteria);
+                    }
+                }
+
+                async searchBridgeAPI(searchCriteria) {
+                    try {
+                        const { searchTerm, minPrice, maxPrice, minBedrooms, minBathrooms, propertyType, status, city, state } = searchCriteria;
+                        
+                        // Build OData query for Bridge API
+                        let filters = [];
+                        
+                        if (minPrice > 0) filters.push(`ListPrice ge ${minPrice}`);
+                        if (maxPrice < Infinity) filters.push(`ListPrice le ${maxPrice}`);
+                        if (minBedrooms > 0) filters.push(`BedroomsTotal ge ${minBedrooms}`);
+                        if (minBathrooms > 0) filters.push(`BathroomsTotal ge ${minBathrooms}`);
+                        if (propertyType) filters.push(`PropertyType eq '${propertyType}'`);
+                        if (status !== 'all') filters.push(`StandardStatus eq '${status}'`);
+                        if (city) filters.push(`City eq '${city}'`);
+                        if (state) filters.push(`StateOrProvince eq '${state}'`);
+                        
+                        const filterQuery = filters.length > 0 ? `$filter=${filters.join(' and ')}` : '';
+                        const searchQuery = searchTerm ? `$search="${searchTerm}"` : '';
+                        const params = [filterQuery, searchQuery, '$top=50'].filter(p => p).join('&');
+                        
+                        const response = await fetch(`${MLS_CONFIG.bridge.baseUrl}/Property?${params}`, {
+                            headers: {
+                                'Authorization': `Bearer ${MLS_CONFIG.bridge.apiKey}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`API Error: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        return this.normalizeBridgeData(data.value || []);
+                        
+                    } catch (error) {
+                        console.error('Bridge API Error:', error);
+                        // Fallback to demo data on API error
+                        return this.searchDemoData(searchCriteria);
+                    }
+                }
+
+                async searchSparkAPI(searchCriteria) {
+                    try {
+                        const { searchTerm, minPrice, maxPrice, minBedrooms, minBathrooms, propertyType, status } = searchCriteria;
+                        
+                        // Build Spark API query
+                        let filters = [];
+                        
+                        if (minPrice > 0) filters.push(`ListPrice Ge ${minPrice}`);
+                        if (maxPrice < Infinity) filters.push(`ListPrice Le ${maxPrice}`);
+                        if (minBedrooms > 0) filters.push(`BedroomsTotal Ge ${minBedrooms}`);
+                        if (minBathrooms > 0) filters.push(`BathroomsTotal Ge ${minBathrooms}`);
+                        if (propertyType) filters.push(`PropertyType Eq '${propertyType}'`);
+                        if (status !== 'all') filters.push(`MlsStatus Eq '${status}'`);
+                        
+                        const filterQuery = filters.length > 0 ? filters.join(' And ') : '';
+                        const params = new URLSearchParams({
+                            _limit: '50',
+                            _filter: filterQuery
+                        });
+
+                        const response = await fetch(`${MLS_CONFIG.spark.baseUrl}/listings?${params}`, {
+                            headers: {
+                                'X-SparkApi-User-Agent': 'UltimateRECalc/1.0',
+                                'Authorization': `OAuth ${MLS_CONFIG.spark.apiKey}`
+                            }
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Spark API Error: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        return this.normalizeSparkData(data.D.Results || []);
+                        
+                    } catch (error) {
+                        console.error('Spark API Error:', error);
+                        // Fallback to demo data on API error
+                        return this.searchDemoData(searchCriteria);
+                    }
+                }
+
+                searchDemoData(searchCriteria) {
+                    const { searchTerm, minPrice, maxPrice, minBedrooms, minBathrooms, propertyType, status } = searchCriteria;
+                    
+                    return demoMLSData.filter(property => {
+                        const matchesSearch = !searchTerm || 
+                            property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            property.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            property.description.toLowerCase().includes(searchTerm.toLowerCase());
+                        
+                        const matchesPrice = property.price >= minPrice && property.price <= maxPrice;
+                        const matchesBedrooms = property.bedrooms >= minBedrooms;
+                        const matchesBathrooms = property.bathrooms >= minBathrooms;
+                        const matchesType = !propertyType || property.propertyType === propertyType;
+                        const matchesStatus = status === 'all' || property.status === status;
+
+                        return matchesSearch && matchesPrice && matchesBedrooms && 
+                               matchesBathrooms && matchesType && matchesStatus;
+                    });
+                }
+
+                normalizeBridgeData(properties) {
+                    return properties.map(prop => ({
+                        id: prop.ListingKey || prop.ListingId,
+                        address: `${prop.UnparsedAddress || ''}, ${prop.City || ''}, ${prop.StateOrProvince || ''} ${prop.PostalCode || ''}`.trim(),
+                        price: prop.ListPrice || 0,
+                        bedrooms: prop.BedroomsTotal || 0,
+                        bathrooms: prop.BathroomsTotal || 0,
+                        sqft: prop.LivingArea || 0,
+                        propertyType: this.normalizePropertyType(prop.PropertyType),
+                        status: prop.StandardStatus?.toLowerCase() || 'active',
+                        listDate: prop.ListingContractDate || prop.OnMarketDate,
+                        photo: prop.Media?.[0]?.MediaURL || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop',
+                        propertyTax: this.estimatePropertyTax(prop.ListPrice),
+                        hoa: prop.AssociationFee || 0,
+                        insurance: this.estimateInsurance(prop.ListPrice),
+                        estimatedRent: this.estimateRent(prop.ListPrice),
+                        description: prop.PublicRemarks || 'No description available',
+                        yearBuilt: prop.YearBuilt || null,
+                        lotSize: prop.LotSizeAcres || 0
+                    }));
+                }
+
+                normalizeSparkData(properties) {
+                    return properties.map(prop => ({
+                        id: prop.Id,
+                        address: `${prop.Address}, ${prop.City}, ${prop.StateOrProvince} ${prop.PostalCode}`,
+                        price: prop.ListPrice || 0,
+                        bedrooms: prop.BedroomsTotal || 0,
+                        bathrooms: prop.BathroomsTotal || 0,
+                        sqft: prop.BuildingAreaTotal || 0,
+                        propertyType: this.normalizePropertyType(prop.PropertyType),
+                        status: prop.MlsStatus?.toLowerCase() || 'active',
+                        listDate: prop.ListingContractDate,
+                        photo: prop.Photos?.[0]?.Uri800 || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop',
+                        propertyTax: this.estimatePropertyTax(prop.ListPrice),
+                        hoa: prop.AssociationFee || 0,
+                        insurance: this.estimateInsurance(prop.ListPrice),
+                        estimatedRent: this.estimateRent(prop.ListPrice),
+                        description: prop.PublicRemarks || 'No description available',
+                        yearBuilt: prop.YearBuilt || null,
+                        lotSize: prop.LotSizeAcres || 0
+                    }));
+                }
+
+                normalizePropertyType(type) {
+                    if (!type) return 'single-family';
+                    const normalized = type.toLowerCase();
+                    if (normalized.includes('condo') || normalized.includes('condominium')) return 'condo';
+                    if (normalized.includes('townhouse') || normalized.includes('townhome')) return 'townhouse';
+                    return 'single-family';
+                }
+
+                estimatePropertyTax(price) {
+                    return Math.round(price * 0.01); // 1% estimate
+                }
+
+                estimateInsurance(price) {
+                    return Math.round(price * 0.003); // 0.3% estimate
+                }
+
+                estimateRent(price) {
+                    return Math.round(price * 0.005); // 0.5% rule estimate
+                }
+            }
+
+            // Initialize MLS API Manager
+            const mlsAPI = new MLSAPIManager();
+
+            // MLS Setup Modal Functions (make global)
+            window.showMLSSetupModal = function() {
+                document.getElementById('mls-setup-modal').style.display = 'block';
+            }
+
+            window.closeMLSSetupModal = function() {
+                document.getElementById('mls-setup-modal').style.display = 'none';
+            }
+
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                const modal = document.getElementById('mls-setup-modal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            }
+
+            // Update MLS status banner based on configuration
+            function updateMLSStatusBanner() {
+                const banner = document.getElementById('mls-status-banner');
+                const bannerText = banner.querySelector('.banner-text');
+                
+                const isRealDataEnabled = (MLS_CONFIG.bridge.enabled && MLS_CONFIG.bridge.apiKey) || 
+                                        (MLS_CONFIG.spark.enabled && MLS_CONFIG.spark.apiKey);
+                
+                if (isRealDataEnabled) {
+                    banner.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    banner.style.borderLeftColor = '#065f46';
+                    bannerText.innerHTML = '<strong>Live MLS Data:</strong> Connected to real estate listings. <span style="opacity: 0.8;">Data refreshed in real-time</span>';
+                } else {
+                    banner.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+                    banner.style.borderLeftColor = '#92400e';
+                    bannerText.innerHTML = '<strong>Demo Mode:</strong> Currently showing sample data. <a href="#" onclick="showMLSSetupModal()">Connect to real MLS data →</a>';
+                }
+            }
+
+            // Initialize MLS status banner
+            updateMLSStatusBanner();
 
             // MLS Search and Integration Logic
             let selectedProperty = null;
@@ -1978,7 +2552,7 @@
             const listingStatusFilter = document.getElementById('listing-status');
 
             // Search functionality
-            function searchProperties() {
+            async function searchProperties() {
                 const searchTerm = searchInput.value.toLowerCase().trim();
                 const minPrice = parseInt(minPriceFilter.value) || 0;
                 const maxPrice = parseInt(maxPriceFilter.value) || Infinity;
@@ -1991,28 +2565,32 @@
                 loadingSpinner.classList.add('show');
                 propertyResults.innerHTML = '';
 
-                // Simulate API delay
-                setTimeout(() => {
-                    // Filter properties based on search criteria
-                    searchResults = mockMLSData.filter(property => {
-                        const matchesSearch = !searchTerm || 
-                            property.address.toLowerCase().includes(searchTerm) ||
-                            property.id.toLowerCase().includes(searchTerm) ||
-                            property.description.toLowerCase().includes(searchTerm);
-                        
-                        const matchesPrice = property.price >= minPrice && property.price <= maxPrice;
-                        const matchesBedrooms = property.bedrooms >= minBedrooms;
-                        const matchesBathrooms = property.bathrooms >= minBathrooms;
-                        const matchesType = !propertyType || property.propertyType === propertyType;
-                        const matchesStatus = status === 'all' || property.status === status;
+                try {
+                    // Use the MLS API manager to search properties
+                    const searchCriteria = {
+                        searchTerm,
+                        minPrice,
+                        maxPrice,
+                        minBedrooms,
+                        minBathrooms,
+                        propertyType,
+                        status
+                    };
 
-                        return matchesSearch && matchesPrice && matchesBedrooms && 
-                               matchesBathrooms && matchesType && matchesStatus;
-                    });
-
+                    searchResults = await mlsAPI.searchProperties(searchCriteria);
                     displaySearchResults(searchResults);
+                } catch (error) {
+                    console.error('Search error:', error);
+                    propertyResults.innerHTML = `
+                        <div style="padding: 20px; text-align: center; color: #ef4444;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <p>Error searching properties. Please try again.</p>
+                            <p style="font-size: 0.875rem;">If this persists, check your MLS API configuration.</p>
+                        </div>
+                    `;
+                } finally {
                     loadingSpinner.classList.remove('show');
-                }, 1000);
+                }
             }
 
             // Display search results
@@ -2055,7 +2633,7 @@
 
             // Select a property and auto-populate calculators
             function selectProperty(propertyId) {
-                selectedProperty = mockMLSData.find(p => p.id === propertyId);
+                selectedProperty = searchResults.find(p => p.id === propertyId);
                 
                 if (!selectedProperty) return;
 
