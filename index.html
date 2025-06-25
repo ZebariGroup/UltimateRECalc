@@ -621,6 +621,226 @@
             box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
         }
         
+        /* Mobile Results Popup */
+        .mobile-results-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-results-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mobile-results-popup {
+            background: var(--card-bg);
+            border-radius: 20px;
+            max-width: 90%;
+            max-height: 85%;
+            width: 400px;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.7) translateY(50px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--primary-color);
+        }
+        
+        .mobile-results-overlay.show .mobile-results-popup {
+            transform: scale(1) translateY(0);
+        }
+        
+        .mobile-results-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 18px 18px 0 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .mobile-results-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .mobile-results-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-results-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .mobile-results-content {
+            padding: 25px;
+        }
+        
+        .mobile-results-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .mobile-stat-box {
+            background: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-stat-box:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .mobile-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .mobile-stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .mobile-details-section {
+            margin-bottom: 20px;
+        }
+        
+        .mobile-details-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .mobile-details-list {
+            background: var(--bg-color);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .mobile-details-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .mobile-details-row:last-child {
+            border-bottom: none;
+        }
+        
+        .mobile-details-row:nth-child(even) {
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .mobile-detail-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .mobile-detail-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .mobile-celebration {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            animation: celebrationPulse 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes celebrationPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.02); }
+        }
+        
+        @keyframes popIn {
+            0% {
+                transform: scale(0.3) rotate(-10deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1) rotate(5deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes sparkleFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(90deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            75% { transform: translateY(-10px) rotate(270deg); }
+        }
+        
+        .calculation-sparkles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        
+        .sparkle {
+            position: absolute;
+            font-size: 20px;
+            animation: sparkleFloat 2s ease-in-out infinite;
+            opacity: 0.8;
+        }
+        
         @media (max-width: 768px) {
             .calculator {
                 grid-template-columns: 1fr;
@@ -1222,6 +1442,78 @@
             .calculator {
                 grid-template-columns: 1fr;
                 gap: 20px;
+            }
+            
+            /* Mobile Results Popup Responsive */
+            .mobile-results-popup {
+                width: 95%;
+                max-width: 350px;
+                max-height: 90%;
+            }
+            
+            .mobile-results-header h2 {
+                font-size: 1.3rem;
+            }
+            
+            .mobile-results-content {
+                padding: 20px;
+            }
+            
+            .mobile-results-stats {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .mobile-stat-box {
+                padding: 12px;
+            }
+            
+            .mobile-stat-value {
+                font-size: 1.1rem;
+            }
+            
+            .mobile-details-title {
+                font-size: 1rem;
+            }
+            
+            .mobile-details-row {
+                padding: 10px 12px;
+            }
+            
+            .mobile-detail-label,
+            .mobile-detail-value {
+                font-size: 0.85rem;
+            }
+            
+            .sparkle {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .mobile-results-popup {
+                width: 98%;
+                max-width: 320px;
+            }
+            
+            .mobile-results-header {
+                padding: 15px;
+            }
+            
+            .mobile-results-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .mobile-results-content {
+                padding: 15px;
+            }
+            
+            .mobile-stat-value {
+                font-size: 1rem;
+            }
+            
+            .mobile-stat-label {
+                font-size: 0.8rem;
             }
         }
         
@@ -4031,6 +4323,163 @@
             // Initialize special features
             addBillieSpecialFeatures();
             
+            // Mobile Results Popup System
+            function isMobileDevice() {
+                return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+            
+            function createCalculationSparkles() {
+                const sparkles = ['✨', '⭐', '💫', '🌟', '✨', '💎'];
+                const sparkleContainer = document.createElement('div');
+                sparkleContainer.className = 'calculation-sparkles';
+                
+                for (let i = 0; i < 8; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = Math.random() * 100 + '%';
+                    sparkle.style.animationDelay = Math.random() * 2 + 's';
+                    sparkleContainer.appendChild(sparkle);
+                }
+                
+                return sparkleContainer;
+            }
+            
+            function showMobileResults(calculatorType, data) {
+                if (!isMobileDevice()) return false;
+                
+                // Create overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'mobile-results-overlay';
+                
+                // Create popup
+                const popup = document.createElement('div');
+                popup.className = 'mobile-results-popup';
+                
+                // Add sparkles for fun animation
+                const sparkles = createCalculationSparkles();
+                popup.appendChild(sparkles);
+                
+                // Create header
+                const header = document.createElement('div');
+                header.className = 'mobile-results-header';
+                
+                const titles = {
+                    mortgage: '🏠 Mortgage Results',
+                    investment: '📈 Investment Analysis',
+                    cashflow: '💰 Cash Flow Results',
+                    closing: '📋 Closing Costs',
+                    buyer: '🏡 Buyer Costs',
+                    commission: '💸 Commission Breakdown',
+                    comparison: '⚖️ Property Comparison'
+                };
+                
+                header.innerHTML = `
+                    <h2>${titles[calculatorType] || 'Calculation Results'}</h2>
+                    <button class="mobile-results-close">×</button>
+                `;
+                popup.appendChild(header);
+                
+                // Create content
+                const content = document.createElement('div');
+                content.className = 'mobile-results-content';
+                
+                // Add celebration for good results
+                if (data.celebration) {
+                    const celebration = document.createElement('div');
+                    celebration.className = 'mobile-celebration';
+                    celebration.innerHTML = `<div style="font-size: 1.5rem; margin-bottom: 5px;">${data.celebration.emoji}</div><div>${data.celebration.message}</div>`;
+                    content.appendChild(celebration);
+                }
+                
+                // Add main stats
+                if (data.stats && data.stats.length > 0) {
+                    const statsGrid = document.createElement('div');
+                    statsGrid.className = 'mobile-results-stats';
+                    
+                    data.stats.forEach(stat => {
+                        const statBox = document.createElement('div');
+                        statBox.className = 'mobile-stat-box';
+                        statBox.innerHTML = `
+                            <div class="mobile-stat-label">${stat.label}</div>
+                            <div class="mobile-stat-value">${stat.value}</div>
+                        `;
+                        statsGrid.appendChild(statBox);
+                    });
+                    
+                    content.appendChild(statsGrid);
+                }
+                
+                // Add detailed sections
+                if (data.sections) {
+                    data.sections.forEach(section => {
+                        const sectionDiv = document.createElement('div');
+                        sectionDiv.className = 'mobile-details-section';
+                        
+                        const title = document.createElement('div');
+                        title.className = 'mobile-details-title';
+                        title.innerHTML = `<span>${section.icon || '📊'}</span>${section.title}`;
+                        sectionDiv.appendChild(title);
+                        
+                        const list = document.createElement('div');
+                        list.className = 'mobile-details-list';
+                        
+                        section.items.forEach(item => {
+                            const row = document.createElement('div');
+                            row.className = 'mobile-details-row';
+                            row.innerHTML = `
+                                <div class="mobile-detail-label">${item.label}</div>
+                                <div class="mobile-detail-value">${item.value}</div>
+                            `;
+                            list.appendChild(row);
+                        });
+                        
+                        sectionDiv.appendChild(list);
+                        content.appendChild(sectionDiv);
+                    });
+                }
+                
+                popup.appendChild(content);
+                overlay.appendChild(popup);
+                
+                // Add to page
+                document.body.appendChild(overlay);
+                
+                // Show with animation
+                setTimeout(() => {
+                    overlay.classList.add('show');
+                }, 50);
+                
+                // Remove sparkles after animation
+                setTimeout(() => {
+                    sparkles.remove();
+                }, 3000);
+                
+                // Close handlers
+                const closeBtn = header.querySelector('.mobile-results-close');
+                closeBtn.addEventListener('click', closeMobileResults);
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) closeMobileResults();
+                });
+                
+                function closeMobileResults() {
+                    overlay.classList.remove('show');
+                    setTimeout(() => {
+                        overlay.remove();
+                        document.body.style.overflow = '';
+                    }, 300);
+                }
+                
+                // Prevent background scrolling
+                document.body.style.overflow = 'hidden';
+                
+                // Haptic feedback
+                hapticFeedback('medium');
+                
+                return true; // Indicates mobile popup was shown
+            }
+            
             // Tab switching functionality
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -4133,14 +4582,50 @@
                 }
             });
             
-            // Calculator button event listeners
-            document.getElementById('calculate-mortgage').addEventListener('click', calculateMortgage);
-            document.getElementById('calculate-investment').addEventListener('click', calculateInvestment);
-            document.getElementById('calculate-cashflow').addEventListener('click', calculateCashFlow);
-            document.getElementById('calculate-closing').addEventListener('click', calculateClosing);
-            document.getElementById('calculate-buyer').addEventListener('click', calculateBuyer);
-            document.getElementById('calculate-commission').addEventListener('click', calculateCommission);
-            document.getElementById('calculate-comparison').addEventListener('click', calculateComparison);
+            // Enhanced calculator button event listeners with animations
+            function addCalculationAnimation(buttonId, calculationFunction) {
+                const button = document.getElementById(buttonId);
+                if (!button) return;
+                
+                button.addEventListener('click', () => {
+                    // Button animation
+                    button.style.transform = 'scale(0.95)';
+                    button.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
+                    
+                    // Add loading state for mobile
+                    if (isMobileDevice()) {
+                        const originalText = button.innerHTML;
+                        button.innerHTML = '<i class="fas fa-magic"></i> Calculating...';
+                        button.disabled = true;
+                        
+                        setTimeout(() => {
+                            calculationFunction();
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                            button.style.transform = '';
+                            button.style.background = '';
+                        }, 800);
+                    } else {
+                        setTimeout(() => {
+                            calculationFunction();
+                            button.style.transform = '';
+                            button.style.background = '';
+                        }, 200);
+                    }
+                    
+                    // Haptic feedback
+                    hapticFeedback('medium');
+                });
+            }
+            
+            // Add enhanced listeners
+            addCalculationAnimation('calculate-mortgage', calculateMortgage);
+            addCalculationAnimation('calculate-investment', calculateInvestment);
+            addCalculationAnimation('calculate-cashflow', calculateCashFlow);
+            addCalculationAnimation('calculate-closing', calculateClosing);
+            addCalculationAnimation('calculate-buyer', calculateBuyer);
+            addCalculationAnimation('calculate-commission', calculateCommission);
+            addCalculationAnimation('calculate-comparison', calculateComparison);
             
 
             
@@ -4435,7 +4920,39 @@
                 // Calculate total interest over life of loan
                 const totalInterest = (monthlyPayment * numberOfPayments) - loanAmount;
                 
-                // Update DOM elements
+                // Check if mobile and show popup
+                const mobileData = {
+                    stats: [
+                        { label: 'Principal & Interest', value: '$' + Math.round(monthlyPayment).toLocaleString() },
+                        { label: 'Total Monthly', value: '$' + Math.round(totalMonthlyPayment).toLocaleString() }
+                    ],
+                    sections: [
+                        {
+                            title: 'Loan Summary',
+                            icon: '🏦',
+                            items: [
+                                { label: 'Loan Amount', value: '$' + Math.round(loanAmount).toLocaleString() },
+                                { label: 'Down Payment', value: '$' + Math.round(downPayment).toLocaleString() },
+                                { label: 'Total Interest Paid', value: '$' + Math.round(totalInterest).toLocaleString() },
+                                { label: 'Total Cost', value: '$' + Math.round(propertyPrice + totalInterest).toLocaleString() }
+                            ]
+                        }
+                    ]
+                };
+                
+                // Add celebration for good deals
+                if (totalMonthlyPayment < propertyPrice * 0.004) { // Less than 0.4% of home value per month
+                    mobileData.celebration = {
+                        emoji: '🎉',
+                        message: 'Excellent! This is a very affordable payment!'
+                    };
+                }
+                
+                if (showMobileResults('mortgage', mobileData)) {
+                    return; // Mobile popup shown, skip desktop updates
+                }
+                
+                // Update DOM elements (desktop)
                 document.getElementById('principal-interest').textContent = '$' + Math.round(monthlyPayment).toLocaleString();
                 document.getElementById('total-monthly').textContent = '$' + Math.round(totalMonthlyPayment).toLocaleString();
                 document.getElementById('loan-amount').textContent = '$' + Math.round(loanAmount).toLocaleString();
@@ -4520,7 +5037,60 @@
                 const netOperatingIncome = effectiveAnnualRent - annualExpenses;
                 const capRate = (netOperatingIncome / purchasePrice) * 100;
                 
-                // Update DOM elements
+                // Future value calculations
+                const futurePropertyValue = purchasePrice * Math.pow(1 + appreciationRate / 100, holdingPeriod);
+                const totalRentalIncome = annualCashFlow * holdingPeriod;
+                const totalReturn = (futurePropertyValue - purchasePrice) + totalRentalIncome;
+                const annualizedReturn = (Math.pow(1 + totalReturn / downPayment, 1 / holdingPeriod) - 1) * 100;
+                
+                // Check if mobile and show popup
+                const mobileData = {
+                    stats: [
+                        { label: 'Cash-on-Cash ROI', value: cashOnCashROI.toFixed(1) + '%' },
+                        { label: 'Cap Rate', value: capRate.toFixed(1) + '%' }
+                    ],
+                    sections: [
+                        {
+                            title: 'Monthly Cash Flow',
+                            icon: '💰',
+                            items: [
+                                { label: 'Monthly Rent', value: '$' + Math.round(monthlyRent).toLocaleString() },
+                                { label: 'Monthly Expenses', value: '$' + Math.round(annualExpenses / 12).toLocaleString() },
+                                { label: 'Monthly Cash Flow', value: '$' + Math.round(monthlyCashFlow).toLocaleString() },
+                                { label: 'Annual Cash Flow', value: '$' + Math.round(annualCashFlow).toLocaleString() }
+                            ]
+                        },
+                        {
+                            title: `Future Value (${holdingPeriod} Years)`,
+                            icon: '📈',
+                            items: [
+                                { label: 'Property Value', value: '$' + Math.round(futurePropertyValue).toLocaleString() },
+                                { label: 'Total Rental Income', value: '$' + Math.round(totalRentalIncome).toLocaleString() },
+                                { label: 'Total Return', value: '$' + Math.round(totalReturn).toLocaleString() },
+                                { label: 'Annualized Return', value: annualizedReturn.toFixed(1) + '%' }
+                            ]
+                        }
+                    ]
+                };
+                
+                // Add celebration for great investments
+                if (cashOnCashROI > 12) {
+                    mobileData.celebration = {
+                        emoji: '🚀',
+                        message: 'Outstanding investment! Excellent cash-on-cash return!'
+                    };
+                } else if (annualizedReturn > 15) {
+                    mobileData.celebration = {
+                        emoji: '🏆',
+                        message: 'Great long-term investment potential!'
+                    };
+                }
+                
+                if (showMobileResults('investment', mobileData)) {
+                    return; // Mobile popup shown, skip desktop updates
+                }
+                
+                // Update DOM elements (desktop)
                 document.getElementById('monthly-rent').textContent = '$' + Math.round(monthlyRent).toLocaleString();
                 document.getElementById('monthly-expenses').textContent = '$' + Math.round(annualExpenses / 12).toLocaleString();
                 document.getElementById('monthly-cashflow').textContent = '$' + Math.round(monthlyCashFlow).toLocaleString();
@@ -4528,12 +5098,6 @@
                 document.getElementById('cash-on-cash').textContent = cashOnCashROI.toFixed(1) + '%';
                 document.getElementById('cap-rate').textContent = capRate.toFixed(1) + '%';
                 document.getElementById('period-label').textContent = holdingPeriod;
-                
-                // Future value calculations
-                const futurePropertyValue = purchasePrice * Math.pow(1 + appreciationRate / 100, holdingPeriod);
-                const totalRentalIncome = annualCashFlow * holdingPeriod;
-                const totalReturn = (futurePropertyValue - purchasePrice) + totalRentalIncome;
-                const annualizedReturn = (Math.pow(1 + totalReturn / downPayment, 1 / holdingPeriod) - 1) * 100;
                 
                 document.getElementById('future-property-value').textContent = '$' + Math.round(futurePropertyValue).toLocaleString();
                 document.getElementById('total-rental-income').textContent = '$' + Math.round(totalRentalIncome).toLocaleString();
@@ -4595,7 +5159,51 @@
                 const netOperatingIncome = effectiveRentalIncome - (propertyTax + insurance + managementFee + maintenanceReserve);
                 const cashFlowAfterDebt = netOperatingIncome - mortgagePayment;
                 
-                // Update DOM elements
+                // Check if mobile and show popup
+                const mobileData = {
+                    stats: [
+                        { label: 'Gross Income', value: '$' + Math.round(grossIncome).toLocaleString() },
+                        { label: 'Total Expenses', value: '$' + Math.round(totalExpenses).toLocaleString() }
+                    ],
+                    sections: [
+                        {
+                            title: 'Net Operating Income',
+                            icon: '📊',
+                            items: [
+                                { label: 'Gross Income', value: '$' + Math.round(grossIncome).toLocaleString() },
+                                { label: 'Total Expenses', value: '$' + Math.round(totalExpenses).toLocaleString() },
+                                { label: 'Net Operating Income', value: '$' + Math.round(netOperatingIncome).toLocaleString() }
+                            ]
+                        },
+                        {
+                            title: 'Cash Flow',
+                            icon: '💸',
+                            items: [
+                                { label: 'Cash Flow Before Taxes', value: '$' + Math.round(cashFlowAfterDebt).toLocaleString() },
+                                { label: 'Cash Flow After Taxes', value: '$' + Math.round(cashFlowAfterDebt).toLocaleString() }
+                            ]
+                        }
+                    ]
+                };
+                
+                // Add celebration for positive cash flow
+                if (cashFlowAfterDebt > 500) {
+                    mobileData.celebration = {
+                        emoji: '💰',
+                        message: 'Excellent! Strong positive cash flow!'
+                    };
+                } else if (cashFlowAfterDebt > 0) {
+                    mobileData.celebration = {
+                        emoji: '✅',
+                        message: 'Good! Property has positive cash flow!'
+                    };
+                }
+                
+                if (showMobileResults('cashflow', mobileData)) {
+                    return; // Mobile popup shown, skip desktop updates
+                }
+                
+                // Update DOM elements (desktop)
                 document.getElementById('gross-income').textContent = '$' + Math.round(grossIncome).toLocaleString();
                 document.getElementById('total-expenses').textContent = '$' + Math.round(totalExpenses).toLocaleString();
                 document.getElementById('net-operating-income').textContent = '$' + Math.round(netOperatingIncome).toLocaleString();
@@ -4741,7 +5349,58 @@
                 
                 const yourNetCommission = yourGrossCommission - transactionFee;
                 
-                // Update DOM elements
+                // Check if mobile and show popup
+                const mobileData = {
+                    stats: [
+                        { label: 'Your Gross Commission', value: '$' + Math.round(yourGrossCommission).toLocaleString() },
+                        { label: 'Your Net Commission', value: '$' + Math.round(yourNetCommission).toLocaleString() }
+                    ],
+                    sections: [
+                        {
+                            title: 'Commission Breakdown',
+                            icon: '💸',
+                            items: [
+                                { label: 'Total Commission', value: '$' + Math.round(totalCommission).toLocaleString() },
+                                { label: 'Listing Side Total', value: '$' + Math.round(listingSide).toLocaleString() },
+                                { label: 'Selling Side Total', value: '$' + Math.round(sellingSide).toLocaleString() },
+                                { label: 'Your Gross Commission', value: '$' + Math.round(yourGrossCommission).toLocaleString() }
+                            ]
+                        },
+                        {
+                            title: 'Final Payout',
+                            icon: '💰',
+                            items: [
+                                { label: 'Commission Before Fees', value: '$' + Math.round(yourGrossCommission).toLocaleString() },
+                                { label: 'Transaction Fees', value: '$' + Math.round(transactionFee).toLocaleString() },
+                                { label: 'Final Commission', value: '$' + Math.round(yourNetCommission).toLocaleString() }
+                            ]
+                        }
+                    ]
+                };
+                
+                // Add celebration for big commissions
+                if (yourNetCommission > 25000) {
+                    mobileData.celebration = {
+                        emoji: '🎉',
+                        message: 'Fantastic! That\'s a huge commission!'
+                    };
+                } else if (yourNetCommission > 15000) {
+                    mobileData.celebration = {
+                        emoji: '🏆',
+                        message: 'Excellent commission! Well earned!'
+                    };
+                } else if (yourNetCommission > 8000) {
+                    mobileData.celebration = {
+                        emoji: '💰',
+                        message: 'Great commission! Nice work!'
+                    };
+                }
+                
+                if (showMobileResults('commission', mobileData)) {
+                    return; // Mobile popup shown, skip desktop updates
+                }
+                
+                // Update DOM elements (desktop)
                 document.getElementById('total-commission').textContent = '$' + Math.round(totalCommission).toLocaleString();
                 document.getElementById('listing-side-total').textContent = '$' + Math.round(listingSide).toLocaleString();
                 document.getElementById('selling-side-total').textContent = '$' + Math.round(sellingSide).toLocaleString();
