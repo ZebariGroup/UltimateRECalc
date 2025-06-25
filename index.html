@@ -3375,9 +3375,7 @@
             function triggerBillieMode() {
                 // Special mode just for Billie!
                 const billieMessages = [
-                    "🏠 Hey Billie! Keep tappppping on the title!😉",
-                    "💕 I've calculated it: You + Me + Coffee = 100% chance of a great time!",
-                    "📊 My interest rate in taking you out is at an all-time high! 💘",
+                    "🏠 Hey Billie! My interest rate in taking you out is at an all-time high! 💘",
         
                 ];
                 
@@ -3424,8 +3422,8 @@
                     sparkleStyle.remove();
                 }, 3000);
                 
-                // Show the message to Billie
-                alert(randomMessage);
+                // Show the message to Billie in a fun popup
+                showBilliePopup(randomMessage);
                 hapticFeedback('heavy');
                 
                 // Temporarily change the theme to something special
@@ -3433,6 +3431,158 @@
                 setTimeout(() => {
                     document.body.style.background = '';
                 }, 5000);
+            }
+
+            function showBilliePopup(message) {
+                // Create the popup overlay
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    backdrop-filter: blur(10px);
+                    z-index: 15000;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    animation: fadeIn 0.3s ease;
+                `;
+
+                // Create the popup content
+                const popup = document.createElement('div');
+                popup.style.cssText = `
+                    background: linear-gradient(135deg, #ff6b6b, #ff8e8e, #ffa8a8);
+                    border-radius: 20px;
+                    padding: 40px;
+                    max-width: 400px;
+                    width: 90%;
+                    text-align: center;
+                    box-shadow: 0 20px 40px rgba(255, 107, 107, 0.3);
+                    border: 3px solid rgba(255, 255, 255, 0.3);
+                    position: relative;
+                    animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                    color: white;
+                    font-family: 'Poppins', sans-serif;
+                `;
+
+                // Add floating hearts
+                const heartsContainer = document.createElement('div');
+                heartsContainer.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    overflow: hidden;
+                    border-radius: 20px;
+                `;
+
+                for (let i = 0; i < 15; i++) {
+                    const heart = document.createElement('div');
+                    heart.textContent = '💖';
+                    heart.style.cssText = `
+                        position: absolute;
+                        font-size: ${Math.random() * 20 + 15}px;
+                        animation: floatHearts ${Math.random() * 3 + 2}s ease-in-out infinite;
+                        animation-delay: ${Math.random() * 2}s;
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                        opacity: 0.7;
+                    `;
+                    heartsContainer.appendChild(heart);
+                }
+
+                popup.appendChild(heartsContainer);
+
+                // Add the message
+                const messageElement = document.createElement('div');
+                messageElement.style.cssText = `
+                    font-size: 1.5rem;
+                    font-weight: 600;
+                    margin-bottom: 20px;
+                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    line-height: 1.4;
+                    position: relative;
+                    z-index: 1;
+                `;
+                messageElement.textContent = message;
+                popup.appendChild(messageElement);
+
+                // Add tap instruction
+                const tapInstruction = document.createElement('div');
+                tapInstruction.style.cssText = `
+                    font-size: 1rem;
+                    opacity: 0.9;
+                    margin-top: 20px;
+                    animation: pulse 2s infinite;
+                    position: relative;
+                    z-index: 1;
+                `;
+                tapInstruction.textContent = '💕 Tap anywhere to close 💕';
+                popup.appendChild(tapInstruction);
+
+                overlay.appendChild(popup);
+
+                // Add animations
+                const animationStyles = document.createElement('style');
+                animationStyles.textContent = `
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes popIn {
+                        0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+                        50% { transform: scale(1.1) rotate(5deg); }
+                        100% { transform: scale(1) rotate(0deg); opacity: 1; }
+                    }
+                    @keyframes floatHearts {
+                        0%, 100% { transform: translateY(0px) rotate(0deg); }
+                        25% { transform: translateY(-10px) rotate(5deg); }
+                        50% { transform: translateY(-20px) rotate(-5deg); }
+                        75% { transform: translateY(-5px) rotate(3deg); }
+                    }
+                    @keyframes pulse {
+                        0%, 100% { transform: scale(1); }
+                        50% { transform: scale(1.05); }
+                    }
+                `;
+                document.head.appendChild(animationStyles);
+
+                // Add to page
+                document.body.appendChild(overlay);
+
+                // Close when clicked/tapped
+                overlay.addEventListener('click', () => {
+                    overlay.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        overlay.remove();
+                        animationStyles.remove();
+                    }, 300);
+                });
+
+                // Add fadeOut animation
+                const fadeOutStyle = document.createElement('style');
+                fadeOutStyle.textContent = `
+                    @keyframes fadeOut {
+                        from { opacity: 1; }
+                        to { opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(fadeOutStyle);
+
+                // Prevent scrolling while popup is open
+                document.body.style.overflow = 'hidden';
+                
+                // Restore scrolling when popup closes
+                overlay.addEventListener('click', () => {
+                    setTimeout(() => {
+                        document.body.style.overflow = '';
+                    }, 300);
+                });
             }
 
             // Initialize special features
