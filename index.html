@@ -3652,7 +3652,7 @@
                 { slider: 'appreciation-slider', display: 'appreciation-value', suffix: '%' },
                 { slider: 'management-slider', display: 'management-value', suffix: '%' },
                 { slider: 'maintenance-slider', display: 'maintenance-value', suffix: '%' },
-                { slider: 'rental-vacancy-slider', display: 'rental-vacancy-value', suffix: '%' },
+                { slider: 'vacancy-slider', display: 'vacancy-value', suffix: '%' },
                 { slider: 'commission-rate-slider', display: 'commission-rate-display', suffix: '%' },
                 { slider: 'listing-split-slider', display: 'listing-split-display', suffix: '%' },
                 { slider: 'selling-split-slider', display: 'selling-split-display', suffix: '%' }
@@ -4103,7 +4103,7 @@
                 const insurance = parseFloat(document.getElementById('rental-insurance').value);
                 const managementPercent = parseFloat(document.getElementById('management-slider').value);
                 const maintenancePercent = parseFloat(document.getElementById('maintenance-slider').value);
-                const vacancyPercent = parseFloat(document.getElementById('rental-vacancy-slider').value);
+                const vacancyPercent = parseFloat(document.getElementById('vacancy-slider').value);
                 
                 // Calculate monthly expenses
                 const effectiveRentalIncome = rentalIncome * (1 - vacancyPercent / 100);
