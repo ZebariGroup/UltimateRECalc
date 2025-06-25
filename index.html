@@ -2032,20 +2032,21 @@
             </div>
             
             <div class="warning-box">
-                <strong><i class="fas fa-exclamation-triangle"></i> Important:</strong> 
-                To access real MLS data, you must be a licensed real estate professional and get approval from your local MLS organization.
+                <strong><i class="fas fa-info-circle"></i> Getting Started:</strong> 
+                This application requires a property data source to function. Choose from traditional MLS APIs (requires licensing) or alternative free/low-cost options below.
             </div>
 
             <div class="setup-steps">
                 <div class="setup-step">
-                    <h3>Step 1: Get MLS Authorization</h3>
-                    <p>Contact your local Multiple Listing Service (MLS) to request data access. You'll need:</p>
+                    <h3>Step 1: Choose Your Data Path</h3>
+                    <p>You have two main options for property data:</p>
                     <ul>
-                        <li>Active real estate license</li>
-                        <li>MLS membership</li>
-                        <li>Agreement to MLS terms and IDX/VOW policies</li>
-                        <li>Application for third-party data access</li>
+                        <li><strong>Traditional MLS:</strong> Requires real estate license and MLS membership (most comprehensive data)</li>
+                        <li><strong>Alternative Sources:</strong> No licensing required, varying costs and coverage (see options below)</li>
                     </ul>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #6b7280;">
+                        For MLS access, contact your local Multiple Listing Service. For alternatives, sign up directly with the data providers listed below.
+                    </p>
                 </div>
 
                 <div class="setup-step">
@@ -2248,168 +2249,10 @@ const DATA_CONFIG = {
                             cost: '1000 free requests/month'
                         }
                     }
-                },
-                
-                // Fallback to demo data when no real API is configured
-                useDemoData: true
+                }
             };
 
-            // Demo MLS Database - Replace with real API calls when you have MLS access
-            const demoMLSData = [
-                {
-                    id: 'DEMO001',
-                    address: '123 Oak Street, Austin, TX 78701',
-                    price: 425000,
-                    bedrooms: 3,
-                    bathrooms: 2,
-                    sqft: 1850,
-                    propertyType: 'single-family',
-                    status: 'active',
-                    listDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days ago
-                    photo: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-                    propertyTax: 4200,
-                    hoa: 0,
-                    insurance: 1400,
-                    estimatedRent: 2400,
-                    description: 'Beautiful single-family home in downtown Austin - DEMO DATA',
-                    yearBuilt: 2018,
-                    lotSize: 0.25
-                },
-                {
-                    id: 'DEMO002', 
-                    address: '456 Pine Avenue, Austin, TX 78702',
-                    price: 385000,
-                    bedrooms: 4,
-                    bathrooms: 3,
-                    sqft: 2100,
-                    propertyType: 'single-family',
-                    status: 'active',
-                    listDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 days ago
-                    photo: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=300&fit=crop',
-                    propertyTax: 3850,
-                    hoa: 150,
-                    insurance: 1200,
-                    estimatedRent: 2200,
-                    description: 'Spacious family home with modern amenities - DEMO DATA',
-                    yearBuilt: 2015,
-                    lotSize: 0.3
-                },
-                {
-                    id: 'DEMO003',
-                    address: '789 Maple Drive, Austin, TX 78703', 
-                    price: 750000,
-                    bedrooms: 3,
-                    bathrooms: 2.5,
-                    sqft: 2200,
-                    propertyType: 'condo',
-                    status: 'pending',
-                    listDate: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 12 days ago
-                    photo: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop',
-                    propertyTax: 6200,
-                    hoa: 350,
-                    insurance: 1800,
-                    estimatedRent: 3200,
-                    description: 'Luxury condo with city views - DEMO DATA',
-                    yearBuilt: 2020,
-                    lotSize: 0
-                },
-                {
-                    id: 'DEMO004',
-                    address: '321 Cedar Lane, Austin, TX 78704',
-                    price: 295000,
-                    bedrooms: 2,
-                    bathrooms: 2,
-                    sqft: 1200,
-                    propertyType: 'townhouse',
-                    status: 'active',
-                    listDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 day ago
-                    photo: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=400&h=300&fit=crop',
-                    propertyTax: 2950,
-                    hoa: 200,
-                    insurance: 900,
-                    estimatedRent: 1800,
-                    description: 'Charming townhouse in trendy neighborhood - DEMO DATA',
-                    yearBuilt: 2010,
-                    lotSize: 0.1
-                },
-                {
-                    id: 'DEMO005',
-                    address: '654 Birch Court, Austin, TX 78705',
-                    price: 525000,
-                    bedrooms: 4,
-                    bathrooms: 3.5,
-                    sqft: 2800,
-                    propertyType: 'single-family',
-                    status: 'sold',
-                    listDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days ago
-                    photo: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop',
-                    propertyTax: 5250,
-                    hoa: 0,
-                    insurance: 1600,
-                    estimatedRent: 2800,
-                    description: 'Recently sold - excellent investment opportunity - DEMO DATA',
-                    yearBuilt: 2017,
-                    lotSize: 0.4
-                },
-                // Adding more diverse demo data
-                {
-                    id: 'DEMO006',
-                    address: '1234 Main Street, Houston, TX 77001',
-                    price: 650000,
-                    bedrooms: 4,
-                    bathrooms: 3,
-                    sqft: 2400,
-                    propertyType: 'single-family',
-                    status: 'active',
-                    listDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                    photo: 'https://images.unsplash.com/photo-1566908829077-2d7ef0191e92?w=400&h=300&fit=crop',
-                    propertyTax: 6500,
-                    hoa: 0,
-                    insurance: 1800,
-                    estimatedRent: 2800,
-                    description: 'Modern home in Houston downtown area - DEMO DATA',
-                    yearBuilt: 2019,
-                    lotSize: 0.3
-                },
-                {
-                    id: 'DEMO007',
-                    address: '567 Elm Avenue, Dallas, TX 75201',
-                    price: 480000,
-                    bedrooms: 3,
-                    bathrooms: 2.5,
-                    sqft: 1900,
-                    propertyType: 'townhouse',
-                    status: 'active',
-                    listDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                    photo: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop',
-                    propertyTax: 4800,
-                    hoa: 250,
-                    insurance: 1300,
-                    estimatedRent: 2200,
-                    description: 'Contemporary townhouse in Dallas business district - DEMO DATA',
-                    yearBuilt: 2021,
-                    lotSize: 0.15
-                },
-                {
-                    id: 'DEMO008',
-                    address: '890 Beach Drive, Miami, FL 33139',
-                    price: 1200000,
-                    bedrooms: 2,
-                    bathrooms: 2,
-                    sqft: 1400,
-                    propertyType: 'condo',
-                    status: 'active',
-                    listDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                    photo: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop',
-                    propertyTax: 12000,
-                    hoa: 800,
-                    insurance: 2500,
-                    estimatedRent: 4500,
-                    description: 'Luxury oceanfront condo with stunning views - DEMO DATA',
-                    yearBuilt: 2022,
-                    lotSize: 0
-                }
-            ];
+
 
             // Real MLS API Functions
             class MLSAPIManager {
@@ -2431,8 +2274,8 @@ const DATA_CONFIG = {
                     } else if (DATA_CONFIG.alternative.publicRecords.enabled) {
                         return await this.searchPublicRecords(searchCriteria);
                     } else {
-                        // Fallback to demo data
-                        return this.searchDemoData(searchCriteria);
+                        // No data sources configured
+                        return [];
                     }
                 }
 
@@ -2472,8 +2315,8 @@ const DATA_CONFIG = {
                         
                     } catch (error) {
                         console.error('Bridge API Error:', error);
-                        // Fallback to demo data on API error
-                        return this.searchDemoData(searchCriteria);
+                        // Return empty array on API error
+                        return [];
                     }
                 }
 
@@ -2513,30 +2356,12 @@ const DATA_CONFIG = {
                         
                     } catch (error) {
                         console.error('Spark API Error:', error);
-                        // Fallback to demo data on API error
-                        return this.searchDemoData(searchCriteria);
+                        // Return empty array on API error
+                        return [];
                     }
                 }
 
-                searchDemoData(searchCriteria) {
-                    const { searchTerm, minPrice, maxPrice, minBedrooms, minBathrooms, propertyType, status } = searchCriteria;
-                    
-                    return demoMLSData.filter(property => {
-                        const matchesSearch = !searchTerm || 
-                            property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            property.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            property.description.toLowerCase().includes(searchTerm.toLowerCase());
-                        
-                        const matchesPrice = property.price >= minPrice && property.price <= maxPrice;
-                        const matchesBedrooms = property.bedrooms >= minBedrooms;
-                        const matchesBathrooms = property.bathrooms >= minBathrooms;
-                        const matchesType = !propertyType || property.propertyType === propertyType;
-                        const matchesStatus = status === 'all' || property.status === status;
 
-                        return matchesSearch && matchesPrice && matchesBedrooms && 
-                               matchesBathrooms && matchesType && matchesStatus;
-                    });
-                }
 
                 normalizeBridgeData(properties) {
                     return properties.map(prop => ({
@@ -2631,7 +2456,7 @@ const DATA_CONFIG = {
                         
                     } catch (error) {
                         console.error('Rentals API Error:', error);
-                        return this.searchDemoData(searchCriteria);
+                        return [];
                     }
                 }
 
@@ -2663,7 +2488,7 @@ const DATA_CONFIG = {
                         
                     } catch (error) {
                         console.error('Scraping API Error:', error);
-                        return this.searchDemoData(searchCriteria);
+                        return [];
                     }
                 }
 
@@ -2690,7 +2515,7 @@ const DATA_CONFIG = {
                         
                     } catch (error) {
                         console.error('Public Records API Error:', error);
-                        return this.searchDemoData(searchCriteria);
+                        return [];
                     }
                 }
 
@@ -2717,36 +2542,19 @@ const DATA_CONFIG = {
                 }
 
                 parseScrapedData(html, searchCriteria) {
-                    // Basic HTML parsing - in production, use proper HTML parser
+                    // Parse actual HTML content from scraped pages
                     try {
-                        // This is a simplified example - real implementation would need proper parsing
-                        const mockScrapedData = [
-                            {
-                                id: 'SCRAPED_001',
-                                address: '123 Scraped Street, ' + (searchCriteria.city || 'Austin') + ', ' + (searchCriteria.state || 'TX'),
-                                price: 450000,
-                                bedrooms: 3,
-                                bathrooms: 2,
-                                sqft: 1800,
-                                propertyType: 'single-family',
-                                status: 'active',
-                                listDate: new Date().toISOString().split('T')[0],
-                                photo: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop',
-                                propertyTax: this.estimatePropertyTax(450000),
-                                hoa: 0,
-                                insurance: this.estimateInsurance(450000),
-                                estimatedRent: this.estimateRent(450000),
-                                description: 'Property found via web scraping - verify details independently',
-                                yearBuilt: 2020,
-                                lotSize: 0.25
-                            }
-                        ];
+                        // This is where you would implement real HTML parsing
+                        // Example: Use DOMParser, Cheerio, or similar to extract property data
+                        // const parser = new DOMParser();
+                        // const doc = parser.parseFromString(html, 'text/html');
+                        // Extract property listings from the parsed HTML
                         
-                        return mockScrapedData.filter(prop => {
-                            const matchesPrice = prop.price >= (searchCriteria.minPrice || 0) && 
-                                               prop.price <= (searchCriteria.maxPrice || Infinity);
-                            return matchesPrice;
-                        });
+                        console.log('HTML content received for parsing:', html.length, 'characters');
+                        
+                        // Return empty array until real parsing is implemented
+                        // Replace this with actual HTML parsing logic
+                        return [];
                     } catch (error) {
                         console.error('HTML parsing error:', error);
                         return [];
@@ -2818,9 +2626,9 @@ const DATA_CONFIG = {
                     banner.style.borderLeftColor = '#1e40af';
                     bannerText.innerHTML = '<strong>Alternative Data:</strong> Using free/low-cost property data sources. <span style="opacity: 0.8;">See modal for upgrade options</span>';
                 } else {
-                    banner.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
-                    banner.style.borderLeftColor = '#92400e';
-                    bannerText.innerHTML = '<strong>Demo Mode:</strong> Currently showing sample data. <a href="#" onclick="showMLSSetupModal()">Connect to real property data →</a>';
+                    banner.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                    banner.style.borderLeftColor = '#991b1b';
+                    bannerText.innerHTML = '<strong>No Data Source:</strong> Configure a data source to see property listings. <a href="#" onclick="showMLSSetupModal()">Setup data connection →</a>';
                 }
             }
 
@@ -2891,13 +2699,34 @@ const DATA_CONFIG = {
             // Display search results
             function displaySearchResults(results) {
                 if (results.length === 0) {
-                    propertyResults.innerHTML = `
-                        <div style="padding: 20px; text-align: center; color: #6b7280;">
-                            <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px;"></i>
-                            <p>No properties found matching your criteria.</p>
-                            <p style="font-size: 0.875rem;">Try adjusting your search filters.</p>
-                        </div>
-                    `;
+                    // Check if any data source is configured
+                    const isAnyDataSourceEnabled = 
+                        (DATA_CONFIG.mls.bridge.enabled && DATA_CONFIG.mls.bridge.apiKey) ||
+                        (DATA_CONFIG.mls.spark.enabled && DATA_CONFIG.mls.spark.apiKey) ||
+                        DATA_CONFIG.alternative.rentals.rentalsApi.enabled ||
+                        DATA_CONFIG.alternative.scraping.scrapingBee.enabled ||
+                        DATA_CONFIG.alternative.publicRecords.enabled;
+                    
+                    if (!isAnyDataSourceEnabled) {
+                        propertyResults.innerHTML = `
+                            <div style="padding: 30px; text-align: center; color: #ef4444;">
+                                <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.7;"></i>
+                                <h3 style="margin: 0 0 10px 0;">No Data Source Configured</h3>
+                                <p style="margin-bottom: 15px;">Connect to a property data source to see listings here.</p>
+                                <button onclick="showMLSSetupModal()" style="background: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                                    <i class="fas fa-cog"></i> Setup Data Source
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        propertyResults.innerHTML = `
+                            <div style="padding: 20px; text-align: center; color: #6b7280;">
+                                <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                                <p>No properties found matching your criteria.</p>
+                                <p style="font-size: 0.875rem;">Try adjusting your search filters or check your data source connection.</p>
+                            </div>
+                        `;
+                    }
                     return;
                 }
 
@@ -2991,7 +2820,7 @@ const DATA_CONFIG = {
                 filter.addEventListener('change', searchProperties);
             });
 
-            // Initial search to show sample properties
+            // Initial search to check for available data
             setTimeout(() => {
                 searchProperties();
             }, 500);
