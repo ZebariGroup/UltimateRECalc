@@ -954,26 +954,7 @@
                 <i class="far fa-moon"></i>
             </div>
             
-            <!-- Add logo upload button -->
-            <div class="dropdown" style="margin-right: 15px;">
-                <button class="btn-primary" style="display: flex; align-items: center; gap: 5px;">
-                    <i class="fas fa-cog"></i> Your Logo
-                </button>
-                <div class="dropdown-content" style="width: 250px; padding: 15px;">
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 8px;">Company Logo</label>
-                        <input type="file" id="logo-upload" accept="image/*" style="display: none;">
-                        <div id="logo-preview" style="width: 100%; height: 60px; border: 2px dashed var(--border-color); border-radius: 4px; display: flex; justify-content: center; align-items: center; margin-bottom: 8px; cursor: pointer; background-size: contain; background-repeat: no-repeat; background-position: center;">
-                            <span id="logo-placeholder">Click to upload logo</span>
-                        </div>
-                        <button id="remove-logo" class="btn-red" style="width: 100%; display: none;">Remove Logo</button>
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 8px;">Company Name</label>
-                        <input type="text" id="company-name" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--card-bg); color: var(--text-color);" placeholder="Enter company name">
-                    </div>
-                </div>
-            </div>
+
             
             <span style="margin-right: 15px; font-size: 0.875rem; opacity: 0.8;">
                 <a href="http://www.zebarigroup.com" target="_blank" style="color: inherit; text-decoration: none;">
@@ -3062,34 +3043,7 @@
                 });
             }
 
-            // Add smart defaults based on location (if geolocation available)
-            function setSmartDefaults() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition((position) => {
-                        // This is a simple example - in reality you'd use a service to get property values by location
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        
-                        // Set defaults based on rough location (this is very simplified)
-                        if (lat > 32 && lat < 42 && lng > -125 && lng < -114) {
-                            // West Coast - higher property values
-                            document.getElementById('property-price').value = '650000';
-                            document.getElementById('inv-purchase-price').value = '550000';
-                            document.getElementById('rental-income').value = '3500';
-                        } else if (lat > 40 && lat < 45 && lng > -75 && lng < -70) {
-                            // Northeast - higher property values
-                            document.getElementById('property-price').value = '500000';
-                            document.getElementById('inv-purchase-price').value = '450000';
-                            document.getElementById('rental-income').value = '2800';
-                        }
-                        
-                        showToast('📍 Defaults adjusted for your location', 'info');
-                    }, () => {
-                        // Geolocation failed, use national averages
-                        console.log('Geolocation not available, using default values');
-                    });
-                }
-            }
+
 
             // Performance optimization: Debounce calculations
             function debounce(func, wait) {
@@ -3438,43 +3392,26 @@
                     }
                 });
                 
-                // Smart defaults that make sense for real estate professionals
-                const smartRecommendations = {
-                    'property-price': () => {
-                        const currentHour = new Date().getHours();
-                        if (currentHour >= 9 && currentHour <= 17) {
-                            // Business hours - suggest higher-end properties
-                            return Math.floor(Math.random() * 200000) + 400000; // $400k-$600k
-                        } else {
-                            // After hours - suggest starter homes
-                            return Math.floor(Math.random() * 150000) + 250000; // $250k-$400k
+                // Smart commission rate suggestions based on property value
+                const commissionField = document.getElementById('commission-rate-slider');
+                if (commissionField) {
+                    commissionField.addEventListener('input', () => {
+                        const salePrice = parseFloat(document.getElementById('sale-price')?.value || 0);
+                        if (salePrice > 0) {
+                            let optimalRate = 6.0; // Default rate
+                            if (salePrice > 500000) optimalRate = 5.5;
+                            else if (salePrice < 300000) optimalRate = 6.5;
+                            
+                            // Show suggestion if significantly different
+                            const currentRate = parseFloat(commissionField.value);
+                            if (Math.abs(currentRate - optimalRate) > 0.5) {
+                                setTimeout(() => {
+                                    showToast(`💡 Consider ${optimalRate}% for this price range`, 'info');
+                                }, 500);
+                            }
                         }
-                    },
-                    'commission-rate-slider': () => {
-                        // Smart commission rate based on property value
-                        const propertyPrice = parseFloat(document.getElementById('sale-price')?.value || 0);
-                        if (propertyPrice > 500000) return 5.5; // Lower rate for high-value properties
-                        if (propertyPrice > 300000) return 6.0; // Standard rate
-                        return 6.5; // Higher rate for lower-value properties
-                    }
-                };
-                
-                // Auto-suggest optimal values
-                Object.keys(smartRecommendations).forEach(fieldId => {
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.addEventListener('focus', () => {
-                            setTimeout(() => {
-                                const suggestion = smartRecommendations[fieldId]();
-                                if (suggestion && field.value == field.defaultValue) {
-                                    field.value = suggestion;
-                                    field.dispatchEvent(new Event('input'));
-                                    showToast('💡 Smart suggestion applied!', 'info');
-                                }
-                            }, 1000);
-                        });
-                    }
-                });
+                    });
+                }
             }
 
             function triggerBillieMode() {
@@ -4211,15 +4148,7 @@
                         doc.setTextColor(107, 114, 128);
                         doc.text(`Generated on ${new Date().toLocaleDateString()}`, 20, 30);
                         
-                        // Add company branding if available
-                        try {
-                            const companyName = localStorage.getItem('companyName');
-                            if (companyName) {
-                                doc.text(`Prepared by: ${companyName}`, 20, 35);
-                            }
-                        } catch (e) {
-                            // Ignore if localStorage not available
-                        }
+
                         
                         let yPos = 50;
                         
@@ -4322,14 +4251,6 @@
                 }
 
                 getCompanyBranding() {
-                    try {
-                        const companyName = localStorage.getItem('companyName');
-                        if (companyName) {
-                            return `<p style="color: #6b7280; margin: 5px 0 0 0; font-size: 14px;">Prepared by: ${companyName}</p>`;
-                        }
-                    } catch (e) {
-                        // Ignore if localStorage not available
-                    }
                     return '';
                 }
 
@@ -4518,7 +4439,6 @@
             // Initialize mobile enhancements
             setupInputValidation();
             setupAutoSave();
-            setSmartDefaults();
             
             // Load any auto-saved data
             setTimeout(() => {
