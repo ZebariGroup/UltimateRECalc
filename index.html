@@ -4167,17 +4167,27 @@
                 const otherFees = inspection + survey + attorneyFees;
                 const totalClosingCosts = titleInsurance + totalRecordingFees + transferTax + totalLenderFees + otherFees + realEstateCommission;
                 
-                // Update DOM elements
-                document.getElementById('title-insurance-cost').textContent = '$' + titleInsurance.toLocaleString();
-                document.getElementById('attorney-fees-cost').textContent = '$' + attorneyFees.toLocaleString();
-                document.getElementById('recording-fees-cost').textContent = '$' + totalRecordingFees.toLocaleString();
-                document.getElementById('transfer-tax-cost').textContent = '$' + transferTax.toLocaleString();
-                document.getElementById('lender-fees-cost').textContent = '$' + totalLenderFees.toLocaleString();
-                document.getElementById('inspection-cost').textContent = '$' + inspection.toLocaleString();
-                document.getElementById('survey-cost').textContent = '$' + survey.toLocaleString();
-                document.getElementById('commission-cost').textContent = '$' + realEstateCommission.toLocaleString();
-                document.getElementById('total-closing-costs').textContent = '$' + totalClosingCosts.toLocaleString();
-                document.getElementById('closing-percentage').textContent = ((totalClosingCosts / salesPrice) * 100).toFixed(2) + '%';
+                // Update DOM elements that actually exist in the HTML
+                document.getElementById('buyer-total').textContent = '$' + totalClosingCosts.toLocaleString();
+                document.getElementById('seller-total').textContent = '$' + realEstateCommission.toLocaleString();
+                document.getElementById('mortgage-fees').textContent = '$' + totalLenderFees.toLocaleString();
+                document.getElementById('settlement-fee').textContent = '$' + attorneyFees.toLocaleString();
+                document.getElementById('title-search').textContent = '$' + Math.round(titleInsurance/2).toLocaleString();
+                document.getElementById('association-fee').textContent = '$250';
+                document.getElementById('survey').textContent = '$' + survey.toLocaleString();
+                document.getElementById('termite').textContent = '$' + inspection.toLocaleString();
+                document.getElementById('lien-search').textContent = '$75';
+                document.getElementById('commission').textContent = '$' + realEstateCommission.toLocaleString();
+                document.getElementById('owners-policy').textContent = '$' + Math.round(titleInsurance/2).toLocaleString();
+                document.getElementById('lenders-policy').textContent = '$' + Math.round(titleInsurance/2).toLocaleString();
+                document.getElementById('environmental').textContent = '$100';
+                document.getElementById('alta-9').textContent = '$50';
+                document.getElementById('alta-5').textContent = '$25';
+                document.getElementById('alta-4').textContent = '$25';
+                document.getElementById('recording').textContent = '$' + totalRecordingFees.toLocaleString();
+                document.getElementById('doc-stamp-mortgage').textContent = '$' + Math.round(transferTax/2).toLocaleString();
+                document.getElementById('intangible-tax').textContent = '$' + Math.round(transferTax/3).toLocaleString();
+                document.getElementById('doc-stamp-deed').textContent = '$' + Math.round(transferTax/2).toLocaleString();
                 
                 // Update closing costs chart
                 if (closingChart) {
