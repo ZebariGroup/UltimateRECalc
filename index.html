@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="UltimateRECalc">
-    <meta name="theme-color" content="#2563eb">
-    <title>UltimateRECalc - Professional Calculator Suite by Zebari Group IT</title>
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlVsdGltYXRlUkVDYWxjIiwKICAic2hvcnRfbmFtZSI6ICJSRUNhbGMiLAogICJkZXNjcmlwdGlvbiI6ICJQcm9mZXNzaW9uYWwgUmVhbCBFc3RhdGUgQ2FsY3VsYXRvciBTdWl0ZSIsCiAgInN0YXJ0X3VybCI6ICIuLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzI1NjNlYiIsCiAgInRoZW1lX2NvbG9yIjogIiMyNTYzZWIiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNVEk0SWlCb1pXbG5hSFE5SWpFeU9DSWdkbWxsZDBKdmVEMGlNQ0F3SURFME5DQXhORFFpSUdacGJHdzlJaU16TlRrM1pqY2lQZ29nSUNBZ1BISmxZM1FnZUQwaU9DSWdlVDBpT0NJZ2QybGtkR2c5SWpFeU9DSWdhR1ZwWjJoMFBTSXhNamdpSUhKNFBTSTJJaUJtYVd4c1BTSWpNalUyTTJWaUlpOCtDaUFnSUM0OEwzTjJaejQiLAogICAgICAic2l6ZXMiOiAiMTQ0eDE0NCIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
-    
-    <!-- Preload critical resources -->
+            <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-title" content="UltimateRECalc">
+        <meta name="theme-color" content="#2563eb">
+                <title>UltimateRECalc - Professional Calculator Suite by Zebari Group IT</title>
+        
+        <!-- Favicon -->
+        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%232563eb'/><text x='50' y='65' font-family='Arial' font-size='60' fill='white' text-anchor='middle'>🧮</text></svg>">
+        
+        <!-- Preload critical resources -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" as="script">
     <!-- Chart.js for visualizations -->
@@ -68,62 +69,179 @@
         }
         
         nav {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         .mobile-menu-button {
             display: none;
-            padding: 20px;
-            background: none;
+            background: var(--primary-color);
+            color: white;
             border: none;
-            color: var(--text-color);
-            cursor: pointer;
-        }
-
-        .mobile-menu {
-        display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-            padding: 10px 0;
-        }
-
-        .mobile-menu .tab {
             padding: 12px 20px;
-            display: block;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            min-height: 48px;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+        
+        .mobile-menu-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
+        }
+        
+        .mobile-menu-button i {
+            font-size: 18px;
+        }
+        
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            text-align: left;
-            border-bottom: none;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .mobile-menu-overlay.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-menu-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: slideInMobile 0.3s ease;
+        }
+        
+        @keyframes slideInMobile {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .mobile-menu-header h3 {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .mobile-menu-close {
+            background: #ef4444;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+        
+        .mobile-menu-close:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+        
+        .mobile-menu-items {
+            padding: 20px 0;
+        }
+        
+        .mobile-tab {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            min-height: 56px;
+        }
+        
+        .mobile-tab:hover {
+            background: rgba(37, 99, 235, 0.1);
+            border-left-color: var(--primary-color);
+        }
+        
+        .mobile-tab.active {
+            background: rgba(37, 99, 235, 0.15);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .mobile-tab i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+        
+        .mobile-tab span {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .mobile-menu-footer {
+            padding: 20px 25px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
         }
 
         @media (max-width: 768px) {
             .mobile-menu-button {
-                display: block;
+                display: flex;
             }
 
             .tabs {
                 display: none;
             }
-
-            .mobile-menu.show {
-                display: block;
-            }
-
-            .actions {
-                gap: 10px;
-            }
-
-            
 
             nav {
                 padding: 15px;
@@ -885,84 +1003,136 @@
                 gap: 8px;
             }
             
-            #save-calc, #load-calc {
+            .actions button {
                 padding: 10px 12px;
                 margin-right: 8px;
                 font-size: 14px;
             }
+            
+            .nav-content {
+                flex-direction: row;
+                align-items: center;
+                gap: 15px;
+            }
         }
         
         @media (max-width: 480px) {
-            #save-calc, #load-calc {
-                padding: 12px;
-                margin-right: 6px;
+            .actions button {
+                padding: 10px;
+                margin-right: 4px;
                 font-size: 16px;
                 min-width: 44px;
             }
             
             .actions {
-                order: -1;
-                width: 100%;
-                justify-content: space-between;
-                margin-bottom: 10px;
+                gap: 6px;
+            }
+            
+            .nav-content {
+                gap: 10px;
+            }
+            
+            .mobile-menu-button span {
+                display: none;
+            }
+            
+            .mobile-menu-button {
+                padding: 12px;
+                min-width: 48px;
             }
         }
     </style>
 </head>
 <body class="dark">
+    <!-- Header with Logo -->
+    <header style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); padding: 15px 0; text-align: center; color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <i class="fas fa-calculator" style="font-size: 2rem;"></i>
+            <h1 style="margin: 0; font-size: 1.75rem; font-weight: 600;">UltimateRECalc</h1>
+        </div>
+        <p style="margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9;">Professional Real Estate Calculator Suite</p>
+    </header>
+
     <!-- Navigation bar -->
     <nav>
-        <div class="logo">
-            <i class="fas fa-calculator"></i>
-            <span>UltimateRECalc</span>
-            <button class="mobile-menu-button">
+        <div class="nav-content">
+            <button class="mobile-menu-button" id="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>
+                <span>Menu</span>
             </button>
-        </div>
-        </div>
-        
-
-        <div class="mobile-menu">
-            <div class="tab active" data-tab="mortgage">Mortgage Calculator</div>
-            <div class="tab" data-tab="investment">Investment Property</div>
-            <div class="tab" data-tab="cashflow">Rental Cash Flow</div>
-            <div class="tab" data-tab="closing">Closing Costs</div>
-            <div class="tab" data-tab="buyer">Buyer Cost Sheet</div>
-            <div class="tab" data-tab="commission">Commission Calculator</div>
-            <div class="tab" data-tab="comparison">Property Comparison</div>
-            <div class="tab" data-tab="report">Generated Report</div>
-        </div>
-        
-        <div class="actions">
-            <button id="save-calc" title="Save Current Calculation (Ctrl+S)" class="btn-primary" style="margin-right: 10px; font-size: 14px; padding: 8px 12px;">
-                <i class="fas fa-save"></i>
-                <span class="action-text" style="margin-left: 5px;">Save</span>
-            </button>
-            <button id="load-calc" title="Load Saved Calculation (Ctrl+L)" class="btn-primary" style="margin-right: 10px; font-size: 14px; padding: 8px 12px;">
-                <i class="fas fa-folder-open"></i>
-                <span class="action-text" style="margin-left: 5px;">Load</span>
-            </button>
-            <button id="presentation-mode" title="Client Presentation Mode" class="btn-primary" style="margin-right: 10px; font-size: 14px; padding: 8px 12px;">
-                <i class="fas fa-presentation-screen"></i>
-                <span class="action-text" style="margin-left: 5px;">Present</span>
-            </button>
-            <div class="theme-toggle">
-                <i class="far fa-sun"></i>
-                <div class="toggle-wrapper" id="theme-toggle">
-                    <div class="toggle-dot"></div>
+            
+            <div class="actions">
+                <button id="save-calc" title="Save Current Calculation (Ctrl+S)" class="btn-primary">
+                    <i class="fas fa-save"></i>
+                    <span class="action-text">Save</span>
+                </button>
+                <button id="load-calc" title="Load Saved Calculation (Ctrl+L)" class="btn-primary">
+                    <i class="fas fa-folder-open"></i>
+                    <span class="action-text">Load</span>
+                </button>
+                <button id="presentation-mode" title="Client Presentation Mode" class="btn-primary">
+                    <i class="fas fa-presentation-screen"></i>
+                    <span class="action-text">Present</span>
+                </button>
+                <div class="theme-toggle">
+                    <i class="far fa-sun"></i>
+                    <div class="toggle-wrapper" id="theme-toggle">
+                        <div class="toggle-dot"></div>
+                    </div>
+                    <i class="far fa-moon"></i>
                 </div>
-                <i class="far fa-moon"></i>
             </div>
-            
+        </div>
 
-            
-            <span style="margin-right: 15px; font-size: 0.875rem; opacity: 0.8;">
-                <a href="http://www.zebarigroup.com" target="_blank" style="color: inherit; text-decoration: none;">
-                    Powered by Zebari Group IT Services
-                </a>
-            </span>
-            
-
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" id="mobile-menu-overlay">
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <h3>Calculators</h3>
+                    <button class="mobile-menu-close" id="mobile-menu-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="mobile-menu-items">
+                    <div class="mobile-tab active" data-tab="mortgage">
+                        <i class="fas fa-home"></i>
+                        <span>Mortgage Calculator</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="investment">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Investment Property</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="cashflow">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Rental Cash Flow</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="closing">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Closing Costs</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="buyer">
+                        <i class="fas fa-user-check"></i>
+                        <span>Buyer Cost Sheet</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="commission">
+                        <i class="fas fa-percentage"></i>
+                        <span>Commission Calculator</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="comparison">
+                        <i class="fas fa-balance-scale"></i>
+                        <span>Property Comparison</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="report">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Generated Report</span>
+                    </div>
+                </div>
+                <div class="mobile-menu-footer">
+                    <a href="http://www.zebarigroup.com" target="_blank" style="color: #6b7280; text-decoration: none; font-size: 0.875rem;">
+                        Powered by Zebari Group IT Services
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
     
@@ -2777,47 +2947,12 @@
                 });
             }
 
-            // Add PWA install prompt
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                showInstallButton();
-            });
-
-            function showInstallButton() {
-                const installButton = document.createElement('button');
-                installButton.textContent = '📱 Install App';
-                installButton.className = 'btn-primary';
-                installButton.style.cssText = `
-                    position: fixed;
-                    bottom: 20px;
-                    left: 20px;
-                    z-index: 1000;
-                    font-size: 14px;
-                    padding: 10px 16px;
-                `;
-                
-                installButton.addEventListener('click', async () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        if (outcome === 'accepted') {
-                            showToast('🎉 App installed successfully!', 'success');
-                        }
-                        deferredPrompt = null;
-                        installButton.remove();
-                    }
+            // PWA functionality - simplified without install prompt
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    // Simple service worker registration for future use
+                    console.log('PWA features available');
                 });
-                
-                document.body.appendChild(installButton);
-                
-                // Auto-hide after 10 seconds
-                setTimeout(() => {
-                    if (installButton.parentNode) {
-                        installButton.remove();
-                    }
-                }, 10000);
             }
 
             // Show saved calculations modal
@@ -3131,88 +3266,11 @@
             `;
             document.head.appendChild(style);
 
-            // Add logo handling code near the top
-            const logoUpload = document.getElementById('logo-upload');
-            const logoPreview = document.getElementById('logo-preview');
-            const logoPlaceholder = document.getElementById('logo-placeholder');
-            const removeLogoBtn = document.getElementById('remove-logo');
-            const companyNameInput = document.getElementById('company-name');
-
-            // Load saved logo and company name
-            try {
-                const savedLogo = localStorage.getItem('companyLogo');
-                const savedCompanyName = localStorage.getItem('companyName');
-                
-                if (savedLogo) {
-                    logoPreview.style.backgroundImage = `url(${savedLogo})`;
-                    logoPlaceholder.style.display = 'none';
-                    removeLogoBtn.style.display = 'block';
-                }
-                
-                if (savedCompanyName) {
-                    companyNameInput.value = savedCompanyName;
-                }
-            } catch (e) {
-                console.warn('Unable to load saved logo:', e);
-            }
-
-            // Logo upload handling
-            logoPreview.addEventListener('click', () => logoUpload.click());
-            
-            logoUpload.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        try {
-                            localStorage.setItem('companyLogo', e.target.result);
-                            logoPreview.style.backgroundImage = `url(${e.target.result})`;
-                            logoPlaceholder.style.display = 'none';
-                            removeLogoBtn.style.display = 'block';
-                        } catch (err) {
-                            console.warn('Unable to save logo:', err);
-                            alert('Unable to save logo. The file might be too large.');
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            removeLogoBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                try {
-                    localStorage.removeItem('companyLogo');
-                    logoPreview.style.backgroundImage = 'none';
-                    logoPlaceholder.style.display = 'block';
-                    removeLogoBtn.style.display = 'none';
-                } catch (e) {
-                    console.warn('Unable to remove logo:', e);
-                }
-            });
-
-            companyNameInput.addEventListener('change', function() {
-                try {
-                    localStorage.setItem('companyName', this.value);
-                } catch (e) {
-                    console.warn('Unable to save company name:', e);
-                }
-            });
+            // Mobile menu variables will be initialized later in the DOM loading
 
             // DOM Elements
             const themeToggle = document.getElementById('theme-toggle');
             const tabs = document.querySelectorAll('.tab');
-            const calculators = ['mortgage-calculator', 'investment-calculator', 'cashflow-calculator', 'closing-calculator', 'buyer-calculator', 'report-calculator'];
-
-            
-            // Chart objects
-            let paymentChart = null;
-            let amortizationChart = null;
-            let investmentChart = null;
-            let expenseChart = null;
-            let reportPaymentChart = null;
-            let reportAmortizationChart = null;
-            let reportInvestmentChart = null;
-            let reportExpenseChart = null;
             
             // Try to use theme preference, with fallback if localStorage is unavailable
             let currentTheme = 'dark';
@@ -3483,20 +3541,29 @@
             // Tab switching functionality
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    // Remove active class from all tabs
+                    // Remove active class from all tabs (both desktop and mobile)
                     tabs.forEach(t => t.classList.remove('active'));
+                    const mobileTabs = document.querySelectorAll('.mobile-tab');
+                    mobileTabs.forEach(t => t.classList.remove('active'));
                     
                     // Add active class to clicked tab
                     tab.classList.add('active');
                     
+                    // Also update mobile tab
+                    const tabId = tab.getAttribute('data-tab');
+                    const matchingMobileTab = document.querySelector(`.mobile-tab[data-tab="${tabId}"]`);
+                    if (matchingMobileTab) {
+                        matchingMobileTab.classList.add('active');
+                    }
+                    
                     // Hide all calculators
+                    const calculators = ['mortgage', 'investment', 'cashflow', 'closing', 'buyer', 'commission', 'comparison', 'report'];
                     calculators.forEach(calc => {
-                        const element = document.getElementById(calc);
+                        const element = document.getElementById(`${calc}-calculator`);
                         if (element) element.classList.add('hidden');
                     });
                     
                     // Show the selected calculator
-                    const tabId = tab.getAttribute('data-tab');
                     const selectedCalculator = document.getElementById(`${tabId}-calculator`);
                     if (selectedCalculator) {
                         selectedCalculator.classList.remove('hidden');
@@ -4421,19 +4488,83 @@
             // Initialize the export manager
             const exportManager = new ExportManager();
 
-            // Add mobile menu handler
-            const mobileMenuButton = document.querySelector('.mobile-menu-button');
-            const mobileMenu = document.querySelector('.mobile-menu');
-            const mobileMenuItems = document.querySelectorAll('.mobile-menu .tab');
+            // Enhanced Mobile Menu Handler
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+            const mobileTabs = document.querySelectorAll('.mobile-tab');
 
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('show');
+            // Check if mobile menu elements exist before adding listeners
+            if (!mobileMenuToggle || !mobileMenuOverlay || !mobileMenuClose) {
+                console.warn('Mobile menu elements not found');
+                return;
+            }
+
+            // Open mobile menu
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenuOverlay.classList.add('show');
+                hapticFeedback('light');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
             });
 
-            mobileMenuItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    mobileMenu.classList.remove('show');
+            // Close mobile menu
+            function closeMobileMenu() {
+                mobileMenuOverlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+
+            // Close when clicking overlay background
+            mobileMenuOverlay.addEventListener('click', (e) => {
+                if (e.target === mobileMenuOverlay) {
+                    closeMobileMenu();
+                }
+            });
+
+            // Handle mobile tab selection
+            mobileTabs.forEach(mobileTab => {
+                mobileTab.addEventListener('click', () => {
+                    // Remove active class from all mobile tabs
+                    mobileTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    mobileTab.classList.add('active');
+                    
+                    // Also update desktop tabs if visible
+                    const tabId = mobileTab.getAttribute('data-tab');
+                    const desktopTabs = document.querySelectorAll('.tab');
+                    desktopTabs.forEach(t => t.classList.remove('active'));
+                    const matchingDesktopTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+                    if (matchingDesktopTab) {
+                        matchingDesktopTab.classList.add('active');
+                    }
+                    
+                    // Hide all calculators and show selected one
+                    const calculators = ['mortgage', 'investment', 'cashflow', 'closing', 'buyer', 'commission', 'comparison', 'report'];
+                    calculators.forEach(calc => {
+                        const element = document.getElementById(`${calc}-calculator`);
+                        if (element) element.classList.add('hidden');
+                    });
+                    
+                    const selectedCalculator = document.getElementById(`${tabId}-calculator`);
+                    if (selectedCalculator) {
+                        selectedCalculator.classList.remove('hidden');
+                    }
+                    
+                    hapticFeedback('medium');
+                    closeMobileMenu();
+                    
+                    // Scroll to top of content
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
+            });
+
+            // Close menu with escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileMenuOverlay.classList.contains('show')) {
+                    closeMobileMenu();
+                }
             });
 
             // Initialize mobile enhancements
