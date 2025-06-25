@@ -4063,7 +4063,7 @@
     
     <script>
         // Chart variables
-        let paymentChart, amortizationChart, investmentChart, expenseChart, commissionChart, comparisonChart, closingChart;
+                    let paymentChart, amortizationChart, investmentChart, expenseChart, commissionChart, comparisonChart, closingChart, helocChart, flipChart, brrrrChart;
         
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -6252,6 +6252,50 @@
                     },
                     options: defaultOptions
                 });
+
+                // HELOC Chart
+                const helocCtx = document.getElementById('heloc-chart').getContext('2d');
+                helocChart = new Chart(helocCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Available Equity', 'Existing Mortgage', 'HELOC Balance'],
+                        datasets: [{
+                            data: [220000, 280000, 0],
+                            backgroundColor: ['#10b981', '#ef4444', '#f59e0b']
+                        }]
+                    },
+                    options: pieOptions
+                });
+
+                // Property Flip Chart
+                const flipCtx = document.getElementById('flip-chart').getContext('2d');
+                flipChart = new Chart(flipCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Purchase', 'Renovation', 'Contingency', 'Carrying', 'Sale Costs', 'Net Profit'],
+                        datasets: [{
+                            label: 'Amount ($)',
+                            data: [180000, 45000, 6750, 13200, 22000, 8050],
+                            backgroundColor: ['#ef4444', '#f59e0b', '#f97316', '#ec4899', '#8b5cf6', '#10b981']
+                        }]
+                    },
+                    options: defaultOptions
+                });
+
+                // BRRRR Strategy Chart
+                const brrrrCtx = document.getElementById('brrrr-chart').getContext('2d');
+                brrrrChart = new Chart(brrrrCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Purchase', 'Rehab', 'Closing', 'Refinance', 'Cash Left', 'Monthly Flow'],
+                        datasets: [{
+                            label: 'Amount ($)',
+                            data: [120000, 25000, 4000, -135000, 14000, 542],
+                            backgroundColor: ['#ef4444', '#f59e0b', '#f97316', '#3b82f6', '#10b981', '#06b6d4']
+                        }]
+                    },
+                    options: defaultOptions
+                });
             }
             
             // Reinitialize charts when theme changes
@@ -6264,6 +6308,9 @@
                 if (commissionChart) commissionChart.destroy();
                 if (comparisonChart) comparisonChart.destroy();
                 if (closingChart) closingChart.destroy();
+                if (helocChart) helocChart.destroy();
+                if (flipChart) flipChart.destroy();
+                if (brrrrChart) brrrrChart.destroy();
                 
                 // Initialize new charts
                 initializeCharts();
@@ -6275,6 +6322,9 @@
                 calculateClosing();
                 calculateBuyer();
                 calculateCommission();
+                calculateHELOC();
+                calculateFlip();
+                calculateBRRRR();
             }
             
             // Calculate mortgage
@@ -7000,6 +7050,16 @@
                     document.getElementById('heloc-max-credit-line').textContent = '$' + Math.round(maxCreditLine).toLocaleString();
                     document.getElementById('heloc-available-borrow').textContent = '$' + Math.round(availableToBorrow).toLocaleString();
 
+                    // Update HELOC chart
+                    if (helocChart) {
+                        helocChart.data.datasets[0].data = [
+                            Math.round(currentEquity - currentBalance),
+                            Math.round(existingMortgage),
+                            Math.round(currentBalance)
+                        ];
+                        helocChart.update();
+                    }
+
                     // Auto-scroll to results on mobile devices
                     autoScrollToResults('heloc');
 
@@ -7061,6 +7121,19 @@
                     document.getElementById('flip-total-investment').textContent = '$' + Math.round(totalInvestment).toLocaleString();
                     document.getElementById('flip-arv-display').textContent = '$' + arv.toLocaleString();
                     document.getElementById('flip-profit-display').textContent = '$' + Math.round(netProfit).toLocaleString();
+
+                    // Update Property Flip chart
+                    if (flipChart) {
+                        flipChart.data.datasets[0].data = [
+                            Math.round(purchasePrice + closingCosts),
+                            Math.round(renovationBudget),
+                            Math.round(contingencyAmount),
+                            Math.round(totalCarryingCosts),
+                            Math.round(saleCosts),
+                            Math.round(netProfit)
+                        ];
+                        flipChart.update();
+                    }
 
                     // Auto-scroll to results on mobile devices
                     autoScrollToResults('flip');
@@ -7135,6 +7208,19 @@
                     document.getElementById('brrrr-net-cashflow').textContent = '$' + Math.round(netCashFlow).toLocaleString();
                     document.getElementById('brrrr-coc-roi').textContent = cocRoi.toFixed(1) + '%';
                     document.getElementById('brrrr-coc-roi').style.color = cocRoi > 0 ? '#10b981' : '#ef4444';
+
+                    // Update BRRRR Strategy chart
+                    if (brrrrChart) {
+                        brrrrChart.data.datasets[0].data = [
+                            Math.round(purchasePrice),
+                            Math.round(rehabCosts),
+                            Math.round(closingCosts),
+                            -Math.round(refinanceAmount),
+                            Math.round(Math.max(cashLeftInDeal, 0)),
+                            Math.round(netCashFlow * 12) // Annual cash flow
+                        ];
+                        brrrrChart.update();
+                    }
 
                     // Auto-scroll to results on mobile devices
                     autoScrollToResults('brrrr');
