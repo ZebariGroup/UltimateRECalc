@@ -1887,6 +1887,26 @@
                         <i class="fas fa-balance-scale"></i>
                         <span>Property Comparison</span>
                     </div>
+                    <div class="mobile-tab" data-tab="rentbuy">
+                        <i class="fas fa-home-alt"></i>
+                        <span>Rent vs Buy</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="refinance">
+                        <i class="fas fa-redo-alt"></i>
+                        <span>Refinancing</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="heloc">
+                        <i class="fas fa-piggy-bank"></i>
+                        <span>HELOC</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="flip">
+                        <i class="fas fa-hammer"></i>
+                        <span>Property Flip</span>
+                    </div>
+                    <div class="mobile-tab" data-tab="brrrr">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>BRRRR Strategy</span>
+                    </div>
                     <div class="mobile-tab" data-tab="report">
                         <i class="fas fa-file-alt"></i>
                         <span>Generated Report</span>
@@ -1981,6 +2001,11 @@
             <div class="tab" data-tab="buyer">Buyer Cost Sheet</div>
             <div class="tab" data-tab="commission">Commission Calculator</div>
             <div class="tab" data-tab="comparison">Property Comparison</div>
+            <div class="tab" data-tab="rentbuy">Rent vs Buy</div>
+            <div class="tab" data-tab="refinance">Refinancing</div>
+            <div class="tab" data-tab="heloc">HELOC</div>
+            <div class="tab" data-tab="flip">Property Flip</div>
+            <div class="tab" data-tab="brrrr">BRRRR Strategy</div>
             <div class="tab" data-tab="report">Generated Report</div>
         </div>
 
@@ -2059,6 +2084,52 @@
                         <h3>Property Comparison</h3>
                         <p>Compare multiple properties side-by-side with detailed analysis.</p>
                         <button class="card-button">Compare</button>
+                    </div>
+
+                    <!-- New Advanced Calculators -->
+                    <div class="calculator-card" data-calculator="rentbuy">
+                        <div class="card-icon">
+                            <i class="fas fa-home-alt"></i>
+                        </div>
+                        <h3>Rent vs Buy</h3>
+                        <p>Determine whether renting or buying makes more financial sense.</p>
+                        <button class="card-button">Analyze</button>
+                    </div>
+
+                    <div class="calculator-card" data-calculator="refinance">
+                        <div class="card-icon">
+                            <i class="fas fa-redo-alt"></i>
+                        </div>
+                        <h3>Refinancing</h3>
+                        <p>Calculate savings and break-even point for refinancing your mortgage.</p>
+                        <button class="card-button">Calculate</button>
+                    </div>
+
+                    <div class="calculator-card" data-calculator="heloc">
+                        <div class="card-icon">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <h3>HELOC Calculator</h3>
+                        <p>Analyze home equity line of credit options and payments.</p>
+                        <button class="card-button">Calculate</button>
+                    </div>
+
+                    <div class="calculator-card" data-calculator="flip">
+                        <div class="card-icon">
+                            <i class="fas fa-hammer"></i>
+                        </div>
+                        <h3>Property Flip</h3>
+                        <p>Calculate potential profits and ROI for fix-and-flip projects.</p>
+                        <button class="card-button">Analyze</button>
+                    </div>
+
+                    <div class="calculator-card" data-calculator="brrrr">
+                        <div class="card-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h3>BRRRR Strategy</h3>
+                        <p>Buy, Rehab, Rent, Refinance, Repeat investment analysis.</p>
+                        <button class="card-button">Calculate</button>
                     </div>
                 </div>
             </div>
@@ -3127,6 +3198,359 @@
                     <div class="details-row">
                         <div class="details-label">Recommended Choice:</div>
                         <div class="details-value" id="recommended-choice" style="font-weight: 700; color: #10b981;">Property A</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rent vs Buy Calculator -->
+        <div id="rentbuy-calculator" class="calculator fade-in hidden">
+            <!-- Inputs -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-home-alt"></i> Rent vs Buy Calculator</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">Determine whether renting or buying makes more financial sense for your situation</p>
+                
+                <h3 style="margin-bottom: 15px; color: var(--primary-color);">🏠 Buying Scenario</h3>
+                <div class="form-group">
+                    <label for="buy-home-price">Home Price ($)</label>
+                    <input type="number" id="buy-home-price" value="400000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="buy-down-payment-slider">Down Payment (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="buy-down-payment-slider" min="0" max="50" step="1" value="20">
+                        <span id="buy-down-payment-value" class="slider-value">20%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="buy-interest-rate-slider">Interest Rate (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="buy-interest-rate-slider" min="2" max="10" step="0.1" value="4.5">
+                        <span id="buy-interest-rate-value" class="slider-value">4.5%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="buy-loan-term">Loan Term (years)</label>
+                    <select id="buy-loan-term">
+                        <option value="15">15 years</option>
+                        <option value="30" selected>30 years</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="buy-property-tax">Annual Property Tax ($)</label>
+                    <input type="number" id="buy-property-tax" value="4000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="buy-home-insurance">Annual Home Insurance ($)</label>
+                    <input type="number" id="buy-home-insurance" value="1200">
+                </div>
+                
+                <div class="form-group">
+                    <label for="buy-hoa">Monthly HOA Fees ($)</label>
+                    <input type="number" id="buy-hoa" value="0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="buy-maintenance-slider">Annual Maintenance (% of home value)</label>
+                    <div class="slider-container">
+                        <input type="range" id="buy-maintenance-slider" min="0.5" max="3" step="0.1" value="1.5">
+                        <span id="buy-maintenance-value" class="slider-value">1.5%</span>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 25px 0 15px 0; color: var(--secondary-color);">🏠 Renting Scenario</h3>
+                <div class="form-group">
+                    <label for="rent-monthly-rent">Monthly Rent ($)</label>
+                    <input type="number" id="rent-monthly-rent" value="2200">
+                </div>
+                
+                <div class="form-group">
+                    <label for="rent-annual-increase-slider">Annual Rent Increase (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="rent-annual-increase-slider" min="0" max="8" step="0.1" value="3">
+                        <span id="rent-annual-increase-value" class="slider-value">3%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rent-security-deposit">Security Deposit ($)</label>
+                    <input type="number" id="rent-security-deposit" value="2200">
+                </div>
+                
+                <h3 style="margin: 25px 0 15px 0; color: #10b981;">💰 Investment Assumptions</h3>
+                <div class="form-group">
+                    <label for="investment-return-slider">Annual Investment Return (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="investment-return-slider" min="3" max="12" step="0.1" value="7">
+                        <span id="investment-return-value" class="slider-value">7%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="home-appreciation-slider">Annual Home Appreciation (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="home-appreciation-slider" min="0" max="8" step="0.1" value="3">
+                        <span id="home-appreciation-value" class="slider-value">3%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="analysis-period">Time Period (years)</label>
+                    <select id="analysis-period">
+                        <option value="3">3 years</option>
+                        <option value="5" selected>5 years</option>
+                        <option value="7">7 years</option>
+                        <option value="10">10 years</option>
+                        <option value="15">15 years</option>
+                    </select>
+                </div>
+                
+                <button id="calculate-rentbuy" class="btn-primary" style="width: 100%;">Calculate Rent vs Buy</button>
+                <div class="export-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                    <div class="dropdown">
+                        <button class="btn-primary dropdown-btn" style="display: flex; align-items: center; gap: 5px;">
+                            <i class="far fa-file-pdf"></i> Export PDF <i class="fas fa-chevron-down" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="export-option" data-type="pdf" data-content="current" data-source="rentbuy">Current View</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="summary" data-source="rentbuy">Summary Only</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="full" data-source="rentbuy">Full Report</a>
+                        </div>
+                    </div>
+                    <button class="btn-green export-option" data-type="jpg" data-content="current" data-source="rentbuy" style="display: flex; align-items: center; gap: 5px;">
+                        <i class="far fa-file-image"></i> JPG
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results -->
+            <div class="card">
+                <h2 class="card-title">🏆 Rent vs Buy Analysis</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Better Option</div>
+                        <div class="stat-value" id="better-option" style="color: #10b981;">Buying</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-label">Cost Difference</div>
+                        <div class="stat-value" id="cost-difference">$45,000</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="rentbuy-chart"></canvas>
+                </div>
+                
+                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">💵 Buying Costs (5 years)</h3>
+                <div class="details-table">
+                    <div class="details-row">
+                        <div class="details-label">Down Payment:</div>
+                        <div class="details-value" id="buy-down-payment-total">$80,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Monthly Payment:</div>
+                        <div class="details-value" id="buy-monthly-payment">$1,900</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Total Payments:</div>
+                        <div class="details-value" id="buy-total-payments">$114,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Maintenance & Taxes:</div>
+                        <div class="details-value" id="buy-maintenance-taxes">$32,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Home Value:</div>
+                        <div class="details-value" id="buy-home-value">$464,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Net Cost (5 years):</div>
+                        <div class="details-value" id="buy-net-cost">$162,000</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">🏠 Renting Costs (5 years)</h3>
+                <div class="details-table">
+                    <div class="details-row">
+                        <div class="details-label">Initial Rent:</div>
+                        <div class="details-value" id="rent-initial">$2,200</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Final Rent (Year 5):</div>
+                        <div class="details-value" id="rent-final">$2,548</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Total Rent Paid:</div>
+                        <div class="details-value" id="rent-total-paid">$141,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Security Deposit:</div>
+                        <div class="details-value" id="rent-security">$2,200</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Investment Growth:</div>
+                        <div class="details-value" id="rent-investment-growth">$112,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Net Cost (5 years):</div>
+                        <div class="details-value" id="rent-net-cost">$31,200</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Refinancing Calculator -->
+        <div id="refinance-calculator" class="calculator fade-in hidden">
+            <!-- Inputs -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-redo-alt"></i> Refinancing Calculator</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">Calculate refinancing savings and determine your break-even point</p>
+                
+                <h3 style="margin-bottom: 15px; color: var(--primary-color);">🏠 Current Loan</h3>
+                <div class="form-group">
+                    <label for="refi-current-balance">Current Loan Balance ($)</label>
+                    <input type="number" id="refi-current-balance" value="280000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="refi-current-rate-slider">Current Interest Rate (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="refi-current-rate-slider" min="2" max="10" step="0.1" value="5.5">
+                        <span id="refi-current-rate-value" class="slider-value">5.5%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="refi-current-payment">Current Monthly Payment ($)</label>
+                    <input type="number" id="refi-current-payment" value="1895">
+                </div>
+                
+                <div class="form-group">
+                    <label for="refi-years-remaining">Years Remaining on Current Loan</label>
+                    <select id="refi-years-remaining">
+                        <option value="25">25 years</option>
+                        <option value="27" selected>27 years</option>
+                        <option value="30">30 years</option>
+                    </select>
+                </div>
+                
+                <h3 style="margin: 25px 0 15px 0; color: var(--secondary-color);">🆕 New Loan</h3>
+                <div class="form-group">
+                    <label for="refi-new-rate-slider">New Interest Rate (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="refi-new-rate-slider" min="2" max="8" step="0.1" value="4.0">
+                        <span id="refi-new-rate-value" class="slider-value">4.0%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="refi-new-term">New Loan Term (years)</label>
+                    <select id="refi-new-term">
+                        <option value="15">15 years</option>
+                        <option value="20">20 years</option>
+                        <option value="30" selected>30 years</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="refi-closing-costs">Total Closing Costs ($)</label>
+                    <input type="number" id="refi-closing-costs" value="4200">
+                </div>
+                
+                <div class="form-group">
+                    <label for="refi-points-slider">Points (% of loan amount)</label>
+                    <div class="slider-container">
+                        <input type="range" id="refi-points-slider" min="0" max="3" step="0.125" value="0">
+                        <span id="refi-points-value" class="slider-value">0%</span>
+                    </div>
+                </div>
+                
+                <button id="calculate-refinance" class="btn-primary" style="width: 100%;">Calculate Refinancing</button>
+                <div class="export-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                    <div class="dropdown">
+                        <button class="btn-primary dropdown-btn" style="display: flex; align-items: center; gap: 5px;">
+                            <i class="far fa-file-pdf"></i> Export PDF <i class="fas fa-chevron-down" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="export-option" data-type="pdf" data-content="current" data-source="refinance">Current View</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="summary" data-source="refinance">Summary Only</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="full" data-source="refinance">Full Report</a>
+                        </div>
+                    </div>
+                    <button class="btn-green export-option" data-type="jpg" data-content="current" data-source="refinance" style="display: flex; align-items: center; gap: 5px;">
+                        <i class="far fa-file-image"></i> JPG
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results -->
+            <div class="card">
+                <h2 class="card-title">💰 Refinancing Analysis</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Monthly Savings</div>
+                        <div class="stat-value" id="refi-monthly-savings" style="color: #10b981;">$312</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-label">Break-Even Period</div>
+                        <div class="stat-value" id="refi-breakeven">13.5 months</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="refinance-chart"></canvas>
+                </div>
+                
+                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">💵 Payment Comparison</h3>
+                <div class="details-table">
+                    <div class="details-row">
+                        <div class="details-label">Current Monthly Payment:</div>
+                        <div class="details-value" id="refi-current-monthly">$1,895</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">New Monthly Payment:</div>
+                        <div class="details-value" id="refi-new-monthly">$1,583</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Monthly Savings:</div>
+                        <div class="details-value" id="refi-savings-monthly" style="color: #10b981;">$312</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Annual Savings:</div>
+                        <div class="details-value" id="refi-savings-annual" style="color: #10b981;">$3,744</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">🎯 Break-Even Analysis</h3>
+                <div class="details-table">
+                    <div class="details-row">
+                        <div class="details-label">Total Closing Costs:</div>
+                        <div class="details-value" id="refi-total-costs">$4,200</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Points Cost:</div>
+                        <div class="details-value" id="refi-points-cost">$0</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Total Upfront Cost:</div>
+                        <div class="details-value" id="refi-upfront-total">$4,200</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Break-Even Time:</div>
+                        <div class="details-value" id="refi-breakeven-months">13.5 months</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">5-Year Total Savings:</div>
+                        <div class="details-value" id="refi-five-year-savings" style="color: #10b981;">$14,520</div>
                     </div>
                 </div>
             </div>
@@ -4970,7 +5394,7 @@
                     }
                     
                     // Hide all calculators including home
-                    const calculators = ['home', 'mortgage', 'investment', 'cashflow', 'closing', 'buyer', 'commission', 'comparison', 'report'];
+                    const calculators = ['home', 'mortgage', 'investment', 'cashflow', 'closing', 'buyer', 'commission', 'comparison', 'rentbuy', 'refinance', 'heloc', 'flip', 'brrrr', 'report'];
                     calculators.forEach(calc => {
                         const element = document.getElementById(`${calc}-calculator`);
                         if (element) element.classList.add('hidden');
@@ -5009,7 +5433,7 @@
                     if (targetMobileTab) targetMobileTab.classList.add('active');
                     
                     // Hide all calculators including home
-                    const calculators = ['home', 'mortgage', 'investment', 'cashflow', 'closing', 'buyer', 'commission', 'comparison', 'report'];
+                    const calculators = ['home', 'mortgage', 'investment', 'cashflow', 'closing', 'buyer', 'commission', 'comparison', 'rentbuy', 'refinance', 'heloc', 'flip', 'brrrr', 'report'];
                     calculators.forEach(calc => {
                         const element = document.getElementById(`${calc}-calculator`);
                         if (element) element.classList.add('hidden');
@@ -5032,10 +5456,20 @@
                 { slider: 'appreciation-slider', display: 'appreciation-value', suffix: '%' },
                 { slider: 'management-slider', display: 'management-value', suffix: '%' },
                 { slider: 'maintenance-slider', display: 'maintenance-value', suffix: '%' },
-                { slider: 'vacancy-slider', display: 'vacancy-value', suffix: '%' },
                 { slider: 'commission-rate-slider', display: 'commission-rate-display', suffix: '%' },
                 { slider: 'listing-split-slider', display: 'listing-split-display', suffix: '%' },
-                { slider: 'selling-split-slider', display: 'selling-split-display', suffix: '%' }
+                { slider: 'selling-split-slider', display: 'selling-split-display', suffix: '%' },
+                // Rent vs Buy sliders
+                { slider: 'buy-down-payment-slider', display: 'buy-down-payment-value', suffix: '%' },
+                { slider: 'buy-interest-rate-slider', display: 'buy-interest-rate-value', suffix: '%' },
+                { slider: 'buy-maintenance-slider', display: 'buy-maintenance-value', suffix: '%' },
+                { slider: 'rent-annual-increase-slider', display: 'rent-annual-increase-value', suffix: '%' },
+                { slider: 'investment-return-slider', display: 'investment-return-value', suffix: '%' },
+                { slider: 'home-appreciation-slider', display: 'home-appreciation-value', suffix: '%' },
+                // Refinancing sliders
+                { slider: 'refi-current-rate-slider', display: 'refi-current-rate-value', suffix: '%' },
+                { slider: 'refi-new-rate-slider', display: 'refi-new-rate-value', suffix: '%' },
+                { slider: 'refi-points-slider', display: 'refi-points-value', suffix: '%' }
             ];
             
             sliders.forEach(item => {
@@ -5061,7 +5495,8 @@
             document.getElementById('calculate-buyer').addEventListener('click', calculateBuyer);
             document.getElementById('calculate-commission').addEventListener('click', calculateCommission);
             document.getElementById('calculate-comparison').addEventListener('click', calculateComparison);
-            
+            document.getElementById('calculate-rentbuy').addEventListener('click', calculateRentBuy);
+            document.getElementById('calculate-refinance').addEventListener('click', calculateRefinance);
 
             
             // Initialize charts
@@ -5805,6 +6240,181 @@
                     `🏆 Based on all factors, ${recommended.name} appears to be the smartest choice`,
                     `💡 ${newestProperty.name} is the newest (${newestProperty.year}) but ${lowestHoa.name} has the lowest HOA fees`
                 ];
+            }
+
+            // Calculate Rent vs Buy
+            function calculateRentBuy() {
+                try {
+                    // Get buying scenario inputs
+                    const homePrice = parseFloat(document.getElementById('buy-home-price').value) || 0;
+                    const downPaymentPercent = parseFloat(document.getElementById('buy-down-payment-slider').value) || 0;
+                    const interestRate = parseFloat(document.getElementById('buy-interest-rate-slider').value) || 0;
+                    const loanTerm = parseInt(document.getElementById('buy-loan-term').value) || 30;
+                    const propertyTax = parseFloat(document.getElementById('buy-property-tax').value) || 0;
+                    const homeInsurance = parseFloat(document.getElementById('buy-home-insurance').value) || 0;
+                    const hoaFees = parseFloat(document.getElementById('buy-hoa').value) || 0;
+                    const maintenancePercent = parseFloat(document.getElementById('buy-maintenance-slider').value) || 0;
+
+                    // Get renting scenario inputs
+                    const monthlyRent = parseFloat(document.getElementById('rent-monthly-rent').value) || 0;
+                    const rentIncrease = parseFloat(document.getElementById('rent-annual-increase-slider').value) || 0;
+                    const securityDeposit = parseFloat(document.getElementById('rent-security-deposit').value) || 0;
+
+                    // Get investment assumptions
+                    const investmentReturn = parseFloat(document.getElementById('investment-return-slider').value) || 0;
+                    const homeAppreciation = parseFloat(document.getElementById('home-appreciation-slider').value) || 0;
+                    const analysisPeriod = parseInt(document.getElementById('analysis-period').value) || 5;
+
+                    // Calculate buying costs
+                    const downPayment = homePrice * (downPaymentPercent / 100);
+                    const loanAmount = homePrice - downPayment;
+                    const monthlyInterestRate = interestRate / 100 / 12;
+                    const numberOfPayments = loanTerm * 12;
+
+                    // Monthly mortgage payment (P&I)
+                    const monthlyMortgage = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments) / 
+                        (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+
+                    // Monthly ownership costs
+                    const monthlyPropertyTax = propertyTax / 12;
+                    const monthlyInsurance = homeInsurance / 12;
+                    const monthlyMaintenance = (homePrice * (maintenancePercent / 100)) / 12;
+                    const totalMonthlyPayment = monthlyMortgage + monthlyPropertyTax + monthlyInsurance + hoaFees + monthlyMaintenance;
+
+                    // Calculate total buying costs over analysis period
+                    const totalMortgagePayments = monthlyMortgage * (analysisPeriod * 12);
+                    const totalTaxesInsurance = (monthlyPropertyTax + monthlyInsurance + hoaFees + monthlyMaintenance) * (analysisPeriod * 12);
+                    const futureHomeValue = homePrice * Math.pow(1 + (homeAppreciation / 100), analysisPeriod);
+
+                    // Net buying cost (after home appreciation)
+                    const buyingNetCost = downPayment + totalMortgagePayments + totalTaxesInsurance - (futureHomeValue - homePrice);
+
+                    // Calculate renting costs over analysis period
+                    let totalRentPaid = 0;
+                    let currentRent = monthlyRent;
+                    
+                    for (let year = 0; year < analysisPeriod; year++) {
+                        totalRentPaid += currentRent * 12;
+                        currentRent *= (1 + (rentIncrease / 100));
+                    }
+
+                    // Calculate investment growth if renting (investing the down payment)
+                    const investmentGrowth = downPayment * Math.pow(1 + (investmentReturn / 100), analysisPeriod);
+                    const rentingNetCost = totalRentPaid + securityDeposit - investmentGrowth;
+
+                    // Determine better option
+                    const costDifference = Math.abs(buyingNetCost - rentingNetCost);
+                    const betterOption = buyingNetCost < rentingNetCost ? 'Buying' : 'Renting';
+
+                    // Update results
+                    document.getElementById('better-option').textContent = betterOption;
+                    document.getElementById('better-option').style.color = betterOption === 'Buying' ? '#10b981' : '#3b82f6';
+                    document.getElementById('cost-difference').textContent = '$' + Math.round(costDifference).toLocaleString();
+
+                    // Update buying costs breakdown
+                    document.getElementById('buy-down-payment-total').textContent = '$' + Math.round(downPayment).toLocaleString();
+                    document.getElementById('buy-monthly-payment').textContent = '$' + Math.round(totalMonthlyPayment).toLocaleString();
+                    document.getElementById('buy-total-payments').textContent = '$' + Math.round(totalMortgagePayments).toLocaleString();
+                    document.getElementById('buy-maintenance-taxes').textContent = '$' + Math.round(totalTaxesInsurance).toLocaleString();
+                    document.getElementById('buy-home-value').textContent = '$' + Math.round(futureHomeValue).toLocaleString();
+                    document.getElementById('buy-net-cost').textContent = '$' + Math.round(buyingNetCost).toLocaleString();
+
+                    // Update renting costs breakdown
+                    document.getElementById('rent-initial').textContent = '$' + Math.round(monthlyRent).toLocaleString();
+                    document.getElementById('rent-final').textContent = '$' + Math.round(currentRent).toLocaleString();
+                    document.getElementById('rent-total-paid').textContent = '$' + Math.round(totalRentPaid).toLocaleString();
+                    document.getElementById('rent-security').textContent = '$' + Math.round(securityDeposit).toLocaleString();
+                    document.getElementById('rent-investment-growth').textContent = '$' + Math.round(investmentGrowth).toLocaleString();
+                    document.getElementById('rent-net-cost').textContent = '$' + Math.round(rentingNetCost).toLocaleString();
+
+                    // Auto-save to history
+                    autoSaveCalculation('rentbuy', {
+                        homePrice: homePrice,
+                        downPaymentPercent: downPaymentPercent,
+                        interestRate: interestRate,
+                        monthlyRent: monthlyRent,
+                        analysisPeriod: analysisPeriod
+                    }, {
+                        betterOption: betterOption,
+                        costDifference: Math.round(costDifference),
+                        buyingNetCost: Math.round(buyingNetCost),
+                        rentingNetCost: Math.round(rentingNetCost)
+                    });
+
+                } catch (error) {
+                    console.error('Rent vs Buy calculation error:', error);
+                }
+            }
+
+            // Calculate Refinancing
+            function calculateRefinance() {
+                try {
+                    // Get current loan inputs
+                    const currentBalance = parseFloat(document.getElementById('refi-current-balance').value) || 0;
+                    const currentRate = parseFloat(document.getElementById('refi-current-rate-slider').value) || 0;
+                    const currentPayment = parseFloat(document.getElementById('refi-current-payment').value) || 0;
+                    const yearsRemaining = parseInt(document.getElementById('refi-years-remaining').value) || 30;
+
+                    // Get new loan inputs
+                    const newRate = parseFloat(document.getElementById('refi-new-rate-slider').value) || 0;
+                    const newTerm = parseInt(document.getElementById('refi-new-term').value) || 30;
+                    const closingCosts = parseFloat(document.getElementById('refi-closing-costs').value) || 0;
+                    const pointsPercent = parseFloat(document.getElementById('refi-points-slider').value) || 0;
+
+                    // Calculate new loan details
+                    const newMonthlyInterestRate = newRate / 100 / 12;
+                    const newNumberOfPayments = newTerm * 12;
+                    const pointsCost = currentBalance * (pointsPercent / 100);
+                    const totalUpfrontCost = closingCosts + pointsCost;
+
+                    // Calculate new monthly payment
+                    const newMonthlyPayment = currentBalance * newMonthlyInterestRate * Math.pow(1 + newMonthlyInterestRate, newNumberOfPayments) / 
+                        (Math.pow(1 + newMonthlyInterestRate, newNumberOfPayments) - 1);
+
+                    // Calculate savings
+                    const monthlySavings = currentPayment - newMonthlyPayment;
+                    const annualSavings = monthlySavings * 12;
+
+                    // Calculate break-even point
+                    const breakEvenMonths = totalUpfrontCost / monthlySavings;
+                    const fiveYearSavings = (monthlySavings * 60) - totalUpfrontCost; // 5 years minus upfront costs
+
+                    // Update results
+                    document.getElementById('refi-monthly-savings').textContent = '$' + Math.round(monthlySavings).toLocaleString();
+                    document.getElementById('refi-monthly-savings').style.color = monthlySavings > 0 ? '#10b981' : '#ef4444';
+                    
+                    document.getElementById('refi-breakeven').textContent = breakEvenMonths.toFixed(1) + ' months';
+                    
+                    // Update payment comparison
+                    document.getElementById('refi-current-monthly').textContent = '$' + Math.round(currentPayment).toLocaleString();
+                    document.getElementById('refi-new-monthly').textContent = '$' + Math.round(newMonthlyPayment).toLocaleString();
+                    document.getElementById('refi-savings-monthly').textContent = '$' + Math.round(monthlySavings).toLocaleString();
+                    document.getElementById('refi-savings-annual').textContent = '$' + Math.round(annualSavings).toLocaleString();
+
+                    // Update break-even analysis
+                    document.getElementById('refi-total-costs').textContent = '$' + Math.round(closingCosts).toLocaleString();
+                    document.getElementById('refi-points-cost').textContent = '$' + Math.round(pointsCost).toLocaleString();
+                    document.getElementById('refi-upfront-total').textContent = '$' + Math.round(totalUpfrontCost).toLocaleString();
+                    document.getElementById('refi-breakeven-months').textContent = breakEvenMonths.toFixed(1) + ' months';
+                    document.getElementById('refi-five-year-savings').textContent = '$' + Math.round(fiveYearSavings).toLocaleString();
+                    document.getElementById('refi-five-year-savings').style.color = fiveYearSavings > 0 ? '#10b981' : '#ef4444';
+
+                    // Auto-save to history
+                    autoSaveCalculation('refinance', {
+                        currentBalance: currentBalance,
+                        currentRate: currentRate,
+                        newRate: newRate,
+                        newTerm: newTerm,
+                        closingCosts: closingCosts
+                    }, {
+                        monthlySavings: Math.round(monthlySavings),
+                        breakEvenMonths: breakEvenMonths.toFixed(1),
+                        fiveYearSavings: Math.round(fiveYearSavings)
+                    });
+
+                } catch (error) {
+                    console.error('Refinance calculation error:', error);
+                }
             }
 
             // Modern Export System for Beautiful Reports
