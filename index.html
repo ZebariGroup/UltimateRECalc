@@ -3937,7 +3937,7 @@
                 messageElement.textContent = message;
                 popup.appendChild(messageElement);
 
-                // Add tap instruction
+                // Add tap instruction with countdown
                 const tapInstruction = document.createElement('div');
                 tapInstruction.style.cssText = `
                     font-size: 1rem;
@@ -3947,7 +3947,7 @@
                     position: relative;
                     z-index: 1;
                 `;
-                tapInstruction.textContent = '💕 Tap anywhere to close 💕';
+                tapInstruction.textContent = '💕 Please wait... 5 💕';
                 popup.appendChild(tapInstruction);
 
                 overlay.appendChild(popup);
@@ -3980,15 +3980,6 @@
                 // Add to page
                 document.body.appendChild(overlay);
 
-                // Close when clicked/tapped
-                overlay.addEventListener('click', () => {
-                    overlay.style.animation = 'fadeOut 0.3s ease';
-                    setTimeout(() => {
-                        overlay.remove();
-                        animationStyles.remove();
-                    }, 300);
-                });
-
                 // Add fadeOut animation
                 const fadeOutStyle = document.createElement('style');
                 fadeOutStyle.textContent = `
@@ -4001,13 +3992,40 @@
 
                 // Prevent scrolling while popup is open
                 document.body.style.overflow = 'hidden';
+
+                // Countdown timer and delayed close functionality
+                let countdown = 5;
+                let canClose = false;
                 
-                // Restore scrolling when popup closes
-                overlay.addEventListener('click', () => {
-                    setTimeout(() => {
-                        document.body.style.overflow = '';
-                    }, 300);
-                });
+                const countdownTimer = setInterval(() => {
+                    countdown--;
+                    if (countdown > 0) {
+                        tapInstruction.textContent = `💕 Please wait... ${countdown} 💕`;
+                    } else {
+                        clearInterval(countdownTimer);
+                        canClose = true;
+                        tapInstruction.textContent = '💕 Tap anywhere to close 💕';
+                        // Add a visual indicator that it's now clickable
+                        tapInstruction.style.animation = 'pulse 1s infinite';
+                        tapInstruction.style.transform = 'scale(1.1)';
+                    }
+                }, 1000);
+
+                // Close when clicked/tapped (only after 5 seconds)
+                const closeHandler = () => {
+                    if (canClose) {
+                        overlay.removeEventListener('click', closeHandler);
+                        overlay.style.animation = 'fadeOut 0.3s ease';
+                        setTimeout(() => {
+                            overlay.remove();
+                            animationStyles.remove();
+                            fadeOutStyle.remove();
+                            document.body.style.overflow = '';
+                        }, 300);
+                    }
+                };
+                
+                overlay.addEventListener('click', closeHandler);
             }
 
             // Initialize special features
