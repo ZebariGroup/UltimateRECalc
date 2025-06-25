@@ -849,7 +849,7 @@
 
 
         <!-- Mortgage Calculator -->
-        <div id="mortgage-calculator" class="calculator fade-in hidden">
+        <div id="mortgage-calculator" class="calculator fade-in">
             <!-- Inputs -->
             <div class="card">
                 <h2 class="card-title"><i class="fas fa-home"></i> Mortgage Calculator</h2>
@@ -2150,215 +2150,15 @@
                 }
             }
 
-            // Initialize MLS API Manager
-            const mlsAPI = new MLSAPIManager();
-
-            // MLS Setup Modal Functions (make global)
-            window.showMLSSetupModal = function() {
-                document.getElementById('mls-setup-modal').style.display = 'block';
-                // Load saved credentials when modal opens
-                if (credentialManager) {
-                    credentialManager.loadSavedCredentials();
-                }
-            }
-
-            window.closeMLSSetupModal = function() {
-                document.getElementById('mls-setup-modal').style.display = 'none';
-            }
 
 
 
 
 
-            // MLS Search and Integration Logic
-            let selectedProperty = null;
-            let searchResults = [];
 
-            // DOM Elements
-            const searchInput = document.getElementById('property-search-input');
-            const searchBtn = document.getElementById('search-properties-btn');
-            const loadingSpinner = document.getElementById('loading-spinner');
-            const propertyResults = document.getElementById('property-results');
-            const autoPopulateBanner = document.getElementById('auto-populate-banner');
-            
-            // Filter elements
-            const minPriceFilter = document.getElementById('min-price');
-            const maxPriceFilter = document.getElementById('max-price');
-            const bedroomsFilter = document.getElementById('bedrooms');
-            const bathroomsFilter = document.getElementById('bathrooms');
-            const propertyTypeFilter = document.getElementById('property-type-filter');
-            const listingStatusFilter = document.getElementById('listing-status');
 
-            // Search functionality
-            async function searchProperties() {
-                const searchTerm = searchInput.value.toLowerCase().trim();
-                const minPrice = parseInt(minPriceFilter.value) || 0;
-                const maxPrice = parseInt(maxPriceFilter.value) || Infinity;
-                const minBedrooms = parseInt(bedroomsFilter.value) || 0;
-                const minBathrooms = parseInt(bathroomsFilter.value) || 0;
-                const propertyType = propertyTypeFilter.value;
-                const status = listingStatusFilter.value;
 
-                // Show loading
-                loadingSpinner.classList.add('show');
-                propertyResults.innerHTML = '';
 
-                try {
-                    // Use the MLS API manager to search properties
-                    const searchCriteria = {
-                        searchTerm,
-                        minPrice,
-                        maxPrice,
-                        minBedrooms,
-                        minBathrooms,
-                        propertyType,
-                        status
-                    };
-
-                    searchResults = await mlsAPI.searchProperties(searchCriteria);
-                    displaySearchResults(searchResults);
-                } catch (error) {
-                    console.error('Search error:', error);
-                    propertyResults.innerHTML = `
-                        <div style="padding: 20px; text-align: center; color: #ef4444;">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px;"></i>
-                            <p>Error searching properties. Please try again.</p>
-                            <p style="font-size: 0.875rem;">If this persists, check your MLS API configuration.</p>
-                        </div>
-                    `;
-                } finally {
-                    loadingSpinner.classList.remove('show');
-                }
-            }
-
-            // Display search results
-            function displaySearchResults(results) {
-                if (results.length === 0) {
-                    // Check if any data source is configured
-                    const isAnyDataSourceEnabled = 
-                        (DATA_CONFIG.mls.bridge.enabled && DATA_CONFIG.mls.bridge.apiKey) ||
-                        (DATA_CONFIG.mls.spark.enabled && DATA_CONFIG.mls.spark.apiKey) ||
-                        DATA_CONFIG.alternative.rentals.rentalsApi.enabled ||
-                        DATA_CONFIG.alternative.scraping.scrapingBee.enabled ||
-                        DATA_CONFIG.alternative.publicRecords.enabled;
-                    
-                    if (!isAnyDataSourceEnabled) {
-                        propertyResults.innerHTML = `
-                            <div style="padding: 30px; text-align: center; color: #ef4444;">
-                                <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.7;"></i>
-                                <h3 style="margin: 0 0 10px 0;">No Data Source Configured</h3>
-                                <p style="margin-bottom: 15px;">Connect to a property data source to see listings here.</p>
-                                <button onclick="showMLSSetupModal()" style="background: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
-                                    <i class="fas fa-cog"></i> Setup Data Source
-                                </button>
-                            </div>
-                        `;
-                    } else {
-                        propertyResults.innerHTML = `
-                            <div style="padding: 20px; text-align: center; color: #6b7280;">
-                                <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px;"></i>
-                                <p>No properties found matching your criteria.</p>
-                                <p style="font-size: 0.875rem;">Try adjusting your search filters or check your data source connection.</p>
-                            </div>
-                        `;
-                    }
-                    return;
-                }
-
-                const resultsHTML = results.map(property => `
-                    <div class="property-item" data-property-id="${property.id}">
-                        <div class="property-image" style="background-image: url('${property.photo}')"></div>
-                        <div class="property-details">
-                            <div class="property-address">${property.address}</div>
-                            <div class="property-price">$${property.price.toLocaleString()}</div>
-                            <div class="property-specs">
-                                ${property.bedrooms} bed • ${property.bathrooms} bath • ${property.sqft.toLocaleString()} sqft
-                                ${property.propertyType === 'condo' ? '• Condo' : property.propertyType === 'townhouse' ? '• Townhouse' : '• Single Family'}
-                            </div>
-                            <div class="property-mls">
-                                MLS# ${property.id} • Listed ${new Date(property.listDate).toLocaleDateString()} • ${property.status.toUpperCase()}
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                propertyResults.innerHTML = resultsHTML;
-
-                // Add click handlers to property items
-                document.querySelectorAll('.property-item').forEach(item => {
-                    item.addEventListener('click', () => selectProperty(item.dataset.propertyId));
-                });
-            }
-
-            // Select a property and auto-populate calculators
-            function selectProperty(propertyId) {
-                selectedProperty = searchResults.find(p => p.id === propertyId);
-                
-                if (!selectedProperty) return;
-
-                // Update UI to show selection
-                document.querySelectorAll('.property-item').forEach(item => {
-                    item.classList.remove('selected');
-                });
-                document.querySelector(`[data-property-id="${propertyId}"]`).classList.add('selected');
-
-                // Show auto-populate banner
-                autoPopulateBanner.classList.add('show');
-
-                // Auto-populate all calculator fields
-                populateCalculatorFields(selectedProperty);
-            }
-
-            // Auto-populate calculator fields with property data
-            function populateCalculatorFields(property) {
-                // Mortgage Calculator
-                document.getElementById('property-price').value = property.price;
-                document.getElementById('property-tax').value = property.propertyTax;
-                document.getElementById('home-insurance').value = property.insurance;
-                document.getElementById('hoa').value = property.hoa;
-
-                // Investment Calculator  
-                document.getElementById('inv-purchase-price').value = property.price;
-                document.getElementById('annual-rent').value = property.estimatedRent * 12;
-
-                // Rental Cash Flow Calculator
-                document.getElementById('rental-income').value = property.estimatedRent;
-                document.getElementById('rental-property-tax').value = Math.round(property.propertyTax / 12);
-                document.getElementById('rental-insurance').value = Math.round(property.insurance / 12);
-
-                // Closing Costs Calculator
-                document.getElementById('closing-price').value = property.price;
-                document.getElementById('closing-mortgage').value = Math.round(property.price * 0.8); // 80% LTV
-
-                // Buyer Cost Sheet Calculator
-                document.getElementById('buyer-sales-price').value = property.price;
-                document.getElementById('buyer-down-payment').value = Math.round(property.price * 0.2); // 20% down
-                document.getElementById('buyer-mortgage').value = Math.round(property.price * 0.8);
-
-                // Recalculate all values
-                calculateMortgage();
-                calculateInvestment();
-                calculateCashFlow();
-                calculateClosing();
-                calculateBuyer();
-            }
-
-            // Event listeners for search
-            searchBtn.addEventListener('click', searchProperties);
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') searchProperties();
-            });
-
-            // Event listeners for filters - trigger search when changed
-            [minPriceFilter, maxPriceFilter, bedroomsFilter, bathroomsFilter, 
-             propertyTypeFilter, listingStatusFilter].forEach(filter => {
-                filter.addEventListener('change', searchProperties);
-            });
-
-            // Initial search to check for available data
-            setTimeout(() => {
-                searchProperties();
-            }, 500);
 
             // Add logo handling code near the top
             const logoUpload = document.getElementById('logo-upload');
@@ -2430,7 +2230,7 @@
             // DOM Elements
             const themeToggle = document.getElementById('theme-toggle');
             const tabs = document.querySelectorAll('.tab');
-            const calculators = ['property-search-calculator', 'mortgage-calculator', 'investment-calculator', 'cashflow-calculator', 'closing-calculator', 'buyer-calculator', 'report-calculator'];
+            const calculators = ['mortgage-calculator', 'investment-calculator', 'cashflow-calculator', 'closing-calculator', 'buyer-calculator', 'report-calculator'];
 
             
             // Chart objects
