@@ -2166,62 +2166,7 @@
                 document.getElementById('mls-setup-modal').style.display = 'none';
             }
 
-            // Close modal when clicking outside
-            window.onclick = function(event) {
-                const modal = document.getElementById('mls-setup-modal');
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            }
 
-            // Update data source status banner based on configuration
-            function updateMLSStatusBanner() {
-                const banner = document.getElementById('mls-status-banner');
-                const bannerText = banner.querySelector('.banner-text');
-                
-                // Check for any enabled data source
-                const isMlsEnabled = (DATA_CONFIG.mls.bridge.enabled && DATA_CONFIG.mls.bridge.apiKey) || 
-                                   (DATA_CONFIG.mls.spark.enabled && DATA_CONFIG.mls.spark.apiKey);
-                
-                const isAlternativeEnabled = DATA_CONFIG.alternative.rentals.rentalsApi.enabled ||
-                                          DATA_CONFIG.alternative.scraping.scrapingBee.enabled ||
-                                          DATA_CONFIG.alternative.publicRecords.enabled;
-                
-                if (isMlsEnabled) {
-                    banner.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-                    banner.style.borderLeftColor = '#065f46';
-                    
-                    // Try to show MLS number if available
-                    let mlsInfo = 'Connected to professional real estate listings';
-                    try {
-                        const mlsCredentials = localStorage.getItem('mlsCredentials');
-                        if (mlsCredentials) {
-                            const creds = JSON.parse(mlsCredentials);
-                            if (creds.mlsNumber && creds.provider) {
-                                const providerName = creds.provider === 'bridge' ? 'Bridge' : 
-                                                   creds.provider === 'spark' ? 'Spark' : 
-                                                   creds.provider === 'trestle' ? 'Trestle' : creds.provider;
-                                mlsInfo = `Connected via ${providerName} • MLS #${creds.mlsNumber}`;
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Error reading MLS credentials for banner:', error);
-                    }
-                    
-                    bannerText.innerHTML = `<strong>Live MLS Data:</strong> ${mlsInfo}. <span style="opacity: 0.8;">Data refreshed in real-time</span>`;
-                } else if (isAlternativeEnabled) {
-                    banner.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
-                    banner.style.borderLeftColor = '#1e40af';
-                    bannerText.innerHTML = '<strong>Alternative Data:</strong> Using free/low-cost property data sources. <span style="opacity: 0.8;">See modal for upgrade options</span>';
-                } else {
-                    banner.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-                    banner.style.borderLeftColor = '#991b1b';
-                    bannerText.innerHTML = '<strong>No Data Source:</strong> Configure a data source to see property listings. <a href="#" onclick="showMLSSetupModal()">Setup data connection →</a>';
-                }
-            }
-
-            // Initialize MLS status banner
-            updateMLSStatusBanner();
 
             // Credential Management Functions
             class CredentialManager {
