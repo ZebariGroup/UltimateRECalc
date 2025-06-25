@@ -928,6 +928,8 @@
             <div class="tab" data-tab="cashflow">Rental Cash Flow</div>
             <div class="tab" data-tab="closing">Closing Costs</div>
             <div class="tab" data-tab="buyer">Buyer Cost Sheet</div>
+            <div class="tab" data-tab="commission">Commission Calculator</div>
+            <div class="tab" data-tab="comparison">Property Comparison</div>
             <div class="tab" data-tab="report">Generated Report</div>
         </div>
         
@@ -939,6 +941,10 @@
             <button id="load-calc" title="Load Saved Calculation (Ctrl+L)" class="btn-primary" style="margin-right: 10px; font-size: 14px; padding: 8px 12px;">
                 <i class="fas fa-folder-open"></i>
                 <span class="action-text" style="margin-left: 5px;">Load</span>
+            </button>
+            <button id="presentation-mode" title="Client Presentation Mode" class="btn-primary" style="margin-right: 10px; font-size: 14px; padding: 8px 12px;">
+                <i class="fas fa-presentation-screen"></i>
+                <span class="action-text" style="margin-left: 5px;">Present</span>
             </button>
             <div class="theme-toggle">
                 <i class="far fa-sun"></i>
@@ -988,6 +994,8 @@
             <div class="tab" data-tab="cashflow">Rental Cash Flow</div>
             <div class="tab" data-tab="closing">Closing Costs</div>
             <div class="tab" data-tab="buyer">Buyer Cost Sheet</div>
+            <div class="tab" data-tab="commission">Commission Calculator</div>
+            <div class="tab" data-tab="comparison">Property Comparison</div>
             <div class="tab" data-tab="report">Generated Report</div>
         </div>
 
@@ -1775,11 +1783,299 @@
                 </div>
             </div>
         </div>
+
+        <!-- Commission Calculator -->
+        <div id="commission-calculator" class="calculator fade-in hidden">
+            <!-- Inputs -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-percentage"></i> Real Estate Commission Calculator</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">Calculate your commission earnings and splits with precision</p>
+                
+                <div class="form-group">
+                    <label for="sale-price">Sale Price ($)</label>
+                    <input type="number" id="sale-price" value="450000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="commission-rate-slider">Total Commission Rate (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="commission-rate-slider" min="4" max="8" step="0.25" value="6">
+                        <span id="commission-rate-display" class="slider-value">6%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="listing-split-slider">Listing Agent Split (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="listing-split-slider" min="40" max="100" step="5" value="70">
+                        <span id="listing-split-display" class="slider-value">70%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="selling-split-slider">Selling Agent Split (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="selling-split-slider" min="40" max="100" step="5" value="70">
+                        <span id="selling-split-display" class="slider-value">70%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transaction-fee">Transaction Fee ($)</label>
+                    <input type="number" id="transaction-fee" value="395">
+                </div>
+                
+                <div class="form-group">
+                    <label for="agent-role">You are the:</label>
+                    <select id="agent-role">
+                        <option value="listing">Listing Agent</option>
+                        <option value="selling">Selling Agent</option>
+                        <option value="both">Both (Dual Agency)</option>
+                    </select>
+                </div>
+                
+                <button id="calculate-commission" class="btn-primary" style="width: 100%;">Calculate Commission</button>
+                <div class="export-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                    <div class="dropdown">
+                        <button class="btn-primary dropdown-btn" style="display: flex; align-items: center; gap: 5px;">
+                            <i class="far fa-file-pdf"></i> Export PDF <i class="fas fa-chevron-down" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="export-option" data-type="pdf" data-content="current" data-source="commission">Current View</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="summary" data-source="commission">Summary Only</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="full" data-source="commission">Full Report</a>
+                        </div>
+                    </div>
+                    <button class="btn-green export-option" data-type="jpg" data-content="current" data-source="commission" style="display: flex; align-items: center; gap: 5px;">
+                        <i class="far fa-file-image"></i> JPG
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results -->
+            <div class="card">
+                <h2 class="card-title">💰 Commission Breakdown</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Your Gross Commission</div>
+                        <div class="stat-value" id="your-gross-commission">$18,900</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-label">Your Net Commission</div>
+                        <div class="stat-value" id="your-net-commission">$18,505</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="commission-chart"></canvas>
+                </div>
+                
+                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">💸 Commission Details</h3>
+                <div class="details-table">
+                    <div class="details-row">
+                        <div class="details-label">Total Commission:</div>
+                        <div class="details-value" id="total-commission">$27,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Listing Side:</div>
+                        <div class="details-value" id="listing-side-total">$13,500</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Selling Side:</div>
+                        <div class="details-value" id="selling-side-total">$13,500</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Your Commission (Before Fees):</div>
+                        <div class="details-value" id="your-commission-before-fees">$18,900</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Transaction Fees:</div>
+                        <div class="details-value" id="total-fees">$395</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Your Net Commission:</div>
+                        <div class="details-value" id="final-commission" style="font-weight: 700; color: #10b981;">$18,505</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Property Comparison Calculator -->
+        <div id="comparison-calculator" class="calculator fade-in hidden">
+            <!-- Inputs -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-balance-scale"></i> Property Comparison Tool</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">Compare up to 3 properties side-by-side for your clients</p>
+                
+                <div style="background: rgba(59, 130, 246, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; color: var(--primary-color);">🏠 Property A</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyA-price">Price ($)</label>
+                            <input type="number" id="propertyA-price" value="425000">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyA-sqft">Square Feet</label>
+                            <input type="number" id="propertyA-sqft" value="2100">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyA-bedrooms">Bedrooms</label>
+                            <input type="number" id="propertyA-bedrooms" value="3">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyA-bathrooms">Bathrooms</label>
+                            <input type="number" id="propertyA-bathrooms" value="2.5" step="0.5">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyA-hoa">HOA ($/month)</label>
+                            <input type="number" id="propertyA-hoa" value="150">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyA-year">Year Built</label>
+                            <input type="number" id="propertyA-year" value="2018">
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; color: #10b981;">🏠 Property B</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyB-price">Price ($)</label>
+                            <input type="number" id="propertyB-price" value="395000">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyB-sqft">Square Feet</label>
+                            <input type="number" id="propertyB-sqft" value="1950">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyB-bedrooms">Bedrooms</label>
+                            <input type="number" id="propertyB-bedrooms" value="3">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyB-bathrooms">Bathrooms</label>
+                            <input type="number" id="propertyB-bathrooms" value="2" step="0.5">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyB-hoa">HOA ($/month)</label>
+                            <input type="number" id="propertyB-hoa" value="0">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyB-year">Year Built</label>
+                            <input type="number" id="propertyB-year" value="2015">
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(236, 72, 153, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; color: #ec4899;">🏠 Property C</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyC-price">Price ($)</label>
+                            <input type="number" id="propertyC-price" value="475000">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyC-sqft">Square Feet</label>
+                            <input type="number" id="propertyC-sqft" value="2300">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyC-bedrooms">Bedrooms</label>
+                            <input type="number" id="propertyC-bedrooms" value="4">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyC-bathrooms">Bathrooms</label>
+                            <input type="number" id="propertyC-bathrooms" value="3" step="0.5">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyC-hoa">HOA ($/month)</label>
+                            <input type="number" id="propertyC-hoa" value="200">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label for="propertyC-year">Year Built</label>
+                            <input type="number" id="propertyC-year" value="2020">
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="calculate-comparison" class="btn-primary" style="width: 100%;">Compare Properties</button>
+                <div class="export-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                    <div class="dropdown">
+                        <button class="btn-primary dropdown-btn" style="display: flex; align-items: center; gap: 5px;">
+                            <i class="far fa-file-pdf"></i> Export PDF <i class="fas fa-chevron-down" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="export-option" data-type="pdf" data-content="current" data-source="comparison">Current View</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="summary" data-source="comparison">Summary Only</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="full" data-source="comparison">Full Report</a>
+                        </div>
+                    </div>
+                    <button class="btn-green export-option" data-type="jpg" data-content="current" data-source="comparison" style="display: flex; align-items: center; gap: 5px;">
+                        <i class="far fa-file-image"></i> JPG
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results -->
+            <div class="card">
+                <h2 class="card-title">📊 Property Comparison Results</h2>
+                
+                <div class="chart-container">
+                    <canvas id="comparison-chart"></canvas>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0;">
+                    <div style="background: rgba(59, 130, 246, 0.1); padding: 15px; border-radius: 8px; text-align: center;">
+                        <h4 style="margin: 0 0 10px 0; color: var(--primary-color);">Property A</h4>
+                        <div class="stat-value" id="propertyA-price-per-sqft">$202/sqft</div>
+                        <div class="stat-label">Price per Sq Ft</div>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 8px; text-align: center;">
+                        <h4 style="margin: 0 0 10px 0; color: #10b981;">Property B</h4>
+                        <div class="stat-value" id="propertyB-price-per-sqft">$203/sqft</div>
+                        <div class="stat-label">Price per Sq Ft</div>
+                    </div>
+                    <div style="background: rgba(236, 72, 153, 0.1); padding: 15px; border-radius: 8px; text-align: center;">
+                        <h4 style="margin: 0 0 10px 0; color: #ec4899;">Property C</h4>
+                        <div class="stat-value" id="propertyC-price-per-sqft">$207/sqft</div>
+                        <div class="stat-label">Price per Sq Ft</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">🏆 Best Value Analysis</h3>
+                <div class="details-table">
+                    <div class="details-row">
+                        <div class="details-label">Best Price per Sq Ft:</div>
+                        <div class="details-value" id="best-price-per-sqft">Property A</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Most Bedrooms:</div>
+                        <div class="details-value" id="most-bedrooms">Property C (4 bedrooms)</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Newest Property:</div>
+                        <div class="details-value" id="newest-property">Property C (2020)</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Lowest HOA:</div>
+                        <div class="details-value" id="lowest-hoa">Property B ($0/month)</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Recommended Choice:</div>
+                        <div class="details-value" id="recommended-choice" style="font-weight: 700; color: #10b981;">Property A</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
     
     <script>
+        // Chart variables
+        let paymentChart, amortizationChart, investmentChart, expenseChart, commissionChart, comparisonChart;
+        
         document.addEventListener('DOMContentLoaded', function() {
 
 
@@ -2428,6 +2724,40 @@
                         data.propertyTax = document.getElementById('rental-property-tax')?.value;
                         data.insurance = document.getElementById('rental-insurance')?.value;
                         break;
+                    case 'commission':
+                        data.salePrice = document.getElementById('sale-price')?.value;
+                        data.commissionRate = document.getElementById('commission-rate-slider')?.value;
+                        data.listingSplit = document.getElementById('listing-split-slider')?.value;
+                        data.sellingSplit = document.getElementById('selling-split-slider')?.value;
+                        data.transactionFee = document.getElementById('transaction-fee')?.value;
+                        data.agentRole = document.getElementById('agent-role')?.value;
+                        break;
+                    case 'comparison':
+                        data.propertyA = {
+                            price: document.getElementById('propertyA-price')?.value,
+                            sqft: document.getElementById('propertyA-sqft')?.value,
+                            bedrooms: document.getElementById('propertyA-bedrooms')?.value,
+                            bathrooms: document.getElementById('propertyA-bathrooms')?.value,
+                            hoa: document.getElementById('propertyA-hoa')?.value,
+                            year: document.getElementById('propertyA-year')?.value
+                        };
+                        data.propertyB = {
+                            price: document.getElementById('propertyB-price')?.value,
+                            sqft: document.getElementById('propertyB-sqft')?.value,
+                            bedrooms: document.getElementById('propertyB-bedrooms')?.value,
+                            bathrooms: document.getElementById('propertyB-bathrooms')?.value,
+                            hoa: document.getElementById('propertyB-hoa')?.value,
+                            year: document.getElementById('propertyB-year')?.value
+                        };
+                        data.propertyC = {
+                            price: document.getElementById('propertyC-price')?.value,
+                            sqft: document.getElementById('propertyC-sqft')?.value,
+                            bedrooms: document.getElementById('propertyC-bedrooms')?.value,
+                            bathrooms: document.getElementById('propertyC-bathrooms')?.value,
+                            hoa: document.getElementById('propertyC-hoa')?.value,
+                            year: document.getElementById('propertyC-year')?.value
+                        };
+                        break;
                 }
                 
                 return data;
@@ -2972,11 +3302,13 @@
             
             // Initialize charts and calculator values
             initializeCharts();
-            calculateMortgage();
-            calculateInvestment();
-            calculateCashFlow();
-            calculateClosing();
-            calculateBuyer();
+                            calculateMortgage();
+                calculateInvestment();
+                calculateCashFlow();
+                calculateClosing();
+                calculateBuyer();
+                calculateCommission();
+                calculateComparison();
             
             // Theme toggle functionality
             themeToggle.addEventListener('click', function() {
@@ -3012,6 +3344,204 @@
                 hapticFeedback('light');
                 showSavedCalculations();
             });
+
+            // Presentation Mode - Perfect for showing clients!
+            document.getElementById('presentation-mode').addEventListener('click', () => {
+                hapticFeedback('medium');
+                togglePresentationMode();
+            });
+
+            function togglePresentationMode() {
+                const body = document.body;
+                const presentationMode = body.classList.contains('presentation-mode');
+                
+                if (!presentationMode) {
+                    // Enter presentation mode
+                    body.classList.add('presentation-mode');
+                    
+                    // Add presentation styles
+                    const presentationStyle = document.createElement('style');
+                    presentationStyle.id = 'presentation-styles';
+                    presentationStyle.textContent = `
+                        .presentation-mode {
+                            font-size: 1.1em !important;
+                        }
+                        .presentation-mode .card {
+                            padding: 30px !important;
+                            margin-bottom: 25px !important;
+                            border: 2px solid var(--primary-color) !important;
+                            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15) !important;
+                        }
+                        .presentation-mode .stat-value {
+                            font-size: 2.5rem !important;
+                            font-weight: 700 !important;
+                            animation: pulse 2s infinite;
+                        }
+                        .presentation-mode .chart-container {
+                            height: 350px !important;
+                            border: 2px solid rgba(37, 99, 235, 0.2) !important;
+                            border-radius: 12px !important;
+                            padding: 15px !important;
+                        }
+                        .presentation-mode .details-table {
+                            font-size: 1.1rem !important;
+                        }
+                        .presentation-mode .details-value {
+                            font-weight: 600 !important;
+                            color: var(--primary-color) !important;
+                        }
+                        @keyframes pulse {
+                            0%, 100% { transform: scale(1); }
+                            50% { transform: scale(1.05); }
+                        }
+                        .presentation-mode nav {
+                            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+                            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3) !important;
+                        }
+                        .presentation-mode .logo {
+                            color: white !important;
+                        }
+                    `;
+                    document.head.appendChild(presentationStyle);
+                    
+                    showToast('🎯 Presentation Mode ON - Perfect for client meetings!', 'success');
+                    document.getElementById('presentation-mode').innerHTML = '<i class="fas fa-eye-slash"></i> <span class="action-text" style="margin-left: 5px;">Exit</span>';
+                    
+                } else {
+                    // Exit presentation mode
+                    body.classList.remove('presentation-mode');
+                    const presentationStyle = document.getElementById('presentation-styles');
+                    if (presentationStyle) {
+                        presentationStyle.remove();
+                    }
+                    
+                    showToast('👋 Presentation Mode OFF', 'info');
+                    document.getElementById('presentation-mode').innerHTML = '<i class="fas fa-presentation-screen"></i> <span class="action-text" style="margin-left: 5px;">Present</span>';
+                }
+            }
+
+            // Add some Billie-specific impressive features
+            function addBillieSpecialFeatures() {
+                // Quick commission celebration when high commissions are calculated
+                document.addEventListener('keydown', (e) => {
+                    // Secret key combo for Billie: B + I + L + L + I + E (in sequence)
+                    const secretSequence = ['KeyB', 'KeyI', 'KeyL', 'KeyL', 'KeyI', 'KeyE'];
+                    window.keySequence = window.keySequence || [];
+                    window.keySequence.push(e.code);
+                    if (window.keySequence.length > secretSequence.length) {
+                        window.keySequence.shift();
+                    }
+                    
+                    if (window.keySequence.join('') === secretSequence.join('')) {
+                        triggerBillieMode();
+                        window.keySequence = [];
+                    }
+                });
+                
+                // Smart defaults that make sense for real estate professionals
+                const smartRecommendations = {
+                    'property-price': () => {
+                        const currentHour = new Date().getHours();
+                        if (currentHour >= 9 && currentHour <= 17) {
+                            // Business hours - suggest higher-end properties
+                            return Math.floor(Math.random() * 200000) + 400000; // $400k-$600k
+                        } else {
+                            // After hours - suggest starter homes
+                            return Math.floor(Math.random() * 150000) + 250000; // $250k-$400k
+                        }
+                    },
+                    'commission-rate-slider': () => {
+                        // Smart commission rate based on property value
+                        const propertyPrice = parseFloat(document.getElementById('sale-price')?.value || 0);
+                        if (propertyPrice > 500000) return 5.5; // Lower rate for high-value properties
+                        if (propertyPrice > 300000) return 6.0; // Standard rate
+                        return 6.5; // Higher rate for lower-value properties
+                    }
+                };
+                
+                // Auto-suggest optimal values
+                Object.keys(smartRecommendations).forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        field.addEventListener('focus', () => {
+                            setTimeout(() => {
+                                const suggestion = smartRecommendations[fieldId]();
+                                if (suggestion && field.value == field.defaultValue) {
+                                    field.value = suggestion;
+                                    field.dispatchEvent(new Event('input'));
+                                    showToast('💡 Smart suggestion applied!', 'info');
+                                }
+                            }, 1000);
+                        });
+                    }
+                });
+            }
+
+            function triggerBillieMode() {
+                // Special mode just for Billie!
+                const billieMessages = [
+                    "🌟 Hey Billie! Hope you're having an amazing day!",
+                    "💪 You're absolutely crushing it in real estate!",
+                    "✨ This calculator was made with extra care for professionals like you!",
+                    "🏆 Your clients are lucky to have such a dedicated agent!",
+                    "💎 Keep being the awesome real estate professional you are!"
+                ];
+                
+                const randomMessage = billieMessages[Math.floor(Math.random() * billieMessages.length)];
+                
+                // Add some sparkle effects
+                const sparkles = document.createElement('div');
+                sparkles.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    z-index: 9999;
+                `;
+                
+                for (let i = 0; i < 20; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.textContent = '✨';
+                    sparkle.style.cssText = `
+                        position: absolute;
+                        font-size: 24px;
+                        animation: sparkle 3s ease-out forwards;
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                    `;
+                    sparkles.appendChild(sparkle);
+                }
+                
+                const sparkleStyle = document.createElement('style');
+                sparkleStyle.textContent = `
+                    @keyframes sparkle {
+                        0% { transform: scale(0) rotate(0deg); opacity: 1; }
+                        50% { transform: scale(1) rotate(180deg); opacity: 1; }
+                        100% { transform: scale(0) rotate(360deg); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(sparkleStyle);
+                document.body.appendChild(sparkles);
+                
+                setTimeout(() => {
+                    sparkles.remove();
+                    sparkleStyle.remove();
+                }, 3000);
+                
+                showToast(randomMessage, 'success');
+                hapticFeedback('heavy');
+                
+                // Temporarily change the theme to something special
+                document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                setTimeout(() => {
+                    document.body.style.background = '';
+                }, 5000);
+            }
+
+            // Initialize special features
+            addBillieSpecialFeatures();
             
             // Tab switching functionality
             tabs.forEach(tab => {
@@ -3051,7 +3581,10 @@
                 { slider: 'appreciation-slider', display: 'appreciation-value', suffix: '%' },
                 { slider: 'management-slider', display: 'management-value', suffix: '%' },
                 { slider: 'maintenance-slider', display: 'maintenance-value', suffix: '%' },
-                { slider: 'rental-vacancy-slider', display: 'rental-vacancy-value', suffix: '%' }
+                { slider: 'rental-vacancy-slider', display: 'rental-vacancy-value', suffix: '%' },
+                { slider: 'commission-rate-slider', display: 'commission-rate-display', suffix: '%' },
+                { slider: 'listing-split-slider', display: 'listing-split-display', suffix: '%' },
+                { slider: 'selling-split-slider', display: 'selling-split-display', suffix: '%' }
             ];
             
             sliders.forEach(item => {
@@ -3075,6 +3608,8 @@
             document.getElementById('calculate-cashflow').addEventListener('click', calculateCashFlow);
             document.getElementById('calculate-closing').addEventListener('click', calculateClosing);
             document.getElementById('calculate-buyer').addEventListener('click', calculateBuyer);
+            document.getElementById('calculate-commission').addEventListener('click', calculateCommission);
+            document.getElementById('calculate-comparison').addEventListener('click', calculateComparison);
             
 
             
@@ -3191,6 +3726,95 @@
                     },
                     options: defaultOptions
                 });
+                
+                // Commission Chart
+                const commissionCtx = document.getElementById('commission-chart').getContext('2d');
+                commissionChart = new Chart(commissionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Your Net Commission', 'Brokerage Fees', 'Other Agent Commission'],
+                        datasets: [{
+                            data: [18505, 395, 8100],
+                            backgroundColor: ['#10b981', '#f59e0b', '#6b7280']
+                        }]
+                    },
+                    options: pieOptions
+                });
+                
+                // Property Comparison Chart
+                const comparisonCtx = document.getElementById('comparison-chart').getContext('2d');
+                comparisonChart = new Chart(comparisonCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Property A', 'Property B', 'Property C'],
+                        datasets: [
+                            {
+                                label: 'Price ($)',
+                                data: [425000, 395000, 475000],
+                                backgroundColor: '#3b82f6',
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Price per Sq Ft ($)',
+                                data: [202, 203, 207],
+                                backgroundColor: '#10b981',
+                                type: 'line',
+                                borderColor: '#10b981',
+                                borderWidth: 3,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: textColor
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: gridColor
+                                },
+                                ticks: {
+                                    color: textColor
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                grid: {
+                                    color: gridColor
+                                },
+                                ticks: {
+                                    color: textColor,
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                grid: {
+                                    drawOnChartArea: false,
+                                },
+                                ticks: {
+                                    color: textColor,
+                                    callback: function(value) {
+                                        return '$' + value + '/sqft';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
             }
             
             // Reinitialize charts when theme changes
@@ -3200,10 +3824,8 @@
                 if (amortizationChart) amortizationChart.destroy();
                 if (investmentChart) investmentChart.destroy();
                 if (expenseChart) expenseChart.destroy();
-                if (reportPaymentChart) reportPaymentChart.destroy();
-                if (reportAmortizationChart) reportAmortizationChart.destroy();
-                if (reportInvestmentChart) reportInvestmentChart.destroy();
-                if (reportExpenseChart) reportExpenseChart.destroy();
+                if (commissionChart) commissionChart.destroy();
+                if (comparisonChart) comparisonChart.destroy();
                 
                 // Initialize new charts
                 initializeCharts();
@@ -3391,6 +4013,152 @@
                 console.log('Buyer costs calculation would be implemented here');
             }
 
+            // Calculate commission
+            function calculateCommission() {
+                // Get input values
+                const salePrice = parseFloat(document.getElementById('sale-price').value);
+                const commissionRate = parseFloat(document.getElementById('commission-rate-slider').value);
+                const listingSplit = parseFloat(document.getElementById('listing-split-slider').value);
+                const sellingSplit = parseFloat(document.getElementById('selling-split-slider').value);
+                const transactionFee = parseFloat(document.getElementById('transaction-fee').value);
+                const agentRole = document.getElementById('agent-role').value;
+                
+                // Calculate commission breakdown
+                const totalCommission = salePrice * (commissionRate / 100);
+                const listingSide = totalCommission / 2;
+                const sellingSide = totalCommission / 2;
+                
+                let yourGrossCommission = 0;
+                if (agentRole === 'listing') {
+                    yourGrossCommission = listingSide * (listingSplit / 100);
+                } else if (agentRole === 'selling') {
+                    yourGrossCommission = sellingSide * (sellingSplit / 100);
+                } else if (agentRole === 'both') {
+                    yourGrossCommission = (listingSide * (listingSplit / 100)) + (sellingSide * (sellingSplit / 100));
+                }
+                
+                const yourNetCommission = yourGrossCommission - transactionFee;
+                
+                // Update DOM elements
+                document.getElementById('total-commission').textContent = '$' + Math.round(totalCommission).toLocaleString();
+                document.getElementById('listing-side-total').textContent = '$' + Math.round(listingSide).toLocaleString();
+                document.getElementById('selling-side-total').textContent = '$' + Math.round(sellingSide).toLocaleString();
+                document.getElementById('your-gross-commission').textContent = '$' + Math.round(yourGrossCommission).toLocaleString();
+                document.getElementById('your-net-commission').textContent = '$' + Math.round(yourNetCommission).toLocaleString();
+                document.getElementById('your-commission-before-fees').textContent = '$' + Math.round(yourGrossCommission).toLocaleString();
+                document.getElementById('total-fees').textContent = '$' + Math.round(transactionFee).toLocaleString();
+                document.getElementById('final-commission').textContent = '$' + Math.round(yourNetCommission).toLocaleString();
+                
+                // Update commission chart
+                if (commissionChart) {
+                    const brokerageFee = yourGrossCommission - yourNetCommission;
+                    const otherAgentCommission = totalCommission - yourGrossCommission;
+                    
+                    commissionChart.data.datasets[0].data = [
+                        Math.round(yourNetCommission),
+                        Math.round(brokerageFee),
+                        Math.round(otherAgentCommission)
+                    ];
+                    commissionChart.update();
+                }
+                
+                // Celebrate big commissions!
+                if (yourNetCommission > 15000) {
+                    showToast(`💰 Excellent! That's $${Math.round(yourNetCommission).toLocaleString()} in your pocket!`, 'success');
+                    hapticFeedback('heavy');
+                }
+            }
+
+            // Calculate property comparison
+            function calculateComparison() {
+                // Get property data
+                const properties = ['A', 'B', 'C'].map(letter => ({
+                    name: `Property ${letter}`,
+                    price: parseFloat(document.getElementById(`property${letter}-price`).value),
+                    sqft: parseFloat(document.getElementById(`property${letter}-sqft`).value),
+                    bedrooms: parseFloat(document.getElementById(`property${letter}-bedrooms`).value),
+                    bathrooms: parseFloat(document.getElementById(`property${letter}-bathrooms`).value),
+                    hoa: parseFloat(document.getElementById(`property${letter}-hoa`).value),
+                    year: parseFloat(document.getElementById(`property${letter}-year`).value)
+                }));
+                
+                // Calculate price per square foot for each property
+                properties.forEach((prop, index) => {
+                    const letter = ['A', 'B', 'C'][index];
+                    const pricePerSqft = prop.sqft > 0 ? prop.price / prop.sqft : 0;
+                    prop.pricePerSqft = pricePerSqft;
+                    document.getElementById(`property${letter}-price-per-sqft`).textContent = '$' + Math.round(pricePerSqft) + '/sqft';
+                });
+                
+                // Find best values
+                const bestPricePerSqft = properties.reduce((best, current) => 
+                    current.pricePerSqft < best.pricePerSqft && current.pricePerSqft > 0 ? current : best
+                );
+                const mostBedrooms = properties.reduce((most, current) => 
+                    current.bedrooms > most.bedrooms ? current : most
+                );
+                const newestProperty = properties.reduce((newest, current) => 
+                    current.year > newest.year ? current : newest
+                );
+                const lowestHoa = properties.reduce((lowest, current) => 
+                    current.hoa < lowest.hoa ? current : lowest
+                );
+                
+                // Calculate overall recommendation (simple scoring system)
+                properties.forEach(prop => {
+                    let score = 0;
+                    
+                    // Lower price per sqft is better
+                    if (prop === bestPricePerSqft) score += 30;
+                    
+                    // More bedrooms is better
+                    if (prop === mostBedrooms) score += 20;
+                    
+                    // Newer is better
+                    if (prop === newestProperty) score += 15;
+                    
+                    // Lower HOA is better
+                    if (prop === lowestHoa) score += 10;
+                    
+                    // Size bonus (bigger is generally better)
+                    if (prop.sqft > 2200) score += 10;
+                    
+                    prop.score = score;
+                });
+                
+                const recommended = properties.reduce((best, current) => 
+                    current.score > best.score ? current : best
+                );
+                
+                // Update DOM elements
+                document.getElementById('best-price-per-sqft').textContent = bestPricePerSqft.name;
+                document.getElementById('most-bedrooms').textContent = `${mostBedrooms.name} (${mostBedrooms.bedrooms} bedrooms)`;
+                document.getElementById('newest-property').textContent = `${newestProperty.name} (${newestProperty.year})`;
+                document.getElementById('lowest-hoa').textContent = `${lowestHoa.name} ($${lowestHoa.hoa}/month)`;
+                document.getElementById('recommended-choice').textContent = recommended.name;
+                
+                // Update comparison chart
+                if (comparisonChart) {
+                    comparisonChart.data.labels = properties.map(p => p.name);
+                    comparisonChart.data.datasets[0].data = properties.map(p => p.price);
+                    comparisonChart.data.datasets[1].data = properties.map(p => p.pricePerSqft);
+                    comparisonChart.update();
+                }
+                
+                // Show intelligent analysis
+                const analysisMessages = [
+                    `📊 ${bestPricePerSqft.name} offers the best value at $${Math.round(bestPricePerSqft.pricePerSqft)}/sqft`,
+                    `🏆 Based on all factors, ${recommended.name} appears to be the smartest choice`,
+                    `💡 ${newestProperty.name} is the newest (${newestProperty.year}) but ${lowestHoa.name} has the lowest HOA fees`
+                ];
+                
+                setTimeout(() => {
+                    analysisMessages.forEach((message, index) => {
+                        setTimeout(() => showToast(message, 'info'), index * 2000);
+                    });
+                }, 500);
+            }
+
             // Modern Export System for Beautiful Reports
             class ExportManager {
                 constructor() {
@@ -3431,6 +4199,8 @@
                             cashflow: 'Rental Cash Flow Analysis',
                             closing: 'Closing Costs Breakdown',
                             buyer: 'Buyer Cost Sheet',
+                            commission: 'Real Estate Commission Analysis',
+                            comparison: 'Property Comparison Report',
                             report: 'Complete Property Analysis'
                         };
                         
