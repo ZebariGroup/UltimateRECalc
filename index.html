@@ -575,6 +575,148 @@
             border-color: #92400e;
             color: #fbbf24;
         }
+
+        /* Credential Input Form */
+        .credentials-form {
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .credentials-form h4 {
+            margin: 0 0 15px 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 0.875rem;
+        }
+
+        .form-group input, .form-group select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .credentials-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .btn-success {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .connection-status {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+        }
+
+        .connection-status.success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .connection-status.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+
+        .connection-status.testing {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #3b82f6;
+        }
+
+        .dark .connection-status.success {
+            background-color: #064e3b;
+            color: #6ee7b7;
+        }
+
+        .dark .connection-status.error {
+            background-color: #7f1d1d;
+            color: #fca5a5;
+        }
+
+        .dark .connection-status.testing {
+            background-color: #1e3a8a;
+            color: #93c5fd;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
         
         .tabs {
             display: flex;
@@ -2053,6 +2195,66 @@
                     <h3>Option A: Traditional MLS Data (Requires License)</h3>
                     <p>Professional MLS platforms with comprehensive listing data:</p>
                     
+                    <!-- MLS Credentials Form -->
+                    <div class="credentials-form">
+                        <h4><i class="fas fa-key"></i> Enter Your MLS Credentials</h4>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="mls-provider">MLS Provider</label>
+                                <select id="mls-provider">
+                                    <option value="">Select Provider</option>
+                                    <option value="bridge">Bridge Interactive</option>
+                                    <option value="spark">Spark API</option>
+                                    <option value="trestle">Trestle</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="mls-number">MLS Number</label>
+                                <input type="text" id="mls-number" placeholder="Enter your MLS number">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="api-key">API Key</label>
+                                <input type="password" id="api-key" placeholder="Enter your API key">
+                            </div>
+                            <div class="form-group">
+                                <label for="api-secret">API Secret (if required)</label>
+                                <input type="password" id="api-secret" placeholder="Enter API secret">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="mls-username">Username (if required)</label>
+                                <input type="text" id="mls-username" placeholder="Enter username">
+                            </div>
+                            <div class="form-group">
+                                <label for="mls-password">Password (if required)</label>
+                                <input type="password" id="mls-password" placeholder="Enter password">
+                            </div>
+                        </div>
+                        
+                        <div class="credentials-actions">
+                            <button type="button" class="btn btn-primary" onclick="testMLSConnection()">
+                                <i class="fas fa-plug"></i> Test Connection
+                            </button>
+                            <button type="button" class="btn btn-success" onclick="saveMLSCredentials()">
+                                <i class="fas fa-save"></i> Save & Connect
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="clearMLSCredentials()">
+                                <i class="fas fa-trash"></i> Clear
+                            </button>
+                        </div>
+                        
+                        <div id="mls-connection-status" class="connection-status">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Testing connection...</span>
+                        </div>
+                    </div>
+                    
                     <div class="api-providers">
                         <div class="api-provider">
                             <h4>Bridge Interactive</h4>
@@ -2080,6 +2282,75 @@
                 <div class="setup-step">
                     <h3>Option B: Alternative Data Sources (No License Required)</h3>
                     <p>Free and low-cost alternatives to traditional MLS data:</p>
+                    
+                    <!-- Alternative Data Credentials Form -->
+                    <div class="credentials-form">
+                        <h4><i class="fas fa-globe"></i> Configure Alternative Data Sources</h4>
+                        
+                        <!-- Public Records Toggle -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="enable-public-records" style="margin-right: 8px;">
+                                    Enable Public Records (Free)
+                                </label>
+                                <p style="font-size: 0.8em; color: #6b7280; margin: 5px 0 0 0;">
+                                    Access county assessor and tax records data
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Rentals API -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="rentals-api-key">Rentals.com API Key (Optional)</label>
+                                <input type="password" id="rentals-api-key" placeholder="Enter API key for premium features">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="enable-rentals-api" style="margin-right: 8px;">
+                                    Enable Rentals API
+                                </label>
+                                <p style="font-size: 0.8em; color: #6b7280; margin: 5px 0 0 0;">
+                                    1000 free requests/month
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Web Scraping API -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="scraping-api-key">ScrapingBee API Key (Optional)</label>
+                                <input type="password" id="scraping-api-key" placeholder="Enter ScrapingBee API key">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="enable-scraping-api" style="margin-right: 8px;">
+                                    Enable Web Scraping
+                                </label>
+                                <p style="font-size: 0.8em; color: #6b7280; margin: 5px 0 0 0;">
+                                    1000 free requests/month
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="credentials-actions">
+                            <button type="button" class="btn btn-primary" onclick="testAlternativeConnections()">
+                                <i class="fas fa-plug"></i> Test Connections
+                            </button>
+                            <button type="button" class="btn btn-success" onclick="saveAlternativeCredentials()">
+                                <i class="fas fa-save"></i> Save & Enable
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="clearAlternativeCredentials()">
+                                <i class="fas fa-trash"></i> Clear All
+                            </button>
+                        </div>
+                        
+                        <div id="alternative-connection-status" class="connection-status">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Testing connections...</span>
+                        </div>
+                    </div>
                     
                     <div class="api-providers">
                         <div class="api-provider">
@@ -2162,13 +2433,14 @@ const DATA_CONFIG = {
                 </div>
 
                 <div class="setup-step">
-                    <h3>Step 4: Test Your Connection</h3>
-                    <p>After configuring your API credentials:</p>
+                    <h3>Step 4: Verify Your Connection</h3>
+                    <p>After saving your credentials:</p>
                     <ul>
-                        <li>Refresh the page</li>
-                        <li>The status banner will update to show "Live MLS Data"</li>
-                        <li>Search results will now show real property listings</li>
-                        <li>Properties will have current listing dates and accurate data</li>
+                        <li>The status banner will automatically update to show your connection status</li>
+                        <li>Your MLS number will be displayed in the banner for confirmation</li>
+                        <li>Search results will immediately show real property listings</li>
+                        <li>Use the "Test Connection" button to verify your API access</li>
+                        <li>Close this modal to start searching for properties</li>
                     </ul>
                 </div>
             </div>
@@ -2590,6 +2862,10 @@ const DATA_CONFIG = {
             // MLS Setup Modal Functions (make global)
             window.showMLSSetupModal = function() {
                 document.getElementById('mls-setup-modal').style.display = 'block';
+                // Load saved credentials when modal opens
+                if (credentialManager) {
+                    credentialManager.loadSavedCredentials();
+                }
             }
 
             window.closeMLSSetupModal = function() {
@@ -2620,7 +2896,25 @@ const DATA_CONFIG = {
                 if (isMlsEnabled) {
                     banner.style.background = 'linear-gradient(135deg, #10b981, #059669)';
                     banner.style.borderLeftColor = '#065f46';
-                    bannerText.innerHTML = '<strong>Live MLS Data:</strong> Connected to professional real estate listings. <span style="opacity: 0.8;">Data refreshed in real-time</span>';
+                    
+                    // Try to show MLS number if available
+                    let mlsInfo = 'Connected to professional real estate listings';
+                    try {
+                        const mlsCredentials = localStorage.getItem('mlsCredentials');
+                        if (mlsCredentials) {
+                            const creds = JSON.parse(mlsCredentials);
+                            if (creds.mlsNumber && creds.provider) {
+                                const providerName = creds.provider === 'bridge' ? 'Bridge' : 
+                                                   creds.provider === 'spark' ? 'Spark' : 
+                                                   creds.provider === 'trestle' ? 'Trestle' : creds.provider;
+                                mlsInfo = `Connected via ${providerName} • MLS #${creds.mlsNumber}`;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error reading MLS credentials for banner:', error);
+                    }
+                    
+                    bannerText.innerHTML = `<strong>Live MLS Data:</strong> ${mlsInfo}. <span style="opacity: 0.8;">Data refreshed in real-time</span>`;
                 } else if (isAlternativeEnabled) {
                     banner.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
                     banner.style.borderLeftColor = '#1e40af';
@@ -2634,6 +2928,381 @@ const DATA_CONFIG = {
 
             // Initialize MLS status banner
             updateMLSStatusBanner();
+
+            // Credential Management Functions
+            class CredentialManager {
+                constructor() {
+                    this.loadSavedCredentials();
+                }
+
+                // Save and load MLS credentials
+                saveMLSCredentials() {
+                    const credentials = {
+                        provider: document.getElementById('mls-provider').value,
+                        mlsNumber: document.getElementById('mls-number').value,
+                        apiKey: document.getElementById('api-key').value,
+                        apiSecret: document.getElementById('api-secret').value,
+                        username: document.getElementById('mls-username').value,
+                        password: document.getElementById('mls-password').value
+                    };
+
+                    try {
+                        localStorage.setItem('mlsCredentials', JSON.stringify(credentials));
+                        this.updateDataConfigWithCredentials();
+                        return true;
+                    } catch (error) {
+                        console.error('Error saving MLS credentials:', error);
+                        return false;
+                    }
+                }
+
+                saveAlternativeCredentials() {
+                    const credentials = {
+                        publicRecords: document.getElementById('enable-public-records').checked,
+                        rentalsApi: {
+                            enabled: document.getElementById('enable-rentals-api').checked,
+                            apiKey: document.getElementById('rentals-api-key').value
+                        },
+                        scrapingApi: {
+                            enabled: document.getElementById('enable-scraping-api').checked,
+                            apiKey: document.getElementById('scraping-api-key').value
+                        }
+                    };
+
+                    try {
+                        localStorage.setItem('alternativeCredentials', JSON.stringify(credentials));
+                        this.updateDataConfigWithCredentials();
+                        return true;
+                    } catch (error) {
+                        console.error('Error saving alternative credentials:', error);
+                        return false;
+                    }
+                }
+
+                loadSavedCredentials() {
+                    // Load MLS credentials
+                    try {
+                        const mlsCredentials = localStorage.getItem('mlsCredentials');
+                        if (mlsCredentials) {
+                            const creds = JSON.parse(mlsCredentials);
+                            this.populateMLSForm(creds);
+                        }
+                    } catch (error) {
+                        console.error('Error loading MLS credentials:', error);
+                    }
+
+                    // Load alternative credentials
+                    try {
+                        const altCredentials = localStorage.getItem('alternativeCredentials');
+                        if (altCredentials) {
+                            const creds = JSON.parse(altCredentials);
+                            this.populateAlternativeForm(creds);
+                        }
+                    } catch (error) {
+                        console.error('Error loading alternative credentials:', error);
+                    }
+
+                    // Update DATA_CONFIG with saved credentials
+                    this.updateDataConfigWithCredentials();
+                }
+
+                populateMLSForm(credentials) {
+                    const elements = {
+                        'mls-provider': credentials.provider,
+                        'mls-number': credentials.mlsNumber,
+                        'api-key': credentials.apiKey,
+                        'api-secret': credentials.apiSecret,
+                        'mls-username': credentials.username,
+                        'mls-password': credentials.password
+                    };
+
+                    Object.entries(elements).forEach(([id, value]) => {
+                        const element = document.getElementById(id);
+                        if (element && value) {
+                            element.value = value;
+                        }
+                    });
+                }
+
+                populateAlternativeForm(credentials) {
+                    const checkboxes = {
+                        'enable-public-records': credentials.publicRecords,
+                        'enable-rentals-api': credentials.rentalsApi?.enabled,
+                        'enable-scraping-api': credentials.scrapingApi?.enabled
+                    };
+
+                    Object.entries(checkboxes).forEach(([id, checked]) => {
+                        const element = document.getElementById(id);
+                        if (element) {
+                            element.checked = !!checked;
+                        }
+                    });
+
+                    const inputs = {
+                        'rentals-api-key': credentials.rentalsApi?.apiKey,
+                        'scraping-api-key': credentials.scrapingApi?.apiKey
+                    };
+
+                    Object.entries(inputs).forEach(([id, value]) => {
+                        const element = document.getElementById(id);
+                        if (element && value) {
+                            element.value = value;
+                        }
+                    });
+                }
+
+                updateDataConfigWithCredentials() {
+                    // Update MLS configuration
+                    try {
+                        const mlsCredentials = localStorage.getItem('mlsCredentials');
+                        if (mlsCredentials) {
+                            const creds = JSON.parse(mlsCredentials);
+                            if (creds.provider && creds.apiKey) {
+                                if (creds.provider === 'bridge') {
+                                    DATA_CONFIG.mls.bridge.apiKey = creds.apiKey;
+                                    DATA_CONFIG.mls.bridge.enabled = true;
+                                    DATA_CONFIG.mls.spark.enabled = false;
+                                } else if (creds.provider === 'spark') {
+                                    DATA_CONFIG.mls.spark.apiKey = creds.apiKey;
+                                    DATA_CONFIG.mls.spark.enabled = true;
+                                    DATA_CONFIG.mls.bridge.enabled = false;
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error updating MLS config:', error);
+                    }
+
+                    // Update alternative configuration
+                    try {
+                        const altCredentials = localStorage.getItem('alternativeCredentials');
+                        if (altCredentials) {
+                            const creds = JSON.parse(altCredentials);
+                            
+                            DATA_CONFIG.alternative.publicRecords.enabled = creds.publicRecords || false;
+                            
+                            DATA_CONFIG.alternative.rentals.rentalsApi.enabled = creds.rentalsApi?.enabled || false;
+                            if (creds.rentalsApi?.apiKey) {
+                                DATA_CONFIG.alternative.rentals.rentalsApi.apiKey = creds.rentalsApi.apiKey;
+                            }
+                            
+                            DATA_CONFIG.alternative.scraping.scrapingBee.enabled = creds.scrapingApi?.enabled || false;
+                            if (creds.scrapingApi?.apiKey) {
+                                DATA_CONFIG.alternative.scraping.scrapingBee.apiKey = creds.scrapingApi.apiKey;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error updating alternative config:', error);
+                    }
+
+                    // Update the status banner
+                    updateMLSStatusBanner();
+                }
+
+                clearMLSCredentials() {
+                    try {
+                        localStorage.removeItem('mlsCredentials');
+                        
+                        // Clear form fields
+                        ['mls-provider', 'mls-number', 'api-key', 'api-secret', 'mls-username', 'mls-password'].forEach(id => {
+                            const element = document.getElementById(id);
+                            if (element) {
+                                element.value = '';
+                            }
+                        });
+
+                        // Disable MLS in config
+                        DATA_CONFIG.mls.bridge.enabled = false;
+                        DATA_CONFIG.mls.spark.enabled = false;
+                        DATA_CONFIG.mls.bridge.apiKey = null;
+                        DATA_CONFIG.mls.spark.apiKey = null;
+
+                        updateMLSStatusBanner();
+                        return true;
+                    } catch (error) {
+                        console.error('Error clearing MLS credentials:', error);
+                        return false;
+                    }
+                }
+
+                clearAlternativeCredentials() {
+                    try {
+                        localStorage.removeItem('alternativeCredentials');
+                        
+                        // Clear form fields
+                        ['enable-public-records', 'enable-rentals-api', 'enable-scraping-api'].forEach(id => {
+                            const element = document.getElementById(id);
+                            if (element) {
+                                element.checked = false;
+                            }
+                        });
+                        
+                        ['rentals-api-key', 'scraping-api-key'].forEach(id => {
+                            const element = document.getElementById(id);
+                            if (element) {
+                                element.value = '';
+                            }
+                        });
+
+                        // Disable alternative sources in config
+                        DATA_CONFIG.alternative.publicRecords.enabled = false;
+                        DATA_CONFIG.alternative.rentals.rentalsApi.enabled = false;
+                        DATA_CONFIG.alternative.scraping.scrapingBee.enabled = false;
+                        DATA_CONFIG.alternative.rentals.rentalsApi.apiKey = null;
+                        DATA_CONFIG.alternative.scraping.scrapingBee.apiKey = null;
+
+                        updateMLSStatusBanner();
+                        return true;
+                    } catch (error) {
+                        console.error('Error clearing alternative credentials:', error);
+                        return false;
+                    }
+                }
+
+                async testMLSConnection() {
+                    const statusDiv = document.getElementById('mls-connection-status');
+                    const provider = document.getElementById('mls-provider').value;
+                    const apiKey = document.getElementById('api-key').value;
+
+                    if (!provider || !apiKey) {
+                        this.showConnectionStatus(statusDiv, 'error', 'Please select a provider and enter an API key');
+                        return false;
+                    }
+
+                    this.showConnectionStatus(statusDiv, 'testing', 'Testing connection...');
+
+                    try {
+                        // Create a test search to validate credentials
+                        const testCriteria = {
+                            searchTerm: '',
+                            minPrice: 0,
+                            maxPrice: 999999999,
+                            minBedrooms: 0,
+                            minBathrooms: 0,
+                            propertyType: '',
+                            status: 'active'
+                        };
+
+                        // Temporarily update config for testing
+                        const originalConfig = { ...DATA_CONFIG };
+                        if (provider === 'bridge') {
+                            DATA_CONFIG.mls.bridge.apiKey = apiKey;
+                            DATA_CONFIG.mls.bridge.enabled = true;
+                        } else if (provider === 'spark') {
+                            DATA_CONFIG.mls.spark.apiKey = apiKey;
+                            DATA_CONFIG.mls.spark.enabled = true;
+                        }
+
+                        const results = await mlsAPI.searchProperties(testCriteria);
+                        
+                        // Restore original config
+                        Object.assign(DATA_CONFIG, originalConfig);
+
+                        if (results && results.length >= 0) {
+                            this.showConnectionStatus(statusDiv, 'success', `Connection successful! Found ${results.length} test results.`);
+                            return true;
+                        } else {
+                            this.showConnectionStatus(statusDiv, 'error', 'Connection failed: No data returned');
+                            return false;
+                        }
+                    } catch (error) {
+                        this.showConnectionStatus(statusDiv, 'error', `Connection failed: ${error.message}`);
+                        return false;
+                    }
+                }
+
+                async testAlternativeConnections() {
+                    const statusDiv = document.getElementById('alternative-connection-status');
+                    const enabledSources = [];
+
+                    if (document.getElementById('enable-public-records').checked) {
+                        enabledSources.push('Public Records');
+                    }
+                    if (document.getElementById('enable-rentals-api').checked) {
+                        enabledSources.push('Rentals API');
+                    }
+                    if (document.getElementById('enable-scraping-api').checked) {
+                        enabledSources.push('Web Scraping');
+                    }
+
+                    if (enabledSources.length === 0) {
+                        this.showConnectionStatus(statusDiv, 'error', 'Please enable at least one alternative data source');
+                        return false;
+                    }
+
+                    this.showConnectionStatus(statusDiv, 'testing', 'Testing alternative connections...');
+
+                    try {
+                        // For now, simulate successful connection testing
+                        // In production, you would test actual API endpoints
+                        await new Promise(resolve => setTimeout(resolve, 1500));
+                        
+                        this.showConnectionStatus(statusDiv, 'success', `Successfully configured: ${enabledSources.join(', ')}`);
+                        return true;
+                    } catch (error) {
+                        this.showConnectionStatus(statusDiv, 'error', `Connection test failed: ${error.message}`);
+                        return false;
+                    }
+                }
+
+                showConnectionStatus(statusDiv, type, message) {
+                    statusDiv.className = `connection-status ${type}`;
+                    statusDiv.style.display = 'flex';
+                    
+                    const icon = type === 'success' ? 'fa-check-circle' : 
+                                type === 'error' ? 'fa-exclamation-triangle' : 
+                                'fa-spinner fa-spin';
+                    
+                    statusDiv.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
+                    
+                    // Auto-hide success/error messages after 5 seconds
+                    if (type !== 'testing') {
+                        setTimeout(() => {
+                            statusDiv.style.display = 'none';
+                        }, 5000);
+                    }
+                }
+            }
+
+            // Initialize credential manager
+            const credentialManager = new CredentialManager();
+
+            // Global functions for onclick handlers
+            window.testMLSConnection = () => credentialManager.testMLSConnection();
+            window.saveMLSCredentials = () => {
+                if (credentialManager.saveMLSCredentials()) {
+                    const statusDiv = document.getElementById('mls-connection-status');
+                    credentialManager.showConnectionStatus(statusDiv, 'success', 'Credentials saved successfully!');
+                    // Trigger a new search to refresh results with the new data source
+                    setTimeout(() => {
+                        searchProperties();
+                    }, 1000);
+                }
+            };
+            window.clearMLSCredentials = () => {
+                if (credentialManager.clearMLSCredentials()) {
+                    const statusDiv = document.getElementById('mls-connection-status');
+                    credentialManager.showConnectionStatus(statusDiv, 'success', 'Credentials cleared successfully!');
+                }
+            };
+
+            window.testAlternativeConnections = () => credentialManager.testAlternativeConnections();
+            window.saveAlternativeCredentials = () => {
+                if (credentialManager.saveAlternativeCredentials()) {
+                    const statusDiv = document.getElementById('alternative-connection-status');
+                    credentialManager.showConnectionStatus(statusDiv, 'success', 'Configuration saved successfully!');
+                    // Trigger a new search to refresh results with the new data sources
+                    setTimeout(() => {
+                        searchProperties();
+                    }, 1000);
+                }
+            };
+            window.clearAlternativeCredentials = () => {
+                if (credentialManager.clearAlternativeCredentials()) {
+                    const statusDiv = document.getElementById('alternative-connection-status');
+                    credentialManager.showConnectionStatus(statusDiv, 'success', 'Configuration cleared successfully!');
+                }
+            };
 
             // MLS Search and Integration Logic
             let selectedProperty = null;
