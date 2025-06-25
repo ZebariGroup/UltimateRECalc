@@ -289,6 +289,21 @@
             nav {
                 padding: 15px;
             }
+            
+            .actions {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            
+            .actions button {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+                min-width: auto;
+            }
+            
+            .action-text {
+                display: none;
+            }
         }
         
         .logo {
@@ -1180,15 +1195,16 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
-            z-index: 1000;
+            z-index: 10000;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             padding: 20px;
             box-sizing: border-box;
+            overflow-y: auto;
         }
 
         .modal-content {
@@ -1196,20 +1212,37 @@
             border-radius: 12px;
             max-width: 800px;
             width: 100%;
-            max-height: 90vh;
+            min-height: 300px;
+            max-height: calc(100vh - 40px);
             overflow: hidden;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
             animation: modalSlideIn 0.3s ease;
+            margin: 20px auto;
+            position: relative;
         }
 
         @keyframes modalSlideIn {
             from {
                 opacity: 0;
-                transform: scale(0.9) translateY(-20px);
+                transform: scale(0.9) translateY(20px);
             }
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Better mobile modal animation */
+        @media (max-width: 768px) {
+            @keyframes modalSlideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(50px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
         }
 
@@ -1256,6 +1289,7 @@
             padding: 25px;
             max-height: calc(90vh - 100px);
             overflow-y: auto;
+            overscroll-behavior: contain;
         }
 
         .history-controls, .favorites-controls {
@@ -1444,29 +1478,105 @@
         }
 
         @media (max-width: 768px) {
+            .modal-overlay {
+                padding: max(10px, env(safe-area-inset-top)) 10px 10px 10px;
+                align-items: flex-start;
+                height: 100vh;
+                height: 100dvh; /* Dynamic viewport height for mobile browsers */
+            }
+            
             .modal-content {
-                margin: 10px;
-                max-height: 95vh;
+                margin: 10px auto;
+                max-height: calc(100vh - 20px);
+                border-radius: 8px;
+                width: calc(100% - 20px);
             }
             
             .modal-header {
                 padding: 15px 20px;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                border-radius: 8px 8px 0 0;
             }
             
             .modal-body {
-                padding: 20px;
+                padding: 15px;
+                max-height: calc(100vh - 120px);
+                overflow-y: auto;
             }
             
             .history-controls, .favorites-controls {
                 flex-direction: column;
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+            
+            .history-controls button, .favorites-controls button {
+                width: 100%;
+                justify-content: center;
             }
             
             .item-summary {
                 grid-template-columns: 1fr;
+                gap: 8px;
             }
             
             .item-actions {
                 justify-content: center;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+            
+            .item-actions button {
+                flex: 1;
+                min-width: 80px;
+                font-size: 0.75rem;
+                padding: 8px 10px;
+            }
+            
+            .history-item, .favorite-item {
+                padding: 12px;
+                margin-bottom: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-overlay {
+                padding: 5px;
+            }
+            
+            .modal-content {
+                width: calc(100% - 10px);
+                max-height: calc(100vh - 10px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+                margin: max(5px, env(safe-area-inset-top)) auto 5px auto;
+            }
+            
+            .modal-header {
+                padding: 12px 15px;
+            }
+            
+            .modal-header h3 {
+                font-size: 1.1rem;
+            }
+            
+            .modal-body {
+                padding: 12px;
+                max-height: calc(100vh - 100px);
+            }
+            
+            .history-item, .favorite-item {
+                padding: 10px;
+            }
+            
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .item-date {
+                font-size: 0.75rem;
             }
         }
 
@@ -2015,7 +2125,7 @@
         <div id="home-calculator" class="calculator fade-in">
             <div class="dashboard-welcome">
                 <div class="welcome-header">
-                    <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: var(--primary-color);">Welcome to HouseMath.app</h1>
+                    <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: var(--primary-color);"></h1>
                     <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 40px;">Your complete real estate calculation suite. Choose a calculator to get started.</p>
                 </div>
 
@@ -3902,6 +4012,13 @@
                 if (modal) {
                     modal.style.display = 'flex';
                     document.body.style.overflow = 'hidden';
+                    
+                    // Scroll to top of modal on mobile
+                    setTimeout(() => {
+                        if (window.innerWidth <= 768) {
+                            modal.scrollTop = 0;
+                        }
+                    }, 100);
                 }
             }
 
