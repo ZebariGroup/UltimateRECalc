@@ -2936,7 +2936,7 @@
                     const calcNames = Object.keys(savedCalcs);
                     
                     if (calcNames.length === 0) {
-                        showToast('📁 No saved calculations found', 'info');
+                        alert('📁 No saved calculations found');
                         return;
                     }
                     
@@ -3035,10 +3035,11 @@
                                     const savedCalcs = JSON.parse(localStorage.getItem('savedCalculations') || '{}');
                                     delete savedCalcs[name];
                                     localStorage.setItem('savedCalculations', JSON.stringify(savedCalcs));
-                                    showToast(`🗑️ Deleted "${name}"`, 'success');
                                     modal.remove();
+                                    // Refresh the modal to show updated list
+                                    showSavedCalculations();
                                 } catch (e) {
-                                    showToast('❌ Failed to delete calculation', 'error');
+                                    alert('❌ Failed to delete calculation');
                                 }
                             }
                         });
@@ -3057,7 +3058,7 @@
                     });
                     
                 } catch (e) {
-                    showToast('❌ Failed to load saved calculations', 'error');
+                    alert('❌ Failed to load saved calculations');
                 }
             }
 
