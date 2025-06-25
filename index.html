@@ -2249,7 +2249,7 @@
     
     <script>
         // Chart variables
-        let paymentChart, amortizationChart, investmentChart, expenseChart, commissionChart, comparisonChart;
+        let paymentChart, amortizationChart, investmentChart, expenseChart, commissionChart, comparisonChart, closingChart;
         
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -3293,13 +3293,13 @@
             
             // Initialize charts and calculator values
             initializeCharts();
-                            calculateMortgage();
-                calculateInvestment();
-                calculateCashFlow();
-                calculateClosing();
-                calculateBuyer();
-                calculateCommission();
-                calculateComparison();
+            calculateMortgage();
+            calculateInvestment();
+            calculateCashFlow();
+            calculateClosing();
+            calculateBuyer();
+            calculateCommission();
+            calculateComparison();
             
             // Theme toggle functionality
             themeToggle.addEventListener('click', function() {
@@ -3886,6 +3886,35 @@
                         }
                     }
                 });
+
+                // Cash Flow Chart (Expense Breakdown)
+                const cashflowCtx = document.getElementById('cashflow-chart').getContext('2d');
+                expenseChart = new Chart(cashflowCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Net Cash Flow', 'Mortgage Payment', 'Property Tax', 'Insurance', 'Management', 'Maintenance', 'Vacancy Reserve'],
+                        datasets: [{
+                            data: [650, 1000, 150, 100, 200, 100, 100],
+                            backgroundColor: ['#10b981', '#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#6b7280']
+                        }]
+                    },
+                    options: pieOptions
+                });
+
+                // Closing Costs Chart
+                const closingCtx = document.getElementById('closing-chart').getContext('2d');
+                closingChart = new Chart(closingCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Title Insurance', 'Attorney Fees', 'Recording Fees', 'Transfer Tax', 'Inspection', 'Survey', 'Other'],
+                        datasets: [{
+                            label: 'Costs ($)',
+                            data: [1200, 800, 150, 2100, 400, 300, 500],
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6b7280']
+                        }]
+                    },
+                    options: defaultOptions
+                });
             }
             
             // Reinitialize charts when theme changes
@@ -3897,6 +3926,7 @@
                 if (expenseChart) expenseChart.destroy();
                 if (commissionChart) commissionChart.destroy();
                 if (comparisonChart) comparisonChart.destroy();
+                if (closingChart) closingChart.destroy();
                 
                 // Initialize new charts
                 initializeCharts();
@@ -3907,6 +3937,7 @@
                 calculateCashFlow();
                 calculateClosing();
                 calculateBuyer();
+                calculateCommission();
             }
             
             // Calculate mortgage
@@ -4065,16 +4096,102 @@
             
             // Calculate rental cash flow
             function calculateCashFlow() {
-                // Basic implementation for cash flow calculation
-                // This would be expanded based on your specific requirements
-                console.log('Cash flow calculation would be implemented here');
+                // Get input values
+                const rentalIncome = parseFloat(document.getElementById('rental-income').value);
+                const mortgagePayment = parseFloat(document.getElementById('mortgage-payment').value);
+                const propertyTax = parseFloat(document.getElementById('rental-property-tax').value);
+                const insurance = parseFloat(document.getElementById('rental-insurance').value);
+                const managementPercent = parseFloat(document.getElementById('management-slider').value);
+                const maintenancePercent = parseFloat(document.getElementById('maintenance-slider').value);
+                const vacancyPercent = parseFloat(document.getElementById('rental-vacancy-slider').value);
+                
+                // Calculate monthly expenses
+                const effectiveRentalIncome = rentalIncome * (1 - vacancyPercent / 100);
+                const managementFee = effectiveRentalIncome * (managementPercent / 100);
+                const maintenanceReserve = effectiveRentalIncome * (maintenancePercent / 100);
+                const vacancyReserve = rentalIncome * (vacancyPercent / 100);
+                
+                const totalExpenses = mortgagePayment + propertyTax + insurance + managementFee + maintenanceReserve;
+                const netCashFlow = effectiveRentalIncome - totalExpenses;
+                const grossIncome = rentalIncome;
+                const netOperatingIncome = effectiveRentalIncome - (propertyTax + insurance + managementFee + maintenanceReserve);
+                const cashFlowAfterDebt = netOperatingIncome - mortgagePayment;
+                
+                // Update DOM elements
+                document.getElementById('gross-income').textContent = '$' + Math.round(grossIncome).toLocaleString();
+                document.getElementById('total-expenses').textContent = '$' + Math.round(totalExpenses).toLocaleString();
+                document.getElementById('net-operating-income').textContent = '$' + Math.round(netOperatingIncome).toLocaleString();
+                document.getElementById('cash-flow-before-taxes').textContent = '$' + Math.round(cashFlowAfterDebt).toLocaleString();
+                document.getElementById('cash-flow-after-taxes').textContent = '$' + Math.round(cashFlowAfterDebt).toLocaleString(); // Same for now
+                
+                // Update expense breakdown chart
+                if (expenseChart) {
+                    expenseChart.data.datasets[0].data = [
+                        Math.round(Math.max(netCashFlow, 0)),
+                        Math.round(mortgagePayment),
+                        Math.round(propertyTax),
+                        Math.round(insurance),
+                        Math.round(managementFee),
+                        Math.round(maintenanceReserve),
+                        Math.round(vacancyReserve)
+                    ];
+                    expenseChart.update();
+                }
             }
 
             // Calculate closing costs
             function calculateClosing() {
-                // Basic implementation for closing costs calculation
-                // This would be expanded based on your specific requirements
-                console.log('Closing costs calculation would be implemented here');
+                // Get input values
+                const salesPrice = parseFloat(document.getElementById('closing-price').value);
+                const mortgageAmount = parseFloat(document.getElementById('closing-mortgage').value);
+                const commissionRate = parseFloat(document.getElementById('commission-rate').value);
+                const deedPages = parseInt(document.getElementById('deed-pages').value);
+                const mortgagePages = parseInt(document.getElementById('mortgage-pages').value);
+                
+                // Calculate standard closing costs
+                const titleInsurance = Math.round(salesPrice * 0.003); // ~0.3% of sales price
+                const attorneyFees = 800;
+                const recordingDeed = deedPages * 25; // $25 per page
+                const recordingMortgage = mortgagePages * 25; // $25 per page
+                const transferTax = Math.round(salesPrice * 0.006); // ~0.6% transfer tax
+                const inspection = 400;
+                const survey = 300;
+                const lenderFees = Math.round(mortgageAmount * 0.01); // 1% of loan amount
+                const appraisal = 500;
+                const creditReport = 75;
+                const realEstateCommission = Math.round(salesPrice * (commissionRate / 100));
+                
+                // Calculate totals
+                const totalRecordingFees = recordingDeed + recordingMortgage;
+                const totalLenderFees = lenderFees + appraisal + creditReport;
+                const otherFees = inspection + survey + attorneyFees;
+                const totalClosingCosts = titleInsurance + totalRecordingFees + transferTax + totalLenderFees + otherFees + realEstateCommission;
+                
+                // Update DOM elements
+                document.getElementById('title-insurance-cost').textContent = '$' + titleInsurance.toLocaleString();
+                document.getElementById('attorney-fees-cost').textContent = '$' + attorneyFees.toLocaleString();
+                document.getElementById('recording-fees-cost').textContent = '$' + totalRecordingFees.toLocaleString();
+                document.getElementById('transfer-tax-cost').textContent = '$' + transferTax.toLocaleString();
+                document.getElementById('lender-fees-cost').textContent = '$' + totalLenderFees.toLocaleString();
+                document.getElementById('inspection-cost').textContent = '$' + inspection.toLocaleString();
+                document.getElementById('survey-cost').textContent = '$' + survey.toLocaleString();
+                document.getElementById('commission-cost').textContent = '$' + realEstateCommission.toLocaleString();
+                document.getElementById('total-closing-costs').textContent = '$' + totalClosingCosts.toLocaleString();
+                document.getElementById('closing-percentage').textContent = ((totalClosingCosts / salesPrice) * 100).toFixed(2) + '%';
+                
+                // Update closing costs chart
+                if (closingChart) {
+                    closingChart.data.datasets[0].data = [
+                        titleInsurance,
+                        attorneyFees,
+                        totalRecordingFees,
+                        transferTax,
+                        inspection,
+                        survey,
+                        totalLenderFees
+                    ];
+                    closingChart.update();
+                }
             }
 
             // Calculate buyer costs
