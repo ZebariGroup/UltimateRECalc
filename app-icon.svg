@@ -1,0 +1,35 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="#2563eb" />
+  
+  <!-- Calculator Icon -->
+  <g fill="#ffffff">
+    <!-- Calculator Body -->
+    <rect x="136" y="96" width="240" height="320" rx="24" stroke="#ffffff" stroke-width="16" fill="none" />
+    
+    <!-- Display Screen -->
+    <rect x="160" y="120" width="192" height="60" rx="6" fill="#ffffff" />
+    
+    <!-- Calculator Buttons -->
+    <!-- Row 1 -->
+    <circle cx="184" cy="224" r="20" fill="#ffffff" />
+    <circle cx="256" cy="224" r="20" fill="#ffffff" />
+    <circle cx="328" cy="224" r="20" fill="#ffffff" />
+    
+    <!-- Row 2 -->
+    <circle cx="184" cy="288" r="20" fill="#ffffff" />
+    <circle cx="256" cy="288" r="20" fill="#ffffff" />
+    <circle cx="328" cy="288" r="20" fill="#ffffff" />
+    
+    <!-- Row 3 -->
+    <circle cx="184" cy="352" r="20" fill="#ffffff" />
+    <circle cx="256" cy="352" r="20" fill="#ffffff" />
+    <circle cx="328" cy="352" r="20" fill="#ffffff" />
+    
+    <!-- House Icon Overlay -->
+    <path d="M256 68 L346 148 L326 148 L326 178 L186 178 L186 148 L166 148 Z" fill="#ffffff" opacity="0.9" />
+  </g>
+  
+  <!-- Dollar Sign -->
+  <text x="256" y="150" font-family="Arial, sans-serif" font-size="44" font-weight="bold" text-anchor="middle" fill="#2563eb">$</text>
+</svg>
