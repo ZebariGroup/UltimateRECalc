@@ -2124,10 +2124,7 @@
         <!-- Dashboard Home Page -->
         <div id="home-calculator" class="calculator fade-in">
             <div class="dashboard-welcome">
-                <div class="welcome-header">
-                    <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: var(--primary-color);"></h1>
-                    <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 40px;">Your complete real estate calculation suite. Choose a calculator to get started.</p>
-                </div>
+
 
                 <div class="calculator-grid">
                     <!-- Primary Calculator - Mortgage (Featured) -->
@@ -3661,6 +3658,401 @@
                     <div class="details-row">
                         <div class="details-label">5-Year Total Savings:</div>
                         <div class="details-value" id="refi-five-year-savings" style="color: #10b981;">$14,520</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HELOC Calculator -->
+        <div id="heloc-calculator" class="calculator fade-in hidden">
+            <!-- Inputs -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-piggy-bank"></i> HELOC Calculator</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">Calculate your Home Equity Line of Credit options and monthly payments</p>
+                
+                <div class="form-group">
+                    <label for="heloc-home-value">Current Home Value ($)</label>
+                    <input type="number" id="heloc-home-value" value="500000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="heloc-existing-mortgage">Existing Mortgage Balance ($)</label>
+                    <input type="number" id="heloc-existing-mortgage" value="280000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="heloc-ltv-slider">Max LTV Ratio (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="heloc-ltv-slider" min="70" max="90" step="1" value="80">
+                        <span id="heloc-ltv-value" class="slider-value">80%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="heloc-credit-limit">Desired Credit Limit ($)</label>
+                    <input type="number" id="heloc-credit-limit" value="150000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="heloc-current-balance">Current HELOC Balance ($)</label>
+                    <input type="number" id="heloc-current-balance" value="0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="heloc-interest-rate-slider">Interest Rate (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="heloc-interest-rate-slider" min="3" max="12" step="0.1" value="6.5">
+                        <span id="heloc-interest-rate-value" class="slider-value">6.5%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="heloc-repayment-period">Repayment Period (years)</label>
+                    <select id="heloc-repayment-period">
+                        <option value="10">10 years</option>
+                        <option value="15" selected>15 years</option>
+                        <option value="20">20 years</option>
+                        <option value="30">30 years</option>
+                    </select>
+                </div>
+                
+                <button id="calculate-heloc" class="btn-primary" style="width: 100%;">Calculate HELOC</button>
+                <div class="export-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                    <div class="dropdown">
+                        <button class="btn-primary dropdown-btn" style="display: flex; align-items: center; gap: 5px;">
+                            <i class="far fa-file-pdf"></i> Export PDF <i class="fas fa-chevron-down" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="export-option" data-type="pdf" data-content="current" data-source="heloc">Current View</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="summary" data-source="heloc">Summary Only</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="full" data-source="heloc">Full Report</a>
+                        </div>
+                    </div>
+                    <button class="btn-green export-option" data-type="jpg" data-content="current" data-source="heloc" style="display: flex; align-items: center; gap: 5px;">
+                        <i class="far fa-file-image"></i> JPG
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results -->
+            <div class="card">
+                <h2 class="card-title">🏦 HELOC Analysis</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Available Equity</div>
+                        <div class="stat-value" id="heloc-available-equity">$220,000</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-label">Monthly Payment</div>
+                        <div class="stat-value" id="heloc-monthly-payment">$950</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="heloc-chart"></canvas>
+                </div>
+                
+                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">💰 Equity Breakdown</h3>
+                <div class="details-table">
+                    <div class="details-row">
+                        <div class="details-label">Home Value:</div>
+                        <div class="details-value" id="heloc-home-value-display">$500,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Existing Mortgage:</div>
+                        <div class="details-value" id="heloc-existing-mortgage-display">$280,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Current Equity:</div>
+                        <div class="details-value" id="heloc-current-equity">$220,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Maximum Credit Line:</div>
+                        <div class="details-value" id="heloc-max-credit-line">$120,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Available to Borrow:</div>
+                        <div class="details-value" id="heloc-available-borrow">$120,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Property Flip Calculator -->
+        <div id="flip-calculator" class="calculator fade-in hidden">
+            <!-- Inputs -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-hammer"></i> Property Flip Calculator</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">Calculate potential profits and ROI for fix-and-flip projects</p>
+                
+                <h3 style="margin-bottom: 15px; color: var(--primary-color);">🏠 Purchase Details</h3>
+                <div class="form-group">
+                    <label for="flip-purchase-price">Purchase Price ($)</label>
+                    <input type="number" id="flip-purchase-price" value="180000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="flip-closing-costs">Closing Costs ($)</label>
+                    <input type="number" id="flip-closing-costs" value="3500">
+                </div>
+                
+                <h3 style="margin: 25px 0 15px 0; color: var(--secondary-color);">🔧 Renovation Costs</h3>
+                <div class="form-group">
+                    <label for="flip-renovation-budget">Total Renovation Budget ($)</label>
+                    <input type="number" id="flip-renovation-budget" value="45000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="flip-contingency-slider">Contingency Fund (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="flip-contingency-slider" min="5" max="25" step="1" value="15">
+                        <span id="flip-contingency-value" class="slider-value">15%</span>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 25px 0 15px 0; color: #10b981;">💰 Holding & Sale</h3>
+                <div class="form-group">
+                    <label for="flip-holding-period">Holding Period (months)</label>
+                    <select id="flip-holding-period">
+                        <option value="3">3 months</option>
+                        <option value="6" selected>6 months</option>
+                        <option value="9">9 months</option>
+                        <option value="12">12 months</option>
+                        <option value="18">18 months</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="flip-carrying-costs">Monthly Carrying Costs ($)</label>
+                    <input type="number" id="flip-carrying-costs" value="2200">
+                </div>
+                
+                <div class="form-group">
+                    <label for="flip-arv">After Repair Value - ARV ($)</label>
+                    <input type="number" id="flip-arv" value="275000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="flip-sale-costs-slider">Sale Costs (% of ARV)</label>
+                    <div class="slider-container">
+                        <input type="range" id="flip-sale-costs-slider" min="6" max="12" step="0.5" value="8">
+                        <span id="flip-sale-costs-value" class="slider-value">8%</span>
+                    </div>
+                </div>
+                
+                <button id="calculate-flip" class="btn-primary" style="width: 100%;">Calculate Flip Profit</button>
+                <div class="export-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                    <div class="dropdown">
+                        <button class="btn-primary dropdown-btn" style="display: flex; align-items: center; gap: 5px;">
+                            <i class="far fa-file-pdf"></i> Export PDF <i class="fas fa-chevron-down" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="export-option" data-type="pdf" data-content="current" data-source="flip">Current View</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="summary" data-source="flip">Summary Only</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="full" data-source="flip">Full Report</a>
+                        </div>
+                    </div>
+                    <button class="btn-green export-option" data-type="jpg" data-content="current" data-source="flip" style="display: flex; align-items: center; gap: 5px;">
+                        <i class="far fa-file-image"></i> JPG
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results -->
+            <div class="card">
+                <h2 class="card-title">💎 Flip Analysis</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Net Profit</div>
+                        <div class="stat-value" id="flip-net-profit" style="color: #10b981;">$18,700</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-label">ROI</div>
+                        <div class="stat-value" id="flip-roi">24.8%</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="flip-chart"></canvas>
+                </div>
+                
+                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">💸 Cost Breakdown</h3>
+                <div class="details-table">
+                    <div class="details-row">
+                        <div class="details-label">Purchase Price:</div>
+                        <div class="details-value" id="flip-purchase-display">$180,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Renovation Costs:</div>
+                        <div class="details-value" id="flip-renovation-display">$45,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Contingency Fund:</div>
+                        <div class="details-value" id="flip-contingency-display">$6,750</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Carrying Costs:</div>
+                        <div class="details-value" id="flip-carrying-display">$13,200</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Sale Costs:</div>
+                        <div class="details-value" id="flip-sale-costs-display">$22,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Total Investment:</div>
+                        <div class="details-value" id="flip-total-investment">$266,950</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Sale Price (ARV):</div>
+                        <div class="details-value" id="flip-arv-display">$275,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Net Profit:</div>
+                        <div class="details-value" id="flip-profit-display" style="color: #10b981;">$8,050</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BRRRR Strategy Calculator -->
+        <div id="brrrr-calculator" class="calculator fade-in hidden">
+            <!-- Inputs -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-sync-alt"></i> BRRRR Strategy Calculator</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">Buy, Rehab, Rent, Refinance, Repeat investment analysis</p>
+                
+                <h3 style="margin-bottom: 15px; color: var(--primary-color);">🏠 Buy & Rehab</h3>
+                <div class="form-group">
+                    <label for="brrrr-purchase-price">Purchase Price ($)</label>
+                    <input type="number" id="brrrr-purchase-price" value="120000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="brrrr-rehab-costs">Rehab Costs ($)</label>
+                    <input type="number" id="brrrr-rehab-costs" value="25000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="brrrr-closing-costs">Closing & Holding Costs ($)</label>
+                    <input type="number" id="brrrr-closing-costs" value="4000">
+                </div>
+                
+                <h3 style="margin: 25px 0 15px 0; color: var(--secondary-color);">🏠 Rent</h3>
+                <div class="form-group">
+                    <label for="brrrr-monthly-rent">Monthly Rent ($)</label>
+                    <input type="number" id="brrrr-monthly-rent" value="1800">
+                </div>
+                
+                <div class="form-group">
+                    <label for="brrrr-expenses-slider">Monthly Expenses (% of rent)</label>
+                    <div class="slider-container">
+                        <input type="range" id="brrrr-expenses-slider" min="20" max="50" step="1" value="35">
+                        <span id="brrrr-expenses-value" class="slider-value">35%</span>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 25px 0 15px 0; color: #10b981;">💰 Refinance</h3>
+                <div class="form-group">
+                    <label for="brrrr-arv">After Repair Value - ARV ($)</label>
+                    <input type="number" id="brrrr-arv" value="180000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="brrrr-refi-ltv-slider">Refinance LTV (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="brrrr-refi-ltv-slider" min="70" max="80" step="1" value="75">
+                        <span id="brrrr-refi-ltv-value" class="slider-value">75%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="brrrr-refi-rate-slider">Refinance Interest Rate (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="brrrr-refi-rate-slider" min="3" max="8" step="0.1" value="5.5">
+                        <span id="brrrr-refi-rate-value" class="slider-value">5.5%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="brrrr-refi-term">Refinance Term (years)</label>
+                    <select id="brrrr-refi-term">
+                        <option value="15">15 years</option>
+                        <option value="20">20 years</option>
+                        <option value="30" selected>30 years</option>
+                    </select>
+                </div>
+                
+                <button id="calculate-brrrr" class="btn-primary" style="width: 100%;">Calculate BRRRR</button>
+                <div class="export-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                    <div class="dropdown">
+                        <button class="btn-primary dropdown-btn" style="display: flex; align-items: center; gap: 5px;">
+                            <i class="far fa-file-pdf"></i> Export PDF <i class="fas fa-chevron-down" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" class="export-option" data-type="pdf" data-content="current" data-source="brrrr">Current View</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="summary" data-source="brrrr">Summary Only</a>
+                            <a href="#" class="export-option" data-type="pdf" data-content="full" data-source="brrrr">Full Report</a>
+                        </div>
+                    </div>
+                    <button class="btn-green export-option" data-type="jpg" data-content="current" data-source="brrrr" style="display: flex; align-items: center; gap: 5px;">
+                        <i class="far fa-file-image"></i> JPG
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results -->
+            <div class="card">
+                <h2 class="card-title">🔄 BRRRR Analysis</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Money Left In Deal</div>
+                        <div class="stat-value" id="brrrr-money-left" style="color: #10b981;">$14,000</div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-label">Monthly Cash Flow</div>
+                        <div class="stat-value" id="brrrr-monthly-cashflow">$542</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="brrrr-chart"></canvas>
+                </div>
+                
+                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">💵 Investment Summary</h3>
+                <div class="details-table">
+                    <div class="details-row">
+                        <div class="details-label">Total Investment:</div>
+                        <div class="details-value" id="brrrr-total-investment">$149,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Refinance Amount:</div>
+                        <div class="details-value" id="brrrr-refi-amount">$135,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Cash Recovered:</div>
+                        <div class="details-value" id="brrrr-cash-recovered">$135,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Cash Left in Deal:</div>
+                        <div class="details-value" id="brrrr-cash-left">$14,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">New Mortgage Payment:</div>
+                        <div class="details-value" id="brrrr-mortgage-payment">$1,088</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Net Cash Flow:</div>
+                        <div class="details-value" id="brrrr-net-cashflow" style="color: #10b981;">$542</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Cash-on-Cash ROI:</div>
+                        <div class="details-value" id="brrrr-coc-roi" style="color: #10b981;">46.4%</div>
                     </div>
                 </div>
             </div>
@@ -5586,7 +5978,17 @@
                 // Refinancing sliders
                 { slider: 'refi-current-rate-slider', display: 'refi-current-rate-value', suffix: '%' },
                 { slider: 'refi-new-rate-slider', display: 'refi-new-rate-value', suffix: '%' },
-                { slider: 'refi-points-slider', display: 'refi-points-value', suffix: '%' }
+                { slider: 'refi-points-slider', display: 'refi-points-value', suffix: '%' },
+                // HELOC sliders
+                { slider: 'heloc-ltv-slider', display: 'heloc-ltv-value', suffix: '%' },
+                { slider: 'heloc-interest-rate-slider', display: 'heloc-interest-rate-value', suffix: '%' },
+                // Property Flip sliders
+                { slider: 'flip-contingency-slider', display: 'flip-contingency-value', suffix: '%' },
+                { slider: 'flip-sale-costs-slider', display: 'flip-sale-costs-value', suffix: '%' },
+                // BRRRR sliders
+                { slider: 'brrrr-expenses-slider', display: 'brrrr-expenses-value', suffix: '%' },
+                { slider: 'brrrr-refi-ltv-slider', display: 'brrrr-refi-ltv-value', suffix: '%' },
+                { slider: 'brrrr-refi-rate-slider', display: 'brrrr-refi-rate-value', suffix: '%' }
             ];
             
             sliders.forEach(item => {
@@ -5614,6 +6016,9 @@
             document.getElementById('calculate-comparison').addEventListener('click', calculateComparison);
             document.getElementById('calculate-rentbuy').addEventListener('click', calculateRentBuy);
             document.getElementById('calculate-refinance').addEventListener('click', calculateRefinance);
+            document.getElementById('calculate-heloc').addEventListener('click', calculateHELOC);
+            document.getElementById('calculate-flip').addEventListener('click', calculateFlip);
+            document.getElementById('calculate-brrrr').addEventListener('click', calculateBRRRR);
 
             
             // Initialize charts
@@ -5958,21 +6363,7 @@
                 }
                 
                 // Auto-scroll to results on mobile devices
-                if (window.innerWidth <= 768) {
-                    // Find the results section (the card right after the inputs)
-                    const mortgageCalculator = document.getElementById('mortgage-calculator');
-                    const resultsCard = mortgageCalculator.querySelector('.card:nth-child(2)'); // Second card is the results
-                    
-                    if (resultsCard) {
-                        setTimeout(() => {
-                            resultsCard.scrollIntoView({ 
-                                behavior: 'smooth', 
-                                block: 'start',
-                                inline: 'nearest'
-                            });
-                        }, 100); // Small delay to ensure DOM is updated
-                    }
-                }
+                autoScrollToResults('mortgage');
 
                 // Auto-save to history
                 autoSaveCalculation('mortgage', {
@@ -6072,6 +6463,24 @@
                     investmentChart.data.datasets[1].data = cashFlows;
                     investmentChart.update();
                 }
+
+                // Auto-scroll to results on mobile devices
+                autoScrollToResults('investment');
+
+                // Auto-save to history
+                autoSaveCalculation('investment', {
+                    purchasePrice: purchasePrice,
+                    annualRent: annualRent,
+                    expensesPercent: expensesPercent,
+                    vacancyRate: vacancyRate,
+                    appreciationRate: appreciationRate,
+                    holdingPeriod: holdingPeriod
+                }, {
+                    cashOnCashROI: cashOnCashROI.toFixed(1),
+                    capRate: capRate.toFixed(1),
+                    annualCashFlow: Math.round(annualCashFlow),
+                    annualizedReturn: annualizedReturn.toFixed(1)
+                });
                 } catch (error) {
                     // Handle calculation errors gracefully
                 }
@@ -6120,6 +6529,9 @@
                     ];
                     expenseChart.update();
                 }
+
+                // Auto-scroll to results on mobile devices
+                autoScrollToResults('cashflow');
             }
 
             // Calculate closing costs
@@ -6185,6 +6597,9 @@
                     ];
                     closingChart.update();
                 }
+
+                // Auto-scroll to results on mobile devices
+                autoScrollToResults('closing');
             }
 
             // Calculate buyer costs
@@ -6218,6 +6633,9 @@
                 if (buyerPointsElement) buyerPointsElement.textContent = '$' + Math.round(pointsCost).toLocaleString();
                 if (buyerInterestElement) buyerInterestElement.textContent = '$' + Math.round(prepaidInterest).toLocaleString();
                 if (buyerOtherCostsElement) buyerOtherCostsElement.textContent = '$' + Math.round(otherCosts).toLocaleString();
+
+                // Auto-scroll to results on mobile devices
+                autoScrollToResults('buyer');
             }
 
             // Calculate commission
@@ -6273,6 +6691,9 @@
                 if (yourNetCommission > 15000) {
                     hapticFeedback('heavy');
                 }
+
+                // Auto-scroll to results on mobile devices
+                autoScrollToResults('commission');
             }
 
             // Calculate property comparison
@@ -6357,6 +6778,9 @@
                     `🏆 Based on all factors, ${recommended.name} appears to be the smartest choice`,
                     `💡 ${newestProperty.name} is the newest (${newestProperty.year}) but ${lowestHoa.name} has the lowest HOA fees`
                 ];
+
+                // Auto-scroll to results on mobile devices
+                autoScrollToResults('comparison');
             }
 
             // Calculate Rent vs Buy
@@ -6444,6 +6868,9 @@
                     document.getElementById('rent-investment-growth').textContent = '$' + Math.round(investmentGrowth).toLocaleString();
                     document.getElementById('rent-net-cost').textContent = '$' + Math.round(rentingNetCost).toLocaleString();
 
+                    // Auto-scroll to results on mobile devices
+                    autoScrollToResults('rentbuy');
+
                     // Auto-save to history
                     autoSaveCalculation('rentbuy', {
                         homePrice: homePrice,
@@ -6516,6 +6943,9 @@
                     document.getElementById('refi-five-year-savings').textContent = '$' + Math.round(fiveYearSavings).toLocaleString();
                     document.getElementById('refi-five-year-savings').style.color = fiveYearSavings > 0 ? '#10b981' : '#ef4444';
 
+                    // Auto-scroll to results on mobile devices
+                    autoScrollToResults('refinance');
+
                     // Auto-save to history
                     autoSaveCalculation('refinance', {
                         currentBalance: currentBalance,
@@ -6531,6 +6961,201 @@
 
                 } catch (error) {
                     console.error('Refinance calculation error:', error);
+                }
+            }
+
+            // Calculate HELOC
+            function calculateHELOC() {
+                try {
+                    // Get input values
+                    const homeValue = parseFloat(document.getElementById('heloc-home-value').value) || 0;
+                    const existingMortgage = parseFloat(document.getElementById('heloc-existing-mortgage').value) || 0;
+                    const maxLtv = parseFloat(document.getElementById('heloc-ltv-slider').value) || 80;
+                    const desiredCreditLimit = parseFloat(document.getElementById('heloc-credit-limit').value) || 0;
+                    const currentBalance = parseFloat(document.getElementById('heloc-current-balance').value) || 0;
+                    const interestRate = parseFloat(document.getElementById('heloc-interest-rate-slider').value) || 6.5;
+                    const repaymentPeriod = parseInt(document.getElementById('heloc-repayment-period').value) || 15;
+
+                    // Calculate equity and available credit
+                    const currentEquity = homeValue - existingMortgage;
+                    const maxCreditLine = (homeValue * (maxLtv / 100)) - existingMortgage;
+                    const availableToBorrow = maxCreditLine - currentBalance;
+
+                    // Calculate monthly payment based on current balance
+                    const monthlyInterestRate = interestRate / 100 / 12;
+                    const numberOfPayments = repaymentPeriod * 12;
+                    const balanceToCalculate = currentBalance || desiredCreditLimit;
+                    
+                    const monthlyPayment = balanceToCalculate * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments) / 
+                        (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+
+                    // Update results
+                    document.getElementById('heloc-available-equity').textContent = '$' + Math.round(currentEquity).toLocaleString();
+                    document.getElementById('heloc-monthly-payment').textContent = '$' + Math.round(monthlyPayment).toLocaleString();
+                    
+                    // Update equity breakdown
+                    document.getElementById('heloc-home-value-display').textContent = '$' + homeValue.toLocaleString();
+                    document.getElementById('heloc-existing-mortgage-display').textContent = '$' + existingMortgage.toLocaleString();
+                    document.getElementById('heloc-current-equity').textContent = '$' + Math.round(currentEquity).toLocaleString();
+                    document.getElementById('heloc-max-credit-line').textContent = '$' + Math.round(maxCreditLine).toLocaleString();
+                    document.getElementById('heloc-available-borrow').textContent = '$' + Math.round(availableToBorrow).toLocaleString();
+
+                    // Auto-scroll to results on mobile devices
+                    autoScrollToResults('heloc');
+
+                    // Auto-save to history
+                    autoSaveCalculation('heloc', {
+                        homeValue: homeValue,
+                        existingMortgage: existingMortgage,
+                        maxLtv: maxLtv,
+                        interestRate: interestRate,
+                        repaymentPeriod: repaymentPeriod
+                    }, {
+                        availableEquity: Math.round(currentEquity),
+                        monthlyPayment: Math.round(monthlyPayment),
+                        maxCreditLine: Math.round(maxCreditLine),
+                        availableToBorrow: Math.round(availableToBorrow)
+                    });
+
+                } catch (error) {
+                    console.error('HELOC calculation error:', error);
+                }
+            }
+
+            // Calculate Property Flip
+            function calculateFlip() {
+                try {
+                    // Get input values
+                    const purchasePrice = parseFloat(document.getElementById('flip-purchase-price').value) || 0;
+                    const closingCosts = parseFloat(document.getElementById('flip-closing-costs').value) || 0;
+                    const renovationBudget = parseFloat(document.getElementById('flip-renovation-budget').value) || 0;
+                    const contingencyPercent = parseFloat(document.getElementById('flip-contingency-slider').value) || 15;
+                    const holdingPeriod = parseInt(document.getElementById('flip-holding-period').value) || 6;
+                    const carryingCosts = parseFloat(document.getElementById('flip-carrying-costs').value) || 0;
+                    const arv = parseFloat(document.getElementById('flip-arv').value) || 0;
+                    const saleCostsPercent = parseFloat(document.getElementById('flip-sale-costs-slider').value) || 8;
+
+                    // Calculate costs
+                    const contingencyAmount = renovationBudget * (contingencyPercent / 100);
+                    const totalCarryingCosts = carryingCosts * holdingPeriod;
+                    const saleCosts = arv * (saleCostsPercent / 100);
+                    const totalInvestment = purchasePrice + closingCosts + renovationBudget + contingencyAmount + totalCarryingCosts;
+                    
+                    // Calculate profit
+                    const netSalePrice = arv - saleCosts;
+                    const netProfit = netSalePrice - totalInvestment;
+                    const roi = (netProfit / totalInvestment) * 100;
+
+                    // Update results
+                    document.getElementById('flip-net-profit').textContent = '$' + Math.round(netProfit).toLocaleString();
+                    document.getElementById('flip-net-profit').style.color = netProfit > 0 ? '#10b981' : '#ef4444';
+                    document.getElementById('flip-roi').textContent = roi.toFixed(1) + '%';
+                    document.getElementById('flip-roi').style.color = roi > 0 ? '#10b981' : '#ef4444';
+
+                    // Update cost breakdown
+                    document.getElementById('flip-purchase-display').textContent = '$' + purchasePrice.toLocaleString();
+                    document.getElementById('flip-renovation-display').textContent = '$' + renovationBudget.toLocaleString();
+                    document.getElementById('flip-contingency-display').textContent = '$' + Math.round(contingencyAmount).toLocaleString();
+                    document.getElementById('flip-carrying-display').textContent = '$' + Math.round(totalCarryingCosts).toLocaleString();
+                    document.getElementById('flip-sale-costs-display').textContent = '$' + Math.round(saleCosts).toLocaleString();
+                    document.getElementById('flip-total-investment').textContent = '$' + Math.round(totalInvestment).toLocaleString();
+                    document.getElementById('flip-arv-display').textContent = '$' + arv.toLocaleString();
+                    document.getElementById('flip-profit-display').textContent = '$' + Math.round(netProfit).toLocaleString();
+
+                    // Auto-scroll to results on mobile devices
+                    autoScrollToResults('flip');
+
+                    // Auto-save to history
+                    autoSaveCalculation('flip', {
+                        purchasePrice: purchasePrice,
+                        renovationBudget: renovationBudget,
+                        holdingPeriod: holdingPeriod,
+                        arv: arv,
+                        saleCostsPercent: saleCostsPercent
+                    }, {
+                        netProfit: Math.round(netProfit),
+                        roi: roi.toFixed(1),
+                        totalInvestment: Math.round(totalInvestment)
+                    });
+
+                } catch (error) {
+                    console.error('Property Flip calculation error:', error);
+                }
+            }
+
+            // Calculate BRRRR Strategy
+            function calculateBRRRR() {
+                try {
+                    // Get input values
+                    const purchasePrice = parseFloat(document.getElementById('brrrr-purchase-price').value) || 0;
+                    const rehabCosts = parseFloat(document.getElementById('brrrr-rehab-costs').value) || 0;
+                    const closingCosts = parseFloat(document.getElementById('brrrr-closing-costs').value) || 0;
+                    const monthlyRent = parseFloat(document.getElementById('brrrr-monthly-rent').value) || 0;
+                    const expensesPercent = parseFloat(document.getElementById('brrrr-expenses-slider').value) || 35;
+                    const arv = parseFloat(document.getElementById('brrrr-arv').value) || 0;
+                    const refiLtv = parseFloat(document.getElementById('brrrr-refi-ltv-slider').value) || 75;
+                    const refiRate = parseFloat(document.getElementById('brrrr-refi-rate-slider').value) || 5.5;
+                    const refiTerm = parseInt(document.getElementById('brrrr-refi-term').value) || 30;
+
+                    // Calculate total investment
+                    const totalInvestment = purchasePrice + rehabCosts + closingCosts;
+
+                    // Calculate refinance amount
+                    const refinanceAmount = arv * (refiLtv / 100);
+
+                    // Calculate cash left in deal
+                    const cashLeftInDeal = totalInvestment - refinanceAmount;
+
+                    // Calculate new mortgage payment
+                    const monthlyRate = refiRate / 100 / 12;
+                    const numberOfPayments = refiTerm * 12;
+                    const mortgagePayment = refinanceAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments) / 
+                        (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+
+                    // Calculate cash flow
+                    const monthlyExpenses = monthlyRent * (expensesPercent / 100);
+                    const netCashFlow = monthlyRent - monthlyExpenses - mortgagePayment;
+
+                    // Calculate cash-on-cash ROI
+                    const annualCashFlow = netCashFlow * 12;
+                    const cocRoi = cashLeftInDeal > 0 ? (annualCashFlow / cashLeftInDeal) * 100 : 0;
+
+                    // Update results
+                    document.getElementById('brrrr-money-left').textContent = '$' + Math.round(cashLeftInDeal).toLocaleString();
+                    document.getElementById('brrrr-money-left').style.color = cashLeftInDeal < totalInvestment * 0.5 ? '#10b981' : '#3b82f6';
+                    document.getElementById('brrrr-monthly-cashflow').textContent = '$' + Math.round(netCashFlow).toLocaleString();
+                    document.getElementById('brrrr-monthly-cashflow').style.color = netCashFlow > 0 ? '#10b981' : '#ef4444';
+
+                    // Update investment summary
+                    document.getElementById('brrrr-total-investment').textContent = '$' + Math.round(totalInvestment).toLocaleString();
+                    document.getElementById('brrrr-refi-amount').textContent = '$' + Math.round(refinanceAmount).toLocaleString();
+                    document.getElementById('brrrr-cash-recovered').textContent = '$' + Math.round(refinanceAmount).toLocaleString();
+                    document.getElementById('brrrr-cash-left').textContent = '$' + Math.round(cashLeftInDeal).toLocaleString();
+                    document.getElementById('brrrr-mortgage-payment').textContent = '$' + Math.round(mortgagePayment).toLocaleString();
+                    document.getElementById('brrrr-net-cashflow').textContent = '$' + Math.round(netCashFlow).toLocaleString();
+                    document.getElementById('brrrr-coc-roi').textContent = cocRoi.toFixed(1) + '%';
+                    document.getElementById('brrrr-coc-roi').style.color = cocRoi > 0 ? '#10b981' : '#ef4444';
+
+                    // Auto-scroll to results on mobile devices
+                    autoScrollToResults('brrrr');
+
+                    // Auto-save to history
+                    autoSaveCalculation('brrrr', {
+                        purchasePrice: purchasePrice,
+                        rehabCosts: rehabCosts,
+                        monthlyRent: monthlyRent,
+                        arv: arv,
+                        refiLtv: refiLtv,
+                        refiRate: refiRate
+                    }, {
+                        moneyLeftInDeal: Math.round(cashLeftInDeal),
+                        monthlyCashFlow: Math.round(netCashFlow),
+                        cocRoi: cocRoi.toFixed(1),
+                        totalInvestment: Math.round(totalInvestment)
+                    });
+
+                } catch (error) {
+                    console.error('BRRRR calculation error:', error);
                 }
             }
 
@@ -6576,6 +7201,11 @@
                             buyer: 'Buyer Cost Sheet',
                             commission: 'Real Estate Commission Analysis',
                             comparison: 'Property Comparison Report',
+                            rentbuy: 'Rent vs Buy Analysis',
+                            refinance: 'Refinancing Analysis',
+                            heloc: 'HELOC Calculator Report',
+                            flip: 'Property Flip Analysis',
+                            brrrr: 'BRRRR Strategy Report',
                             report: 'Complete Property Analysis'
                         };
                         
@@ -6852,6 +7482,25 @@
                         doc.addImage(chartImage, 'PNG', 20, yPos, 160, 80);
                     } catch (error) {
                         // Chart export failed - continue without chart
+                    }
+                }
+            }
+
+            // Generic auto-scroll function for mobile
+            function autoScrollToResults(calculatorId) {
+                if (window.innerWidth <= 768) {
+                    // Find the results section (the card right after the inputs)
+                    const calculator = document.getElementById(calculatorId + '-calculator');
+                    const resultsCard = calculator.querySelector('.card:nth-child(2)'); // Second card is the results
+                    
+                    if (resultsCard) {
+                        setTimeout(() => {
+                            resultsCard.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'start',
+                                inline: 'nearest'
+                            });
+                        }, 100); // Small delay to ensure DOM is updated
                     }
                 }
             }
