@@ -1058,7 +1058,7 @@
     <header style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); padding: 15px 0; text-align: center; color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
         <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
             <i class="fas fa-calculator" style="font-size: 2rem;"></i>
-            <h1 style="margin: 0; font-size: 1.75rem; font-weight: 600;">UltimateRECalc</h1>
+            <h1 id="app-title" style="margin: 0; font-size: 1.75rem; font-weight: 600; cursor: pointer; user-select: none;">UltimateRECalc</h1>
         </div>
         <p style="margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9;">Professional Real Estate Calculator Suite</p>
     </header>
@@ -3323,21 +3323,34 @@
 
             // Add some Billie-specific impressive features
             function addBillieSpecialFeatures() {
-                // Quick commission celebration when high commissions are calculated
-                document.addEventListener('keydown', (e) => {
-                    // Secret key combo for Billie: B + I + L + L + I + E (in sequence)
-                    const secretSequence = ['KeyB', 'KeyI', 'KeyL', 'KeyL', 'KeyI', 'KeyE'];
-                    window.keySequence = window.keySequence || [];
-                    window.keySequence.push(e.code);
-                    if (window.keySequence.length > secretSequence.length) {
-                        window.keySequence.shift();
-                    }
-                    
-                    if (window.keySequence.join('') === secretSequence.join('')) {
-                        triggerBillieMode();
-                        window.keySequence = [];
-                    }
-                });
+                // Secret click combo for Billie: Click title 5 times quickly
+                let clickCount = 0;
+                let clickTimer = null;
+                
+                const appTitle = document.getElementById('app-title');
+                if (appTitle) {
+                    appTitle.addEventListener('click', () => {
+                        clickCount++;
+                        
+                        // Reset counter after 3 seconds of no clicks
+                        if (clickTimer) {
+                            clearTimeout(clickTimer);
+                        }
+                        
+                        clickTimer = setTimeout(() => {
+                            clickCount = 0;
+                        }, 3000);
+                        
+                        // Trigger Billie mode after 5 clicks
+                        if (clickCount === 5) {
+                            triggerBillieMode();
+                            clickCount = 0;
+                            if (clickTimer) {
+                                clearTimeout(clickTimer);
+                            }
+                        }
+                    });
+                }
                 
                 // Smart commission rate suggestions based on property value
                 const commissionField = document.getElementById('commission-rate-slider');
@@ -3362,11 +3375,11 @@
             function triggerBillieMode() {
                 // Special mode just for Billie!
                 const billieMessages = [
-                    "🌟 Hey Billie! Hope you're having an amazing day!",
-                    "💪 You're absolutely crushing it in real estate!",
-                    "✨ This calculator was made with extra care for professionals like you!",
-                    "🏆 Your clients are lucky to have such a dedicated agent!",
-                    "💎 Keep being the awesome real estate professional you are!"
+                    "🏠 Hey Billie! Want to go house hunting... for the perfect dinner spot? 😉",
+                    "💕 I've calculated it: You + Me + Coffee = 100% chance of a great time!",
+                    "🗝️ You've got the key to amazing properties... and maybe my heart? ✨",
+                    "📊 My interest rate in taking you out is at an all-time high! 💘",
+                    "🌹 Want to explore some 'prime real estate'... like that new restaurant downtown? 😊"
                 ];
                 
                 const randomMessage = billieMessages[Math.floor(Math.random() * billieMessages.length)];
@@ -3412,7 +3425,8 @@
                     sparkleStyle.remove();
                 }, 3000);
                 
-                // Show the message briefly - could use a simple alert or custom display
+                // Show the message to Billie
+                alert(randomMessage);
                 hapticFeedback('heavy');
                 
                 // Temporarily change the theme to something special
