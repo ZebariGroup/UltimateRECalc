@@ -2799,28 +2799,49 @@ const DATA_CONFIG = {
 
                 async searchScrapingAPI(searchCriteria) {
                     try {
-                        const { searchTerm, city, state } = searchCriteria;
+                        const { searchTerm, city, state, minPrice, maxPrice } = searchCriteria;
                         
-                        // Example: Scraping Zillow search results (for educational purposes)
-                        const searchUrl = `https://www.zillow.com/homes/${city}-${state}_rb/`;
+                        // Build search URL with filters
+                        let searchUrl = `https://www.zillow.com/homes/`;
+                        if (city && state) {
+                            searchUrl += `${city.replace(/\s+/g, '-')}-${state}_rb/`;
+                        } else {
+                            searchUrl += `for_sale/`;
+                        }
                         
-                        const response = await fetch(`${DATA_CONFIG.alternative.scraping.scrapingBee.baseUrl}`, {
+                        // Add price filters to URL
+                        if (minPrice || maxPrice) {
+                            const priceFilter = `${minPrice || '0'}-${maxPrice || ''}price`;
+                            searchUrl += `${priceFilter}/`;
+                        }
+                        
+                        // Build ScrapingBee API URL with parameters
+                        const apiUrl = new URL(DATA_CONFIG.alternative.scraping.scrapingBee.baseUrl);
+                        apiUrl.searchParams.append('api_key', DATA_CONFIG.alternative.scraping.scrapingBee.apiKey);
+                        apiUrl.searchParams.append('url', searchUrl);
+                        apiUrl.searchParams.append('wait', '3000'); // Wait for JavaScript to load
+                        apiUrl.searchParams.append('window_width', '1920');
+                        apiUrl.searchParams.append('window_height', '1080');
+                        
+                        console.log('ScrapingBee request URL:', apiUrl.toString());
+                        console.log('Target URL to scrape:', searchUrl);
+
+                        const response = await fetch(apiUrl.toString(), {
                             method: 'GET',
                             headers: {
-                                'X-API-KEY': DATA_CONFIG.alternative.scraping.scrapingBee.apiKey
-                            },
-                            body: JSON.stringify({
-                                url: searchUrl,
-                                wait: 2000,
-                                screenshot: false
-                            })
+                                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                            }
                         });
 
                         if (!response.ok) {
-                            throw new Error(`Scraping API Error: ${response.status}`);
+                            const errorText = await response.text();
+                            console.error('ScrapingBee Error Response:', errorText);
+                            throw new Error(`Scraping API Error: ${response.status} - ${errorText}`);
                         }
 
                         const html = await response.text();
+                        console.log('HTML content received:', html.length, 'characters');
+                        
                         return this.parseScrapedData(html, searchCriteria);
                         
                     } catch (error) {
@@ -2879,23 +2900,183 @@ const DATA_CONFIG = {
                 }
 
                 parseScrapedData(html, searchCriteria) {
-                    // Parse actual HTML content from scraped pages
                     try {
-                        // This is where you would implement real HTML parsing
-                        // Example: Use DOMParser, Cheerio, or similar to extract property data
-                        // const parser = new DOMParser();
-                        // const doc = parser.parseFromString(html, 'text/html');
-                        // Extract property listings from the parsed HTML
+                        console.log('Parsing HTML content:', html.length, 'characters');
                         
-                        console.log('HTML content received for parsing:', html.length, 'characters');
+                        // Create DOM parser to work with the HTML
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
                         
-                        // Return empty array until real parsing is implemented
-                        // Replace this with actual HTML parsing logic
-                        return [];
+                        const properties = [];
+                        
+                        // Try multiple selectors to find property listings
+                        const selectors = [
+                            'article[data-test="property-card"]', // Zillow property cards
+                            '[data-testid="property-card"]', // Alternative selector
+                            '.property-card', // Generic property card
+                            '.ListItem', // Zillow list item
+                            '[role="listitem"]' // Generic list item
+                        ];
+                        
+                        let propertyElements = [];
+                        for (const selector of selectors) {
+                            propertyElements = doc.querySelectorAll(selector);
+                            if (propertyElements.length > 0) {
+                                console.log(`Found ${propertyElements.length} properties using selector: ${selector}`);
+                                break;
+                            }
+                        }
+                        
+                        // If no structured elements found, try to extract from JSON data
+                        if (propertyElements.length === 0) {
+                            console.log('No structured property elements found, trying JSON extraction...');
+                            return this.extractFromZillowJSON(html, searchCriteria);
+                        }
+                        
+                        // Parse each property element
+                        propertyElements.forEach((element, index) => {
+                            try {
+                                const property = this.extractPropertyFromElement(element, index);
+                                if (property && property.price > 0) {
+                                    properties.push(property);
+                                }
+                            } catch (err) {
+                                console.warn('Error parsing property element:', err);
+                            }
+                        });
+                        
+                        console.log(`Successfully parsed ${properties.length} properties from scraped data`);
+                        return properties.slice(0, 20); // Limit to 20 properties
+                        
                     } catch (error) {
                         console.error('HTML parsing error:', error);
-                        return [];
+                        // Return fallback data to help with debugging
+                        return this.createFallbackData(searchCriteria);
                     }
+                }
+
+                extractPropertyFromElement(element, index) {
+                    try {
+                        // Extract basic property information
+                        const addressElement = element.querySelector('[data-test="property-card-addr"], .property-card-addr, .address, [aria-label*="address"]');
+                        const priceElement = element.querySelector('[data-test="property-card-price"], .price, [aria-label*="price"]');
+                        const bedsElement = element.querySelector('[data-test="property-card-beds"], .beds, [aria-label*="bed"]');
+                        const bathsElement = element.querySelector('[data-test="property-card-baths"], .baths, [aria-label*="bath"]');
+                        const sqftElement = element.querySelector('[data-test="property-card-sqft"], .sqft, [aria-label*="square feet"]');
+                        const imageElement = element.querySelector('img[src*="zillow"], img[alt*="property"], img');
+                        
+                        // Extract text content and clean it
+                        const address = this.cleanText(addressElement?.textContent || '');
+                        const priceText = this.cleanText(priceElement?.textContent || '');
+                        const bedsText = this.cleanText(bedsElement?.textContent || '');
+                        const bathsText = this.cleanText(bathsElement?.textContent || '');
+                        const sqftText = this.cleanText(sqftElement?.textContent || '');
+                        
+                        // Parse numeric values
+                        const price = this.parsePrice(priceText);
+                        const bedrooms = this.parseNumber(bedsText);
+                        const bathrooms = this.parseNumber(bathsText);
+                        const sqft = this.parseNumber(sqftText);
+                        
+                        // Skip if essential data is missing
+                        if (!address || !price) {
+                            return null;
+                        }
+                        
+                        return {
+                            id: `SCRAPED_${Math.random().toString(36).substr(2, 9)}`,
+                            address: address || 'Address not available',
+                            price: price || 0,
+                            bedrooms: bedrooms || 0,
+                            bathrooms: bathrooms || 0,
+                            sqft: sqft || 0,
+                            propertyType: 'house', // Default type
+                            status: 'active',
+                            listDate: new Date().toISOString().split('T')[0],
+                            photo: imageElement?.src || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop',
+                            propertyTax: this.estimatePropertyTax(price),
+                            hoa: 0,
+                            insurance: this.estimateInsurance(price),
+                            estimatedRent: this.estimateRent(price),
+                            description: 'Property found via web scraping',
+                            yearBuilt: null,
+                            lotSize: 0
+                        };
+                    } catch (error) {
+                        console.warn('Error extracting property from element:', error);
+                        return null;
+                    }
+                }
+
+                extractFromZillowJSON(html, searchCriteria) {
+                    try {
+                        // Look for JSON data embedded in the page
+                        const jsonMatches = html.match(/"searchResults":\s*{[^}]+}|"results":\s*\[[^\]]+\]|"listResults":\s*\[[^\]]+\]/g);
+                        
+                        if (jsonMatches) {
+                            console.log('Found JSON data in page, attempting to parse...');
+                            // This is a simplified approach - full implementation would be more complex
+                            return this.createFallbackData(searchCriteria);
+                        }
+                        
+                        return this.createFallbackData(searchCriteria);
+                    } catch (error) {
+                        console.warn('JSON extraction failed:', error);
+                        return this.createFallbackData(searchCriteria);
+                    }
+                }
+
+                createFallbackData(searchCriteria) {
+                    // Provide helpful feedback when scraping doesn't work
+                    const { city, state } = searchCriteria;
+                    const location = city && state ? `${city}, ${state}` : 'your area';
+                    
+                    return [{
+                        id: 'SCRAPING_INFO',
+                        address: `Web scraping status for ${location}`,
+                        price: 0,
+                        bedrooms: 0,
+                        bathrooms: 0,
+                        sqft: 0,
+                        propertyType: 'info',
+                        status: 'info',
+                        listDate: new Date().toISOString().split('T')[0],
+                        photo: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop',
+                        propertyTax: 0,
+                        hoa: 0,
+                        insurance: 0,
+                        estimatedRent: 0,
+                        description: 'ScrapingBee connected successfully, but no property listings could be extracted from the HTML. This may be due to website structure changes or anti-scraping measures. Consider using MLS or alternative data sources for reliable property data.',
+                        yearBuilt: null,
+                        lotSize: 0
+                    }];
+                }
+
+                cleanText(text) {
+                    return text ? text.trim().replace(/\s+/g, ' ') : '';
+                }
+
+                parsePrice(priceText) {
+                    if (!priceText) return 0;
+                    // Extract numbers from price text like "$450,000" or "$450K"
+                    const match = priceText.match(/[\d,]+/);
+                    if (match) {
+                        let price = parseInt(match[0].replace(/,/g, ''));
+                        // Handle K (thousands) and M (millions)
+                        if (priceText.toLowerCase().includes('k')) {
+                            price *= 1000;
+                        } else if (priceText.toLowerCase().includes('m')) {
+                            price *= 1000000;
+                        }
+                        return price;
+                    }
+                    return 0;
+                }
+
+                parseNumber(text) {
+                    if (!text) return 0;
+                    const match = text.match(/\d+(\.\d+)?/);
+                    return match ? parseFloat(match[0]) : 0;
                 }
 
                 normalizePublicRecordsData(records) {
