@@ -3332,80 +3332,7 @@
                 showSavedCalculations();
             });
 
-            // Presentation Mode - Perfect for showing clients!
-            document.getElementById('presentation-mode').addEventListener('click', () => {
-                hapticFeedback('medium');
-                togglePresentationMode();
-            });
 
-            function togglePresentationMode() {
-                const body = document.body;
-                const presentationMode = body.classList.contains('presentation-mode');
-                
-                if (!presentationMode) {
-                    // Enter presentation mode
-                    body.classList.add('presentation-mode');
-                    
-                    // Add presentation styles
-                    const presentationStyle = document.createElement('style');
-                    presentationStyle.id = 'presentation-styles';
-                    presentationStyle.textContent = `
-                        .presentation-mode {
-                            font-size: 1.1em !important;
-                        }
-                        .presentation-mode .card {
-                            padding: 30px !important;
-                            margin-bottom: 25px !important;
-                            border: 2px solid var(--primary-color) !important;
-                            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15) !important;
-                        }
-                        .presentation-mode .stat-value {
-                            font-size: 2.5rem !important;
-                            font-weight: 700 !important;
-                            animation: pulse 2s infinite;
-                        }
-                        .presentation-mode .chart-container {
-                            height: 350px !important;
-                            border: 2px solid rgba(37, 99, 235, 0.2) !important;
-                            border-radius: 12px !important;
-                            padding: 15px !important;
-                        }
-                        .presentation-mode .details-table {
-                            font-size: 1.1rem !important;
-                        }
-                        .presentation-mode .details-value {
-                            font-weight: 600 !important;
-                            color: var(--primary-color) !important;
-                        }
-                        @keyframes pulse {
-                            0%, 100% { transform: scale(1); }
-                            50% { transform: scale(1.05); }
-                        }
-                        .presentation-mode nav {
-                            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
-                            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3) !important;
-                        }
-                        .presentation-mode .logo {
-                            color: white !important;
-                        }
-                    `;
-                    document.head.appendChild(presentationStyle);
-                    
-                    showToast('🎯 Presentation Mode ON - Perfect for client meetings!', 'success');
-                    document.getElementById('presentation-mode').innerHTML = '<i class="fas fa-eye-slash"></i> <span class="action-text" style="margin-left: 5px;">Exit</span>';
-                    
-                } else {
-                    // Exit presentation mode
-                    body.classList.remove('presentation-mode');
-                    const presentationStyle = document.getElementById('presentation-styles');
-                    if (presentationStyle) {
-                        presentationStyle.remove();
-                    }
-                    
-                    showToast('👋 Presentation Mode OFF', 'info');
-                    document.getElementById('presentation-mode').innerHTML = '<i class="fas fa-presentation-screen"></i> <span class="action-text" style="margin-left: 5px;">Present</span>';
-                }
-            }
 
             // Add some Billie-specific impressive features
             function addBillieSpecialFeatures() {
@@ -3438,9 +3365,7 @@
                             // Show suggestion if significantly different
                             const currentRate = parseFloat(commissionField.value);
                             if (Math.abs(currentRate - optimalRate) > 0.5) {
-                                setTimeout(() => {
-                                    showToast(`💡 Consider ${optimalRate}% for this price range`, 'info');
-                                }, 500);
+                                // Could add a gentle suggestion tooltip here if needed
                             }
                         }
                     });
@@ -3500,7 +3425,7 @@
                     sparkleStyle.remove();
                 }, 3000);
                 
-                showToast(randomMessage, 'success');
+                // Show the message briefly - could use a simple alert or custom display
                 hapticFeedback('heavy');
                 
                 // Temporarily change the theme to something special
