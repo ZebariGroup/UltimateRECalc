@@ -1890,20 +1890,35 @@
             }
             
             .actions {
-                flex-wrap: wrap;
-                gap: 8px;
+                flex-wrap: nowrap; /* Keep all icons on one line */
+                gap: 6px;
+                overflow-x: auto; /* Allow horizontal scroll if needed */
+                scrollbar-width: none; /* Hide scrollbar on Firefox */
+                -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
+            }
+            
+            .actions::-webkit-scrollbar {
+                display: none; /* Hide scrollbar on Chrome/Safari */
             }
             
             .actions button {
-                padding: 10px 12px;
-                margin-right: 8px;
-                font-size: 14px;
+                padding: 8px 10px;
+                margin-right: 0;
+                font-size: 12px;
+                min-width: 40px;
+                flex-shrink: 0; /* Prevent buttons from shrinking */
             }
             
             .nav-content {
                 flex-direction: row;
                 align-items: center;
-                gap: 15px;
+                gap: 12px;
+            }
+            
+            .mobile-menu-button {
+                padding: 8px 10px;
+                min-width: 40px;
+                font-size: 12px;
             }
             
             /* Dashboard Mobile Styles */
@@ -1972,18 +1987,20 @@
         
         @media (max-width: 480px) {
             .actions button {
-                padding: 10px;
-                margin-right: 4px;
-                font-size: 16px;
-                min-width: 44px;
+                padding: 6px 8px;
+                margin-right: 0;
+                font-size: 11px;
+                min-width: 36px;
+                flex-shrink: 0;
             }
             
             .actions {
-                gap: 6px;
+                gap: 4px;
+                flex-wrap: nowrap;
             }
             
             .nav-content {
-                gap: 10px;
+                gap: 8px;
             }
             
             .mobile-menu-button span {
@@ -1991,10 +2008,36 @@
             }
             
             .mobile-menu-button {
-                padding: 12px;
-                min-width: 48px;
+                padding: 6px 8px;
+                min-width: 36px;
+                font-size: 11px;
+            }
+        }
+        
+        /* Extra small screens - keep single line but ultra-compact */
+        @media (max-width: 360px) {
+            .actions button {
+                padding: 5px 6px;
+                min-width: 32px;
+                font-size: 10px;
             }
             
+            .actions {
+                gap: 3px;
+            }
+            
+            .nav-content {
+                gap: 6px;
+            }
+            
+            .mobile-menu-button {
+                padding: 5px 6px;
+                min-width: 32px;
+                font-size: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
             /* Even more compact for very small screens */
             .calculator-grid {
                 gap: 8px;
