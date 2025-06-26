@@ -3967,7 +3967,7 @@
                     <canvas id="rentbuy-chart"></canvas>
                 </div>
                 
-                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">💵 Buying Costs (5 years)</h3>
+                <h3 id="buying-costs-header" style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">💵 Buying Costs (5 years)</h3>
                 <div class="details-table">
                     <div class="details-row">
                         <div class="details-label">Down Payment:</div>
@@ -4002,19 +4002,19 @@
                         <div class="details-value" id="buy-appreciation-gain" style="color: #10b981;">$64,000</div>
                     </div>
                     <div class="details-row">
-                        <div class="details-label">Net Cost (5 years):</div>
+                        <div class="details-label" id="buy-net-cost-label">Net Cost (5 years):</div>
                         <div class="details-value" id="buy-net-cost">$162,000</div>
                     </div>
                 </div>
                 
-                <h3 style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">🏠 Renting Costs (5 years)</h3>
+                <h3 id="renting-costs-header" style="margin-top: 15px; font-size: 1.125rem; font-weight: 500;">🏠 Renting Costs (5 years)</h3>
                 <div class="details-table">
                     <div class="details-row">
                         <div class="details-label">Initial Rent:</div>
                         <div class="details-value" id="rent-initial">$2,200</div>
                     </div>
                     <div class="details-row">
-                        <div class="details-label">Final Rent (Year 5):</div>
+                        <div class="details-label" id="rent-final-label">Final Rent (Year 5):</div>
                         <div class="details-value" id="rent-final">$2,548</div>
                     </div>
                     <div class="details-row">
@@ -4038,7 +4038,7 @@
                         <div class="details-value" id="rent-investment-gain" style="color: #10b981;">$32,000</div>
                     </div>
                     <div class="details-row">
-                        <div class="details-label">Net Cost (5 years):</div>
+                        <div class="details-label" id="rent-net-cost-label">Net Cost (5 years):</div>
                         <div class="details-value" id="rent-net-cost">$31,200</div>
                     </div>
                 </div>
@@ -6798,6 +6798,7 @@
             // Add event listeners for rent vs buy sliders
             const buyDownPaymentSlider = document.getElementById('buy-down-payment-slider');
             const buyHomePriceInput = document.getElementById('buy-home-price');
+            const analysisPeriodSelect = document.getElementById('analysis-period');
             
             if (buyDownPaymentSlider) {
                 buyDownPaymentSlider.addEventListener('input', updateDownPaymentDisplay);
@@ -6805,6 +6806,18 @@
             
             if (buyHomePriceInput) {
                 buyHomePriceInput.addEventListener('input', updateDownPaymentDisplay);
+            }
+
+            // Update labels when analysis period changes
+            if (analysisPeriodSelect) {
+                analysisPeriodSelect.addEventListener('change', () => {
+                    // Trigger recalculation to update all labels and values
+                    setTimeout(() => {
+                        if (document.querySelector('.tab.active')?.dataset.tab === 'rentbuy') {
+                            calculateRentBuy();
+                        }
+                    }, 50);
+                });
             }
 
             // Initialize down payment display
@@ -8232,6 +8245,16 @@
                     const investmentReturn = parseFloat(document.getElementById('investment-return-slider').value) || 0;
                     const homeAppreciation = parseFloat(document.getElementById('home-appreciation-slider').value) || 0;
                     const analysisPeriod = parseInt(document.getElementById('analysis-period').value) || 5;
+
+                    // Update dynamic labels based on analysis period
+                    const periodText = analysisPeriod === 1 ? '1 year' : `${analysisPeriod} years`;
+                    const yearText = analysisPeriod === 1 ? 'Year 1' : `Year ${analysisPeriod}`;
+                    
+                    document.getElementById('buying-costs-header').textContent = `💵 Buying Costs (${periodText})`;
+                    document.getElementById('renting-costs-header').textContent = `🏠 Renting Costs (${periodText})`;
+                    document.getElementById('rent-final-label').textContent = `Final Rent (${yearText}):`;
+                    document.getElementById('buy-net-cost-label').textContent = `Net Cost (${periodText}):`;
+                    document.getElementById('rent-net-cost-label').textContent = `Net Cost (${periodText}):`;
 
                     // Calculate buying costs
                     const downPayment = homePrice * (downPaymentPercent / 100);
