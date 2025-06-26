@@ -1736,26 +1736,47 @@
             }
             
             .calculator-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                margin-bottom: 20px;
             }
             
             .calculator-card.featured {
-                grid-column: span 1;
-                min-height: 280px;
+                grid-column: span 2;
+                min-height: 180px;
+                padding: 20px;
             }
             
             .calculator-card {
-                padding: 25px;
-                min-height: 260px;
+                padding: 16px;
+                min-height: 140px;
+            }
+            
+            .calculator-card h3 {
+                font-size: 1.1rem;
+                margin-bottom: 8px;
+            }
+            
+            .calculator-card p {
+                font-size: 0.85rem;
+                margin-bottom: 12px;
+                line-height: 1.4;
             }
             
             .card-icon {
-                font-size: 2.5rem;
+                font-size: 2rem;
+                margin-bottom: 12px;
             }
             
             .calculator-card.featured .card-icon {
-                font-size: 3.5rem;
+                font-size: 2.8rem;
+                margin-bottom: 15px;
+            }
+            
+            .card-button {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+                border-radius: 6px;
             }
             
             .calculator {
@@ -1787,6 +1808,46 @@
             .mobile-menu-button {
                 padding: 12px;
                 min-width: 48px;
+            }
+            
+            /* Even more compact for very small screens */
+            .calculator-grid {
+                gap: 8px;
+            }
+            
+            .calculator-card {
+                padding: 12px;
+                min-height: 120px;
+            }
+            
+            .calculator-card.featured {
+                min-height: 160px;
+                padding: 16px;
+            }
+            
+            .calculator-card h3 {
+                font-size: 1rem;
+                margin-bottom: 6px;
+            }
+            
+            .calculator-card p {
+                font-size: 0.8rem;
+                margin-bottom: 10px;
+            }
+            
+            .card-icon {
+                font-size: 1.8rem;
+                margin-bottom: 8px;
+            }
+            
+            .calculator-card.featured .card-icon {
+                font-size: 2.4rem;
+                margin-bottom: 12px;
+            }
+            
+            .card-button {
+                padding: 6px 12px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -1896,11 +1957,11 @@
     <header style="background: var(--primary-color); padding: 15px 0; text-align: center; color: white; box-shadow: 0 2px 10px rgba(30,64,175,0.2);">
         <div style="display: flex; align-items: center; justify-content: center; gap: 12px;">
             <!-- Custom Logo -->
-            <div style="position: relative; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+            <div id="header-logo" style="position: relative; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s ease; border-radius: 8px; padding: 4px;" title="Go to Dashboard">
                 <img src="logo.fw.png" alt="HouseMath Logo" style="width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); border-radius: 8px;" />
         </div>
             <div>
-                <h1 id="app-title" style="margin: 0; font-size: 1.8rem; font-weight: 700; cursor: pointer; user-select: none; letter-spacing: -0.5px;">HouseMath.app</h1>
+                <h1 id="app-title" style="margin: 0; font-size: 1.8rem; font-weight: 700; cursor: pointer; user-select: none; letter-spacing: -0.5px; transition: opacity 0.2s ease; border-radius: 4px; padding: 4px 8px;" title="Go to Dashboard">HouseMath.app</h1>
                 <p style="margin: 2px 0 0 0; font-size: 0.85rem; opacity: 0.9; font-weight: 300;">Professional Real Estate Calculator Suite</p>
             </div>
         </div>
@@ -6165,6 +6226,68 @@
 
             // Initialize special features
             addBillieSpecialFeatures();
+            
+            // Logo click handlers to go to dashboard
+            const headerLogo = document.getElementById('header-logo');
+            const appTitle = document.getElementById('app-title');
+            
+            function goToDashboard() {
+                // Remove active class from all tabs (desktop and mobile)
+                const tabs = document.querySelectorAll('.tab');
+                tabs.forEach(t => t.classList.remove('active'));
+                const mobileTabs = document.querySelectorAll('.mobile-tab');
+                mobileTabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active class to home/dashboard tab
+                const homeTab = document.querySelector('.tab[data-tab="home"]');
+                const homeMobileTab = document.querySelector('.mobile-tab[data-tab="home"]');
+                if (homeTab) homeTab.classList.add('active');
+                if (homeMobileTab) homeMobileTab.classList.add('active');
+                
+                // Hide all calculators and show dashboard
+                const calculators = [
+                    'home', 'mortgage', 'investment', 'cashflow', 'closing', 'buyer', 
+                    'commission', 'comparison', 'rentbuy', 'refinance', 'heloc', 
+                    'flip', 'brrrr', 'report'
+                ];
+                calculators.forEach(calc => {
+                    const element = document.getElementById(`${calc}-calculator`);
+                    if (element) element.classList.add('hidden');
+                });
+                
+                const homeCalculator = document.getElementById('home-calculator');
+                if (homeCalculator) {
+                    homeCalculator.classList.remove('hidden');
+                }
+                
+                // Scroll to top smoothly
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Add visual feedback
+                hapticFeedback('light');
+            }
+            
+            if (headerLogo) {
+                headerLogo.addEventListener('click', goToDashboard);
+                headerLogo.addEventListener('mouseenter', () => {
+                    headerLogo.style.transform = 'scale(1.05)';
+                });
+                headerLogo.addEventListener('mouseleave', () => {
+                    headerLogo.style.transform = 'scale(1)';
+                });
+            }
+            
+            if (appTitle) {
+                appTitle.addEventListener('click', goToDashboard);
+                appTitle.addEventListener('mouseenter', () => {
+                    appTitle.style.opacity = '0.8';
+                    appTitle.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                });
+                appTitle.addEventListener('mouseleave', () => {
+                    appTitle.style.opacity = '1';
+                    appTitle.style.backgroundColor = 'transparent';
+                });
+            }
             
             // Tab switching functionality
             tabs.forEach(tab => {
