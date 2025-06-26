@@ -5818,15 +5818,31 @@
 
             }
             
-            // Initialize charts and calculator values
-            initializeCharts();
-            calculateMortgage();
-            calculateInvestment();
-            calculateCashFlow();
-            calculateClosing();
-            calculateBuyer();
-            calculateCommission();
-            calculateComparison();
+            // Initialize charts and calculator values after ensuring Chart.js is loaded
+            setTimeout(() => {
+                if (typeof Chart !== 'undefined') {
+                    try {
+                        initializeCharts();
+                        calculateMortgage();
+                        calculateInvestment();
+                        calculateCashFlow();
+                        calculateClosing();
+                        calculateBuyer();
+                        calculateCommission();
+                        calculateComparison();
+                        calculateRentBuy();
+                        calculateRefinance();
+                        calculateHELOC();
+                        calculateFlip();
+                        calculateBRRRR();
+                    } catch (error) {
+                        console.error('Chart initialization error:', error);
+                        // Charts failed to load, but app should still work
+                    }
+                } else {
+                    console.warn('Chart.js not loaded, charts will not be available');
+                }
+            }, 100);
             
             // Theme toggle functionality
             themeToggle.addEventListener('click', function() {
@@ -6289,10 +6305,11 @@
             
             // Initialize charts
             function initializeCharts() {
-                // Theme-aware colors
-                const isDark = document.body.classList.contains('dark');
-                const textColor = isDark ? '#f9fafb' : '#1f2937';
-                const gridColor = isDark ? '#374151' : '#e5e7eb';
+                try {
+                    // Theme-aware colors
+                    const isDark = document.body.classList.contains('dark');
+                    const textColor = isDark ? '#f9fafb' : '#1f2937';
+                    const gridColor = isDark ? '#374151' : '#e5e7eb';
                 
                 // Default options for line/bar charts
                 const defaultOptions = {
@@ -6562,6 +6579,10 @@
                     },
                     options: defaultOptions
                 });
+                } catch (error) {
+                    console.error('Chart initialization failed:', error);
+                    // Individual chart errors won't break the entire app
+                }
             }
             
             // Reinitialize charts when theme changes
@@ -7866,77 +7887,83 @@
             const mobileMenuClose = document.getElementById('mobile-menu-close');
             const mobileTabs = document.querySelectorAll('.mobile-tab');
 
-            // Check if mobile menu elements exist before adding listeners
-            if (!mobileMenuToggle || !mobileMenuOverlay || !mobileMenuClose) {
-                return; // Mobile menu not available
+            // Initialize mobile menu if elements exist
+            if (mobileMenuToggle && mobileMenuOverlay && mobileMenuClose) {
+                initializeMobileMenu();
             }
 
-            // Open mobile menu
-            mobileMenuToggle.addEventListener('click', () => {
-                mobileMenuOverlay.classList.add('show');
-                hapticFeedback('light');
-                document.body.style.overflow = 'hidden'; // Prevent background scrolling
-            });
-
-            // Close mobile menu
-            function closeMobileMenu() {
-                mobileMenuOverlay.classList.remove('show');
-                document.body.style.overflow = '';
-            }
-
-            mobileMenuClose.addEventListener('click', closeMobileMenu);
-
-            // Close when clicking overlay background
-            mobileMenuOverlay.addEventListener('click', (e) => {
-                if (e.target === mobileMenuOverlay) {
-                    closeMobileMenu();
-                }
-            });
-
-            // Handle mobile tab selection
-            mobileTabs.forEach(mobileTab => {
-                mobileTab.addEventListener('click', () => {
-                    // Remove active class from all mobile tabs
-                    mobileTabs.forEach(t => t.classList.remove('active'));
-                    
-                    // Add active class to clicked tab
-                    mobileTab.classList.add('active');
-                    
-                    // Also update desktop tabs if visible
-                    const tabId = mobileTab.getAttribute('data-tab');
-                    const desktopTabs = document.querySelectorAll('.tab');
-                    desktopTabs.forEach(t => t.classList.remove('active'));
-                    const matchingDesktopTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
-                    if (matchingDesktopTab) {
-                        matchingDesktopTab.classList.add('active');
-                    }
-                    
-                    // Hide all calculators and show selected one
-                    const calculators = ['home', 'mortgage', 'investment', 'cashflow', 'closing', 'buyer', 'commission', 'comparison', 'report'];
-                    calculators.forEach(calc => {
-                        const element = document.getElementById(`${calc}-calculator`);
-                        if (element) element.classList.add('hidden');
-                    });
-                    
-                    const selectedCalculator = document.getElementById(`${tabId}-calculator`);
-                    if (selectedCalculator) {
-                        selectedCalculator.classList.remove('hidden');
-                    }
-                    
-                    hapticFeedback('medium');
-                    closeMobileMenu();
-                    
-                    // Scroll to top of content
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+            function initializeMobileMenu() {
+                // Open mobile menu
+                mobileMenuToggle.addEventListener('click', () => {
+                    mobileMenuOverlay.classList.add('show');
+                    hapticFeedback('light');
+                    document.body.style.overflow = 'hidden'; // Prevent background scrolling
                 });
-            });
 
-            // Close menu with escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && mobileMenuOverlay.classList.contains('show')) {
-                    closeMobileMenu();
+                // Close mobile menu
+                function closeMobileMenu() {
+                    mobileMenuOverlay.classList.remove('show');
+                    document.body.style.overflow = '';
                 }
-            });
+
+                mobileMenuClose.addEventListener('click', closeMobileMenu);
+
+                // Close when clicking overlay background
+                mobileMenuOverlay.addEventListener('click', (e) => {
+                    if (e.target === mobileMenuOverlay) {
+                        closeMobileMenu();
+                    }
+                });
+
+                // Handle mobile tab selection
+                mobileTabs.forEach(mobileTab => {
+                    mobileTab.addEventListener('click', () => {
+                        // Remove active class from all mobile tabs
+                        mobileTabs.forEach(t => t.classList.remove('active'));
+                        
+                        // Add active class to clicked tab
+                        mobileTab.classList.add('active');
+                        
+                        // Also update desktop tabs if visible
+                        const tabId = mobileTab.getAttribute('data-tab');
+                        const desktopTabs = document.querySelectorAll('.tab');
+                        desktopTabs.forEach(t => t.classList.remove('active'));
+                        const matchingDesktopTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+                        if (matchingDesktopTab) {
+                            matchingDesktopTab.classList.add('active');
+                        }
+                        
+                        // Hide all calculators and show selected one - COMPLETE LIST
+                        const calculators = [
+                            'home', 'mortgage', 'investment', 'cashflow', 'closing', 'buyer', 
+                            'commission', 'comparison', 'rentbuy', 'refinance', 'heloc', 
+                            'flip', 'brrrr', 'report'
+                        ];
+                        calculators.forEach(calc => {
+                            const element = document.getElementById(`${calc}-calculator`);
+                            if (element) element.classList.add('hidden');
+                        });
+                        
+                        const selectedCalculator = document.getElementById(`${tabId}-calculator`);
+                        if (selectedCalculator) {
+                            selectedCalculator.classList.remove('hidden');
+                        }
+                        
+                        hapticFeedback('medium');
+                        closeMobileMenu();
+                        
+                        // Scroll to top of content
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                });
+
+                // Close menu with escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && mobileMenuOverlay.classList.contains('show')) {
+                        closeMobileMenu();
+                    }
+                });
+            }
 
             // Initialize mobile enhancements
             setupInputValidation();
