@@ -1551,6 +1551,26 @@
             padding: 6px 12px;
             font-size: 0.8rem;
             border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            min-height: 32px;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-actions button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .item-actions button:active {
+            transform: translateY(0);
         }
 
         .btn-load {
@@ -1558,9 +1578,19 @@
             color: white;
         }
 
+        .btn-load:hover {
+            background: var(--secondary-color);
+            box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+        }
+
         .btn-favorite {
             background: #f59e0b;
             color: white;
+        }
+
+        .btn-favorite:hover {
+            background: #d97706;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
         }
 
         .btn-unfavorite {
@@ -1568,9 +1598,19 @@
             color: white;
         }
 
+        .btn-unfavorite:hover {
+            background: #4b5563;
+            box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+        }
+
         .btn-delete {
             background: #ef4444;
             color: white;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
         }
 
         .empty-state {
@@ -4941,26 +4981,104 @@
                 }
 
                 toggleFavorite(id) {
-                    const historyItem = this.history.find(item => item.id === id);
-                    if (historyItem) {
-                        historyItem.isFavorite = !historyItem.isFavorite;
-                        
-                        if (historyItem.isFavorite) {
-                            this.favorites.push({...historyItem});
-                        } else {
-                            this.favorites = this.favorites.filter(fav => fav.id !== id);
+                    try {
+                        const historyItem = this.history.find(item => item.id === id);
+                        if (historyItem) {
+                            historyItem.isFavorite = !historyItem.isFavorite;
+                            
+                            if (historyItem.isFavorite) {
+                                this.favorites.push({...historyItem});
+                                this.showToast('Added to favorites!', 'success');
+                            } else {
+                                this.favorites = this.favorites.filter(fav => fav.id !== id);
+                                this.showToast('Removed from favorites!', 'info');
+                            }
+                            
+                            this.saveHistory();
+                            this.saveFavorites();
+                            
+                            // Haptic feedback
+                            if (typeof hapticFeedback === 'function') {
+                                hapticFeedback('light');
+                            }
                         }
-                        
-                        this.saveHistory();
-                        this.saveFavorites();
+                    } catch (error) {
+                        console.error('Error toggling favorite:', error);
+                        this.showToast('Error updating favorite!', 'error');
                     }
                 }
 
                 deleteFromHistory(id) {
-                    this.history = this.history.filter(item => item.id !== id);
-                    this.favorites = this.favorites.filter(fav => fav.id !== id);
-                    this.saveHistory();
-                    this.saveFavorites();
+                    try {
+                        const historyItem = this.history.find(item => item.id === id);
+                        const itemName = historyItem ? historyItem.name : 'calculation';
+                        
+                        if (confirm(`Are you sure you want to delete "${itemName}" from history?`)) {
+                            this.history = this.history.filter(item => item.id !== id);
+                            this.favorites = this.favorites.filter(fav => fav.id !== id);
+                            this.saveHistory();
+                            this.saveFavorites();
+                            
+                            this.showToast('Calculation deleted!', 'success');
+                            
+                            // Haptic feedback
+                            if (typeof hapticFeedback === 'function') {
+                                hapticFeedback('medium');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error deleting from history:', error);
+                        this.showToast('Error deleting calculation!', 'error');
+                    }
+                }
+
+                showToast(message, type = 'info') {
+                    // Create toast notification
+                    const toast = document.createElement('div');
+                    toast.className = `toast toast-${type}`;
+                    toast.textContent = message;
+                    
+                    // Style the toast
+                    Object.assign(toast.style, {
+                        position: 'fixed',
+                        top: '20px',
+                        right: '20px',
+                        padding: '12px 20px',
+                        borderRadius: '8px',
+                        color: 'white',
+                        fontWeight: '500',
+                        fontSize: '0.875rem',
+                        zIndex: '10000',
+                        transform: 'translateX(100%)',
+                        transition: 'transform 0.3s ease',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+                    });
+                    
+                    // Set background color based on type
+                    const colors = {
+                        success: '#10b981',
+                        error: '#ef4444',
+                        info: '#3b82f6',
+                        warning: '#f59e0b'
+                    };
+                    toast.style.backgroundColor = colors[type] || colors.info;
+                    
+                    document.body.appendChild(toast);
+                    
+                    // Animate in
+                    setTimeout(() => {
+                        toast.style.transform = 'translateX(0)';
+                    }, 10);
+                    
+                    // Animate out and remove
+                    setTimeout(() => {
+                        toast.style.transform = 'translateX(100%)';
+                        setTimeout(() => {
+                            if (toast.parentNode) {
+                                toast.parentNode.removeChild(toast);
+                            }
+                        }, 300);
+                    }, 3000);
                 }
 
                 clearHistory() {
@@ -4979,23 +5097,83 @@
                     const item = this.history.find(h => h.id === id) || this.favorites.find(f => f.id === id);
                     if (item) {
                         this.populateCalculator(item.type, item.inputs);
-                        showCalculator(item.type);
+                        this.showCalculator(item.type);
+                        
+                        // Close the history/favorites modal
+                        hideModal('history-modal');
+                        hideModal('favorites-modal');
+                        
+                        // Scroll to top
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        
+                        // Provide user feedback
+                        if (typeof hapticFeedback === 'function') {
+                            hapticFeedback('medium');
+                        }
+                    }
+                }
+
+                showCalculator(calculatorType) {
+                    // Get all tabs
+                    const tabs = document.querySelectorAll('.tab');
+                    const mobileTabs = document.querySelectorAll('.mobile-tab');
+                    
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    mobileTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to target tab
+                    const targetTab = document.querySelector(`.tab[data-tab="${calculatorType}"]`);
+                    const targetMobileTab = document.querySelector(`.mobile-tab[data-tab="${calculatorType}"]`);
+                    
+                    if (targetTab) targetTab.classList.add('active');
+                    if (targetMobileTab) targetMobileTab.classList.add('active');
+                    
+                    // Hide all calculators
+                    const calculators = ['home', 'mortgage', 'investment', 'cashflow', 'closing', 'buyer', 'commission', 'comparison', 'rentbuy', 'refinance', 'heloc', 'flip', 'brrrr', 'report'];
+                    calculators.forEach(calc => {
+                        const element = document.getElementById(`${calc}-calculator`);
+                        if (element) element.classList.add('hidden');
+                    });
+                    
+                    // Show the target calculator
+                    const selectedCalculator = document.getElementById(`${calculatorType}-calculator`);
+                    if (selectedCalculator) {
+                        selectedCalculator.classList.remove('hidden');
                     }
                 }
 
                 populateCalculator(type, inputs) {
-                    // Populate form fields based on calculator type
-                    Object.keys(inputs).forEach(key => {
-                        const element = document.getElementById(key);
-                        if (element) {
-                            element.value = inputs[key];
-                            
-                            // Trigger events for sliders
-                            if (element.type === 'range') {
-                                element.dispatchEvent(new Event('input'));
+                    try {
+                        // Populate form fields based on calculator type
+                        Object.keys(inputs).forEach(key => {
+                            const element = document.getElementById(key);
+                            if (element) {
+                                element.value = inputs[key];
+                                
+                                // Trigger events for sliders to update displays
+                                if (element.type === 'range') {
+                                    element.dispatchEvent(new Event('input'));
+                                }
+                                
+                                // Trigger change event for dropdowns
+                                if (element.tagName === 'SELECT') {
+                                    element.dispatchEvent(new Event('change'));
+                                }
                             }
-                        }
-                    });
+                        });
+                        
+                        // Auto-calculate after populating fields
+                        setTimeout(() => {
+                            const calculateButton = document.querySelector(`#${type}-calculator .btn-primary`);
+                            if (calculateButton) {
+                                calculateButton.click();
+                            }
+                        }, 100);
+                        
+                    } catch (error) {
+                        console.warn('Error populating calculator:', error);
+                    }
                 }
 
                 exportHistory() {
@@ -5259,9 +5437,51 @@
 
             // Initialize History Manager
             const historyManager = new HistoryManager();
-
+            
             // Flag to track if calculations should be saved to history
-            let shouldSaveToHistory = false;
+            let shouldSaveToHistory = true; // Enable immediately after history manager initialization
+            
+            // Debug: Verify history manager is working
+            console.log('History Manager initialized:', {
+                historyCount: historyManager.history.length,
+                favoritesCount: historyManager.favorites.length,
+                hasLoadFunction: typeof historyManager.loadCalculation === 'function',
+                hasToggleFunction: typeof historyManager.toggleFavorite === 'function',
+                hasDeleteFunction: typeof historyManager.deleteFromHistory === 'function',
+                shouldSaveToHistory: shouldSaveToHistory
+            });
+
+            // Test history functionality (can be removed in production)
+            window.testHistory = function() {
+                console.log('Testing history functionality...');
+                
+                // Add a test calculation
+                const testItem = historyManager.addToHistory('mortgage', {
+                    propertyPrice: 300000,
+                    downPaymentPercent: 20,
+                    interestRate: 6.5,
+                    loanTerm: 30
+                }, {
+                    monthlyPayment: 1517,
+                    totalMonthly: 1817
+                });
+                
+                console.log('Test item added:', testItem);
+                
+                // Test toggle favorite
+                historyManager.toggleFavorite(testItem.id);
+                console.log('Favorite toggled');
+                
+                // Render to check if HTML is generated correctly
+                historyManager.renderHistory();
+                historyManager.renderFavorites();
+                
+                console.log('History test completed. Check browser console for any errors.');
+                
+                return testItem;
+            };
+            
+            console.log('Run window.testHistory() in console to test history functionality');
 
             // Auto-save calculations when they're performed by user action
             function autoSaveCalculation(type, inputs, results) {
