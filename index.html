@@ -1411,6 +1411,49 @@
             overflow-y: auto;
         }
 
+        /* Help Modal Styles */
+        .help-content {
+            line-height: 1.6;
+        }
+        
+        .help-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .help-section h5 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .help-formula {
+            background: rgba(16, 185, 129, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        
+        .help-tips {
+            background: rgba(245, 158, 11, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+            margin: 15px 0;
+        }
+        
+        .help-assumptions {
+            background: rgba(239, 68, 68, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ef4444;
+            margin: 15px 0;
+        }
+
         .settings-section {
             margin-bottom: 25px;
             padding-bottom: 20px;
@@ -2138,6 +2181,10 @@
                     <i class="fas fa-moon" id="theme-icon"></i>
                     <span class="action-text">Theme</span>
                 </button>
+                <button id="help-btn" title="Help & Guide" class="btn-primary">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="action-text">Help</span>
+                </button>
                 <button id="settings-btn" title="Settings & Privacy" class="btn-primary">
                     <i class="fas fa-cog"></i>
                     <span class="action-text">Settings</span>
@@ -2461,6 +2508,56 @@
                 </div>
             </div>
         </div>
+
+        <!-- Help Modal -->
+        <div id="help-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content large-modal">
+                <div class="modal-header">
+                    <h3><i class="fas fa-question-circle"></i> Calculator Help & Guide</h3>
+                    <button class="modal-close" id="help-modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="help-content" class="help-content">
+                        <!-- Help content will be dynamically loaded based on active calculator -->
+                        <div class="help-default">
+                            <h4>🏠 Welcome to HouseMath.app</h4>
+                            <p>Select a calculator to see specific help and guidance. Each calculator has detailed explanations of formulas, assumptions, and tips for accurate results.</p>
+                            
+                            <div class="help-section">
+                                <h5>📊 Available Calculators:</h5>
+                                <ul>
+                                    <li><strong>Mortgage Calculator:</strong> Calculate monthly payments and loan details</li>
+                                    <li><strong>Investment Property:</strong> Analyze rental property ROI and cash flow</li>
+                                    <li><strong>Rental Cash Flow:</strong> Detailed rental income and expense analysis</li>
+                                    <li><strong>Closing Costs:</strong> Estimate all closing costs and fees</li>
+                                    <li><strong>Buyer Cost Sheet:</strong> Total buyer costs including points and prepaid interest</li>
+                                    <li><strong>Commission Calculator:</strong> Real estate commission calculations and splits</li>
+                                    <li><strong>Property Comparison:</strong> Side-by-side property analysis</li>
+                                    <li><strong>Rent vs Buy:</strong> Financial comparison with investment assumptions</li>
+                                    <li><strong>Refinancing:</strong> Savings analysis and break-even calculations</li>
+                                    <li><strong>HELOC:</strong> Home equity line of credit options</li>
+                                    <li><strong>Property Flip:</strong> Fix-and-flip profit and ROI analysis</li>
+                                    <li><strong>BRRRR Strategy:</strong> Buy-Rehab-Rent-Refinance-Repeat analysis</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="help-section">
+                                <h5>💡 General Tips:</h5>
+                                <ul>
+                                    <li>All calculations are estimates - consult professionals for important decisions</li>
+                                    <li>Use the Save/Load feature to store your calculations</li>
+                                    <li>View History to see your past calculations</li>
+                                    <li>Export results as PDF or JPG for sharing</li>
+                                    <li>Install as PWA for offline access</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </nav>
     
     <!-- PWA Install Banner -->
@@ -2769,6 +2866,14 @@
                 <div class="form-group">
                     <label for="inv-purchase-price">Purchase Price ($)</label>
                     <input type="number" id="inv-purchase-price" value="300000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="inv-down-payment-slider">Down Payment (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="inv-down-payment-slider" min="10" max="50" step="1" value="25">
+                        <span id="inv-down-payment-value" class="slider-value">25%</span>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -3793,8 +3898,12 @@
                 </div>
                 
                 <h3 style="margin: 25px 0 15px 0; color: #10b981;">💰 Investment Assumptions</h3>
+                <div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h4 style="margin: 0 0 10px 0; color: #10b981; font-size: 0.9rem;">📊 Renter Investment Strategy</h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: #6b7280;">This calculator assumes renters invest their down payment amount (<span id="down-payment-display" style="color: #10b981; font-weight: 600;">$80,000</span>) in an investment portfolio earning the return rate below.</p>
+                </div>
                 <div class="form-group">
-                    <label for="investment-return-slider">Annual Investment Return (%)</label>
+                    <label for="investment-return-slider">Annual Investment Return (%) - For Down Payment Investment</label>
                     <div class="slider-container">
                         <input type="range" id="investment-return-slider" min="3" max="12" step="0.1" value="7">
                         <span id="investment-return-value" class="slider-value">7%</span>
@@ -3881,6 +3990,18 @@
                         <div class="details-value" id="buy-home-value">$464,000</div>
                     </div>
                     <div class="details-row">
+                        <div class="details-label">Equity Built:</div>
+                        <div class="details-value" id="buy-equity-built" style="color: #10b981;">$64,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Principal Paid Down:</div>
+                        <div class="details-value" id="buy-principal-paid">$32,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Appreciation Gain:</div>
+                        <div class="details-value" id="buy-appreciation-gain" style="color: #10b981;">$64,000</div>
+                    </div>
+                    <div class="details-row">
                         <div class="details-label">Net Cost (5 years):</div>
                         <div class="details-value" id="buy-net-cost">$162,000</div>
                     </div>
@@ -3905,8 +4026,16 @@
                         <div class="details-value" id="rent-security">$2,200</div>
                     </div>
                     <div class="details-row">
+                        <div class="details-label">Down Payment Invested:</div>
+                        <div class="details-value" id="rent-investment-amount">$80,000</div>
+                    </div>
+                    <div class="details-row">
                         <div class="details-label">Investment Growth:</div>
                         <div class="details-value" id="rent-investment-growth">$112,000</div>
+                    </div>
+                    <div class="details-row">
+                        <div class="details-label">Investment Gain:</div>
+                        <div class="details-value" id="rent-investment-gain" style="color: #10b981;">$32,000</div>
                     </div>
                     <div class="details-row">
                         <div class="details-label">Net Cost (5 years):</div>
@@ -6126,6 +6255,39 @@
                 themeIcon.className = currentTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             }
 
+            // Help Modal functionality
+            const helpBtn = document.getElementById('help-btn');
+            const helpModal = document.getElementById('help-modal');
+            const helpModalClose = document.getElementById('help-modal-close');
+            const helpContent = document.getElementById('help-content');
+
+            // Help modal handlers
+            if (helpBtn) {
+                helpBtn.addEventListener('click', () => {
+                    showContextualHelp();
+                    helpModal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                    hapticFeedback('light');
+                });
+            }
+
+            if (helpModalClose) {
+                helpModalClose.addEventListener('click', () => {
+                    helpModal.style.display = 'none';
+                    document.body.style.overflow = '';
+                });
+            }
+
+            // Close help modal when clicking overlay
+            if (helpModal) {
+                helpModal.addEventListener('click', (e) => {
+                    if (e.target === helpModal) {
+                        helpModal.style.display = 'none';
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+
             // Settings Modal functionality
             const settingsBtn = document.getElementById('settings-btn');
             const settingsModal = document.getElementById('settings-modal');
@@ -6367,6 +6529,286 @@
             });
 
 
+
+            // Contextual Help System
+            function showContextualHelp() {
+                const activeTab = document.querySelector('.tab.active')?.dataset.tab || 'home';
+                const helpContent = document.getElementById('help-content');
+                
+                const helpData = {
+                    home: {
+                        title: '🏠 Dashboard Help',
+                        content: `
+                            <div class="help-section">
+                                <h5>📊 Calculator Overview</h5>
+                                <p>The dashboard provides quick access to all available calculators. Each calculator is designed for specific real estate scenarios:</p>
+                                <ul>
+                                    <li><strong>Mortgage Calculator:</strong> Basic loan calculations</li>
+                                    <li><strong>Investment Property:</strong> ROI and rental analysis</li>
+                                    <li><strong>Advanced Calculators:</strong> Specialized tools for professionals</li>
+                                </ul>
+                            </div>
+                            <div class="help-tips">
+                                <h5>💡 Pro Tips</h5>
+                                <ul>
+                                    <li>Use Save/Load to store your favorite calculations</li>
+                                    <li>Export results as PDF for client presentations</li>
+                                    <li>Install as PWA for offline access</li>
+                                </ul>
+                            </div>
+                        `
+                    },
+                    mortgage: {
+                        title: '🏠 Mortgage Calculator Help',
+                        content: `
+                            <div class="help-section">
+                                <h5>📊 How It Works</h5>
+                                <p>Calculates monthly principal and interest payments using the standard amortization formula.</p>
+                                <div class="help-formula">
+                                    M = P × [r(1+r)^n] / [(1+r)^n - 1]<br>
+                                    Where: M = Monthly Payment, P = Principal, r = Monthly Interest Rate, n = Number of Payments
+                                </div>
+                            </div>
+                            <div class="help-assumptions">
+                                <h5>⚠️ Important Assumptions</h5>
+                                <ul>
+                                    <li>Payment amounts are principal and interest only</li>
+                                    <li>Does not include taxes, insurance, or PMI</li>
+                                    <li>Assumes fixed interest rate for entire term</li>
+                                    <li>Monthly compounding is used</li>
+                                </ul>
+                            </div>
+                            <div class="help-tips">
+                                <h5>💡 Tips for Accuracy</h5>
+                                <ul>
+                                    <li>Use the actual interest rate from your lender</li>
+                                    <li>Consider additional costs like PMI and taxes</li>
+                                    <li>Account for closing costs in your budget</li>
+                                </ul>
+                            </div>
+                        `
+                    },
+                    investment: {
+                        title: '📈 Investment Property Help',
+                        content: `
+                            <div class="help-section">
+                                <h5>📊 Key Metrics Calculated</h5>
+                                <ul>
+                                    <li><strong>Cash-on-Cash ROI:</strong> Annual cash flow ÷ Down payment</li>
+                                    <li><strong>Cap Rate:</strong> Net operating income ÷ Property value</li>
+                                    <li><strong>Total Return:</strong> Cash flow + appreciation over holding period</li>
+                                </ul>
+                            </div>
+                            <div class="help-assumptions">
+                                <h5>⚠️ Key Assumptions</h5>
+                                <ul>
+                                    <li>Down payment is user-configurable (10%-50%)</li>
+                                    <li>Expenses include management, maintenance, and vacancy</li>
+                                    <li>Appreciation rate is applied annually</li>
+                                    <li>Does not include tax benefits or depreciation</li>
+                                </ul>
+                            </div>
+                            <div class="help-tips">
+                                <h5>💡 Analysis Tips</h5>
+                                <ul>
+                                    <li>Use local market data for accurate rent estimates</li>
+                                    <li>Consider 1-2% for maintenance reserves</li>
+                                    <li>Factor in vacancy rates for your market</li>
+                                    <li>Include property management costs if applicable</li>
+                                </ul>
+                            </div>
+                        `
+                    },
+                    rentbuy: {
+                        title: '🏠 Rent vs Buy Help',
+                        content: `
+                            <div class="help-section">
+                                <h5>📊 Investment Strategy Explained</h5>
+                                <p>This calculator assumes renters invest their down payment amount in a diversified investment portfolio earning the specified return rate.</p>
+                                <div class="help-formula">
+                                    Rental Net Cost = Total Rent + Security Deposit - Investment Growth<br>
+                                    Buying Net Cost = Down Payment + Mortgage Payments + Taxes/Maintenance - Home Appreciation
+                                </div>
+                            </div>
+                            <div class="help-assumptions">
+                                <h5>⚠️ Critical Assumptions</h5>
+                                <ul>
+                                    <li><strong>Renter Investment:</strong> Down payment amount invested at specified return rate</li>
+                                    <li><strong>Home Appreciation:</strong> Applied annually and compounded</li>
+                                    <li><strong>Rent Increases:</strong> Applied annually at specified rate</li>
+                                    <li><strong>Opportunity Cost:</strong> Considers alternative investment returns</li>
+                                </ul>
+                            </div>
+                            <div class="help-tips">
+                                <h5>💡 Decision Making Tips</h5>
+                                <ul>
+                                    <li>Consider your expected time in the home</li>
+                                    <li>Factor in closing costs and moving expenses</li>
+                                    <li>Use conservative investment return estimates (6-8%)</li>
+                                    <li>Consider tax implications of homeownership</li>
+                                    <li>Account for maintenance and repair costs</li>
+                                </ul>
+                            </div>
+                        `
+                    },
+                    cashflow: {
+                        title: '💰 Cash Flow Calculator Help',
+                        content: `
+                            <div class="help-section">
+                                <h5>📊 Cash Flow Analysis</h5>
+                                <p>Provides detailed monthly income and expense breakdown for rental properties.</p>
+                                <div class="help-formula">
+                                    Net Cash Flow = (Rental Income × (1 - Vacancy Rate)) - All Expenses<br>
+                                    Expenses = Mortgage + Taxes + Insurance + Management + Maintenance + Vacancy Reserve
+                                </div>
+                            </div>
+                            <div class="help-assumptions">
+                                <h5>⚠️ Expense Assumptions</h5>
+                                <ul>
+                                    <li><strong>Vacancy Rate:</strong> Applied to reduce effective rental income</li>
+                                    <li><strong>Management Fee:</strong> Calculated on effective rental income</li>
+                                    <li><strong>Maintenance:</strong> Percentage of effective rental income</li>
+                                    <li><strong>Property Taxes:</strong> Fixed annual amount</li>
+                                </ul>
+                            </div>
+                            <div class="help-tips">
+                                <h5>💡 Cash Flow Tips</h5>
+                                <ul>
+                                    <li>Use actual vacancy rates from your market</li>
+                                    <li>Include all operating expenses</li>
+                                    <li>Consider seasonal rental variations</li>
+                                    <li>Plan for capital expenditures separately</li>
+                                </ul>
+                            </div>
+                        `
+                    },
+                    brrrr: {
+                        title: '🔄 BRRRR Strategy Help',
+                        content: `
+                            <div class="help-section">
+                                <h5>📊 BRRRR Method Explained</h5>
+                                <p><strong>Buy - Rehab - Rent - Refinance - Repeat</strong></p>
+                                <p>This strategy aims to recover most or all of your initial investment through refinancing.</p>
+                                <div class="help-formula">
+                                    Cash Left in Deal = Total Investment - Refinance Amount<br>
+                                    Cash-on-Cash ROI = Annual Cash Flow ÷ Cash Left in Deal
+                                </div>
+                            </div>
+                            <div class="help-assumptions">
+                                <h5>⚠️ Strategy Assumptions</h5>
+                                <ul>
+                                    <li><strong>ARV (After Repair Value):</strong> Conservative estimate is crucial</li>
+                                    <li><strong>Refinance LTV:</strong> Typically 70-80% of ARV</li>
+                                    <li><strong>Infinite ROI:</strong> Shown when all money is recovered</li>
+                                    <li><strong>Holding Costs:</strong> Interest, taxes, insurance during rehab</li>
+                                </ul>
+                            </div>
+                            <div class="help-tips">
+                                <h5>💡 BRRRR Success Tips</h5>
+                                <ul>
+                                    <li>Buy properties at 65-70% of ARV</li>
+                                    <li>Use conservative ARV estimates</li>
+                                    <li>Factor in all rehab and holding costs</li>
+                                    <li>Ensure property will cash flow after refinance</li>
+                                    <li>Have multiple exit strategies</li>
+                                </ul>
+                            </div>
+                        `
+                    }
+                };
+
+                // Add help content for other calculators
+                const additionalHelp = {
+                    closing: {
+                        title: '📄 Closing Costs Help',
+                        content: `
+                            <div class="help-section">
+                                <h5>📊 Closing Cost Categories</h5>
+                                <p>Estimates typical closing costs for both buyers and sellers.</p>
+                            </div>
+                            <div class="help-tips">
+                                <h5>💡 Cost Estimation Tips</h5>
+                                <ul>
+                                    <li>Costs vary by location and loan type</li>
+                                    <li>Get actual estimates from lenders</li>
+                                    <li>Consider negotiating seller concessions</li>
+                                </ul>
+                            </div>
+                        `
+                    },
+                    buyer: {
+                        title: '💳 Buyer Cost Sheet Help',
+                        content: `
+                            <div class="help-section">
+                                <h5>📊 Total Buyer Costs</h5>
+                                <p>Calculates all upfront costs for property buyers including points and prepaid interest.</p>
+                            </div>
+                            <div class="help-tips">
+                                <h5>💡 Buyer Tips</h5>
+                                <ul>
+                                    <li>Points may reduce your interest rate</li>
+                                    <li>Prepaid interest depends on closing date</li>
+                                    <li>Budget for inspection and appraisal fees</li>
+                                </ul>
+                            </div>
+                        `
+                    },
+                    commission: {
+                        title: '💼 Commission Calculator Help',
+                        content: `
+                            <div class="help-section">
+                                <h5>📊 Commission Calculations</h5>
+                                <p>Calculates real estate commissions and agent splits.</p>
+                            </div>
+                            <div class="help-tips">
+                                <h5>💡 Commission Tips</h5>
+                                <ul>
+                                    <li>Commission rates vary by market</li>
+                                    <li>Consider value-based pricing</li>
+                                    <li>Factor in all transaction costs</li>
+                                </ul>
+                            </div>
+                        `
+                    }
+                };
+
+                // Merge additional help data
+                Object.assign(helpData, additionalHelp);
+
+                const currentHelp = helpData[activeTab] || helpData.home;
+                helpContent.innerHTML = `
+                    <h4>${currentHelp.title}</h4>
+                    ${currentHelp.content}
+                `;
+            }
+
+            // Update down payment display when sliders change
+            function updateDownPaymentDisplay() {
+                const downPaymentSlider = document.getElementById('buy-down-payment-slider');
+                const downPaymentDisplay = document.getElementById('down-payment-display');
+                const homePrice = parseFloat(document.getElementById('buy-home-price')?.value || 400000);
+                
+                if (downPaymentSlider && downPaymentDisplay) {
+                    const downPaymentPercent = parseFloat(downPaymentSlider.value);
+                    const downPaymentAmount = homePrice * (downPaymentPercent / 100);
+                    downPaymentDisplay.textContent = '$' + Math.round(downPaymentAmount).toLocaleString();
+                }
+            }
+
+            // Add event listeners for rent vs buy sliders
+            const buyDownPaymentSlider = document.getElementById('buy-down-payment-slider');
+            const buyHomePriceInput = document.getElementById('buy-home-price');
+            
+            if (buyDownPaymentSlider) {
+                buyDownPaymentSlider.addEventListener('input', updateDownPaymentDisplay);
+            }
+            
+            if (buyHomePriceInput) {
+                buyHomePriceInput.addEventListener('input', updateDownPaymentDisplay);
+            }
+
+            // Initialize down payment display
+            updateDownPaymentDisplay();
 
             // Add some Billie-specific impressive features
             function addBillieSpecialFeatures() {
@@ -6799,6 +7241,7 @@
             const sliders = [
                 { slider: 'down-payment-slider', display: 'down-payment-value', suffix: '%' },
                 { slider: 'interest-rate-slider', display: 'interest-rate-value', suffix: '%' },
+                { slider: 'inv-down-payment-slider', display: 'inv-down-payment-value', suffix: '%' },
                 { slider: 'expenses-slider', display: 'expenses-value', suffix: '%' },
                 { slider: 'vacancy-slider', display: 'vacancy-value', suffix: '%' },
                 { slider: 'appreciation-slider', display: 'appreciation-value', suffix: '%' },
@@ -7266,8 +7709,14 @@
                 const numberOfPayments = loanTerm * 12;
                 
                 // Calculate monthly principal and interest payment
-                const monthlyPayment = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments) / 
-                    (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+                let monthlyPayment;
+                if (interestRate === 0) {
+                    // Handle zero interest rate case
+                    monthlyPayment = loanAmount / numberOfPayments;
+                } else {
+                    monthlyPayment = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments) / 
+                        (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+                }
                 
                 // Calculate total payment with taxes and insurance
                 const monthlyPropertyTax = propertyTax / 12;
@@ -7353,13 +7802,14 @@
             // Calculate investment returns
             function calculateInvestment() {
                 try {
-                    // Get input values with validation
-                    const purchasePrice = parseFloat(document.getElementById('inv-purchase-price').value) || 0;
-                    const annualRent = parseFloat(document.getElementById('annual-rent').value) || 0;
-                    const expensesPercent = parseFloat(document.getElementById('expenses-slider').value) || 0;
-                    const vacancyRate = parseFloat(document.getElementById('vacancy-slider').value) || 0;
-                    const appreciationRate = parseFloat(document.getElementById('appreciation-slider').value) || 0;
-                    const holdingPeriod = parseInt(document.getElementById('holding-period').value) || 10;
+                                    // Get input values with validation
+                const purchasePrice = parseFloat(document.getElementById('inv-purchase-price').value) || 0;
+                const downPaymentPercent = parseFloat(document.getElementById('inv-down-payment-slider').value) || 25;
+                const annualRent = parseFloat(document.getElementById('annual-rent').value) || 0;
+                const expensesPercent = parseFloat(document.getElementById('expenses-slider').value) || 0;
+                const vacancyRate = parseFloat(document.getElementById('vacancy-slider').value) || 0;
+                const appreciationRate = parseFloat(document.getElementById('appreciation-slider').value) || 0;
+                const holdingPeriod = parseInt(document.getElementById('holding-period').value) || 10;
                     
                     // Validate inputs
                     if (purchasePrice <= 0 || annualRent < 0) {
@@ -7373,8 +7823,8 @@
                 const annualCashFlow = effectiveAnnualRent - annualExpenses;
                 const monthlyCashFlow = annualCashFlow / 12;
                 
-                // Assume 25% down payment for cash-on-cash ROI calculation
-                const downPayment = purchasePrice * 0.25;
+                // Calculate down payment based on user input
+                const downPayment = purchasePrice * (downPaymentPercent / 100);
                 const cashOnCashROI = (annualCashFlow / downPayment) * 100;
                 
                 // Cap rate calculation (NOI / Purchase Price)
@@ -7435,6 +7885,7 @@
                 // Auto-save to history
                 autoSaveCalculation('investment', {
                     purchasePrice: purchasePrice,
+                    downPaymentPercent: downPaymentPercent,
                     annualRent: annualRent,
                     expensesPercent: expensesPercent,
                     vacancyRate: vacancyRate,
@@ -7466,7 +7917,7 @@
                 const effectiveRentalIncome = rentalIncome * (1 - vacancyPercent / 100);
                 const managementFee = effectiveRentalIncome * (managementPercent / 100);
                 const maintenanceReserve = effectiveRentalIncome * (maintenancePercent / 100);
-                const vacancyReserve = rentalIncome * (vacancyPercent / 100);
+                const vacancyLoss = rentalIncome * (vacancyPercent / 100); // For display purposes only
                 
                 const totalExpenses = mortgagePayment + propertyTax + insurance + managementFee + maintenanceReserve;
                 const netCashFlow = effectiveRentalIncome - totalExpenses;
@@ -7490,7 +7941,7 @@
                         Math.round(insurance),
                         Math.round(managementFee),
                         Math.round(maintenanceReserve),
-                        Math.round(vacancyReserve)
+                        Math.round(vacancyLoss)
                     ];
                     expenseChart.update();
                 }
@@ -7817,11 +8268,33 @@
 
                     // Calculate investment growth if renting (investing the down payment)
                     const investmentGrowth = downPayment * Math.pow(1 + (investmentReturn / 100), analysisPeriod);
+                    const investmentGain = investmentGrowth - downPayment;
                     const rentingNetCost = totalRentPaid + securityDeposit - investmentGrowth;
+
+                    // Calculate equity building for buyers
+                    const appreciationGain = futureHomeValue - homePrice;
+                    
+                    // Calculate principal paid down
+                    let totalPrincipalPaid = 0;
+                    let remainingBalance = loanAmount;
+                    for (let month = 1; month <= analysisPeriod * 12; month++) {
+                        const interestPayment = remainingBalance * monthlyInterestRate;
+                        const principalPayment = monthlyMortgage - interestPayment;
+                        totalPrincipalPaid += principalPayment;
+                        remainingBalance -= principalPayment;
+                    }
+                    
+                    const totalEquityBuilt = appreciationGain + totalPrincipalPaid;
 
                     // Determine better option
                     const costDifference = Math.abs(buyingNetCost - rentingNetCost);
                     const betterOption = buyingNetCost < rentingNetCost ? 'Buying' : 'Renting';
+
+                    // Update down payment display in the input section
+                    const downPaymentDisplayElement = document.getElementById('down-payment-display');
+                    if (downPaymentDisplayElement) {
+                        downPaymentDisplayElement.textContent = '$' + Math.round(downPayment).toLocaleString();
+                    }
 
                     // Update results
                     document.getElementById('better-option').textContent = betterOption;
@@ -7834,6 +8307,9 @@
                     document.getElementById('buy-total-payments').textContent = '$' + Math.round(totalMortgagePayments).toLocaleString();
                     document.getElementById('buy-maintenance-taxes').textContent = '$' + Math.round(totalTaxesInsurance).toLocaleString();
                     document.getElementById('buy-home-value').textContent = '$' + Math.round(futureHomeValue).toLocaleString();
+                    document.getElementById('buy-equity-built').textContent = '$' + Math.round(totalEquityBuilt).toLocaleString();
+                    document.getElementById('buy-principal-paid').textContent = '$' + Math.round(totalPrincipalPaid).toLocaleString();
+                    document.getElementById('buy-appreciation-gain').textContent = '$' + Math.round(appreciationGain).toLocaleString();
                     document.getElementById('buy-net-cost').textContent = '$' + Math.round(buyingNetCost).toLocaleString();
 
                     // Update renting costs breakdown
@@ -7841,7 +8317,9 @@
                     document.getElementById('rent-final').textContent = '$' + Math.round(currentRent).toLocaleString();
                     document.getElementById('rent-total-paid').textContent = '$' + Math.round(totalRentPaid).toLocaleString();
                     document.getElementById('rent-security').textContent = '$' + Math.round(securityDeposit).toLocaleString();
+                    document.getElementById('rent-investment-amount').textContent = '$' + Math.round(downPayment).toLocaleString();
                     document.getElementById('rent-investment-growth').textContent = '$' + Math.round(investmentGrowth).toLocaleString();
+                    document.getElementById('rent-investment-gain').textContent = '$' + Math.round(investmentGain).toLocaleString();
                     document.getElementById('rent-net-cost').textContent = '$' + Math.round(rentingNetCost).toLocaleString();
 
                     // Update rent vs buy chart
@@ -7925,22 +8403,28 @@
                     const totalUpfrontCost = closingCosts + pointsCost;
 
                     // Calculate new monthly payment
-                    const newMonthlyPayment = currentBalance * newMonthlyInterestRate * Math.pow(1 + newMonthlyInterestRate, newNumberOfPayments) / 
-                        (Math.pow(1 + newMonthlyInterestRate, newNumberOfPayments) - 1);
+                    let newMonthlyPayment;
+                    if (newRate === 0) {
+                        // Handle zero interest rate case
+                        newMonthlyPayment = currentBalance / newNumberOfPayments;
+                    } else {
+                        newMonthlyPayment = currentBalance * newMonthlyInterestRate * Math.pow(1 + newMonthlyInterestRate, newNumberOfPayments) / 
+                            (Math.pow(1 + newMonthlyInterestRate, newNumberOfPayments) - 1);
+                    }
 
                     // Calculate savings
                     const monthlySavings = currentPayment - newMonthlyPayment;
                     const annualSavings = monthlySavings * 12;
 
                     // Calculate break-even point
-                    const breakEvenMonths = totalUpfrontCost / monthlySavings;
+                    const breakEvenMonths = monthlySavings > 0 ? totalUpfrontCost / monthlySavings : Infinity;
                     const fiveYearSavings = (monthlySavings * 60) - totalUpfrontCost; // 5 years minus upfront costs
 
                     // Update results
                     document.getElementById('refi-monthly-savings').textContent = '$' + Math.round(monthlySavings).toLocaleString();
                     document.getElementById('refi-monthly-savings').style.color = monthlySavings > 0 ? '#10b981' : '#ef4444';
                     
-                    document.getElementById('refi-breakeven').textContent = breakEvenMonths.toFixed(1) + ' months';
+                    document.getElementById('refi-breakeven').textContent = breakEvenMonths === Infinity ? 'Never' : breakEvenMonths.toFixed(1) + ' months';
                     
                     // Update payment comparison
                     document.getElementById('refi-current-monthly').textContent = '$' + Math.round(currentPayment).toLocaleString();
@@ -7952,7 +8436,7 @@
                     document.getElementById('refi-total-costs').textContent = '$' + Math.round(closingCosts).toLocaleString();
                     document.getElementById('refi-points-cost').textContent = '$' + Math.round(pointsCost).toLocaleString();
                     document.getElementById('refi-upfront-total').textContent = '$' + Math.round(totalUpfrontCost).toLocaleString();
-                    document.getElementById('refi-breakeven-months').textContent = breakEvenMonths.toFixed(1) + ' months';
+                    document.getElementById('refi-breakeven-months').textContent = breakEvenMonths === Infinity ? 'Never' : breakEvenMonths.toFixed(1) + ' months';
                     document.getElementById('refi-five-year-savings').textContent = '$' + Math.round(fiveYearSavings).toLocaleString();
                     document.getElementById('refi-five-year-savings').style.color = fiveYearSavings > 0 ? '#10b981' : '#ef4444';
 
@@ -7968,7 +8452,7 @@
                         closingCosts: closingCosts
                     }, {
                         monthlySavings: Math.round(monthlySavings),
-                        breakEvenMonths: breakEvenMonths.toFixed(1),
+                        breakEvenMonths: breakEvenMonths === Infinity ? 'Never' : breakEvenMonths.toFixed(1),
                         fiveYearSavings: Math.round(fiveYearSavings)
                     });
 
@@ -7989,10 +8473,10 @@
                     const interestRate = parseFloat(document.getElementById('heloc-interest-rate-slider').value) || 6.5;
                     const repaymentPeriod = parseInt(document.getElementById('heloc-repayment-period').value) || 15;
 
-                    // Calculate equity and available credit
-                    const currentEquity = homeValue - existingMortgage;
-                    const maxCreditLine = (homeValue * (maxLtv / 100)) - existingMortgage;
-                    const availableToBorrow = maxCreditLine - currentBalance;
+                    // Calculate equity and available credit with safety checks
+                    const currentEquity = Math.max(0, homeValue - existingMortgage);
+                    const maxCreditLine = Math.max(0, (homeValue * (maxLtv / 100)) - existingMortgage);
+                    const availableToBorrow = Math.max(0, maxCreditLine - currentBalance);
 
                     // Calculate monthly payment based on current balance
                     const monthlyInterestRate = interestRate / 100 / 12;
@@ -8016,7 +8500,7 @@
                     // Update HELOC chart
                     if (helocChart) {
                         helocChart.data.datasets[0].data = [
-                            Math.round(currentEquity - currentBalance),
+                            Math.round(Math.max(0, currentEquity - currentBalance)),
                             Math.round(existingMortgage),
                             Math.round(currentBalance)
                         ];
@@ -8067,7 +8551,7 @@
                     // Calculate profit
                     const netSalePrice = arv - saleCosts;
                     const netProfit = netSalePrice - totalInvestment;
-                    const roi = (netProfit / totalInvestment) * 100;
+                    const roi = totalInvestment > 0 ? (netProfit / totalInvestment) * 100 : 0;
 
                     // Update results
                     document.getElementById('flip-net-profit').textContent = '$' + Math.round(netProfit).toLocaleString();
@@ -8152,9 +8636,14 @@
                     const monthlyExpenses = monthlyRent * (expensesPercent / 100);
                     const netCashFlow = monthlyRent - monthlyExpenses - mortgagePayment;
 
-                    // Calculate cash-on-cash ROI
+                    // Calculate cash-on-cash ROI with better error handling
                     const annualCashFlow = netCashFlow * 12;
-                    const cocRoi = cashLeftInDeal > 0 ? (annualCashFlow / cashLeftInDeal) * 100 : 0;
+                    let cocRoi = 0;
+                    if (cashLeftInDeal > 0) {
+                        cocRoi = (annualCashFlow / cashLeftInDeal) * 100;
+                    } else if (cashLeftInDeal < 0 && annualCashFlow > 0) {
+                        cocRoi = Infinity; // Infinite return when you get all money back plus positive cash flow
+                    }
 
                     // Update results
                     document.getElementById('brrrr-money-left').textContent = '$' + Math.round(cashLeftInDeal).toLocaleString();
@@ -8169,7 +8658,7 @@
                     document.getElementById('brrrr-cash-left').textContent = '$' + Math.round(cashLeftInDeal).toLocaleString();
                     document.getElementById('brrrr-mortgage-payment').textContent = '$' + Math.round(mortgagePayment).toLocaleString();
                     document.getElementById('brrrr-net-cashflow').textContent = '$' + Math.round(netCashFlow).toLocaleString();
-                    document.getElementById('brrrr-coc-roi').textContent = cocRoi.toFixed(1) + '%';
+                    document.getElementById('brrrr-coc-roi').textContent = cocRoi === Infinity ? '∞%' : cocRoi.toFixed(1) + '%';
                     document.getElementById('brrrr-coc-roi').style.color = cocRoi > 0 ? '#10b981' : '#ef4444';
 
                     // Update BRRRR Strategy chart
@@ -8199,7 +8688,7 @@
                     }, {
                         moneyLeftInDeal: Math.round(cashLeftInDeal),
                         monthlyCashFlow: Math.round(netCashFlow),
-                        cocRoi: cocRoi.toFixed(1),
+                        cocRoi: cocRoi === Infinity ? '∞' : cocRoi.toFixed(1),
                         totalInvestment: Math.round(totalInvestment)
                     });
 
@@ -8260,17 +8749,17 @@
 
                     // Update report chart
                     if (reportChart) {
-                        const roiValue = Math.max(cashOnCashROI * 1000, 0); // Scale for chart display
+                        // Use actual values instead of arbitrary scaling
                         reportChart.data.datasets[0].data = [
                             Math.round(totalMonthlyPayment),
-                            Math.round(netCashFlow),
-                            Math.round(roiValue), 
+                            Math.round(Math.abs(netCashFlow)), // Use absolute value for chart display
+                            Math.round(Math.abs(downPaymentAmount * (cashOnCashROI / 100))), // ROI as dollar amount
                             Math.round(downPaymentAmount)
                         ];
                         reportChart.data.labels = [
                             'Monthly Payment',
-                            'Net Cash Flow',
-                            `ROI (${cashOnCashROI.toFixed(1)}%)`,
+                            `Cash Flow (${netCashFlow >= 0 ? '+' : '-'}$${Math.abs(Math.round(netCashFlow)).toLocaleString()})`,
+                            `Annual ROI ($${Math.round(Math.abs(downPaymentAmount * (cashOnCashROI / 100))).toLocaleString()})`,
                             'Initial Investment'
                         ];
                         reportChart.update();
