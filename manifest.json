@@ -1,0 +1,105 @@
+{
+  "name": "HouseMath.app - Professional Real Estate Calculator Suite",
+  "short_name": "HouseMath",
+  "description": "Professional real estate calculator suite with mortgage, investment, cash flow, and closing cost calculators. Works offline!",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f8fafc",
+  "theme_color": "#1e40af",
+  "categories": ["finance", "business", "productivity"],
+  "lang": "en",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "logo.fw.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo.fw.png",
+      "sizes": "512x512", 
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo.fw.png",
+      "sizes": "192x192",
+      "type": "image/png", 
+      "purpose": "maskable"
+    },
+    {
+      "src": "logo.fw.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "logo.jpg", 
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Mortgage Calculator",
+      "short_name": "Mortgage",
+      "description": "Calculate monthly mortgage payments",
+      "url": "/?tab=mortgage",
+      "icons": [
+        {
+          "src": "logo.fw.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Investment Calculator", 
+      "short_name": "Investment",
+      "description": "Analyze investment properties",
+      "url": "/?tab=investment",
+      "icons": [
+        {
+          "src": "logo.fw.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Cash Flow Calculator",
+      "short_name": "Cash Flow", 
+      "description": "Calculate rental property cash flow",
+      "url": "/?tab=cashflow",
+      "icons": [
+        {
+          "src": "logo.fw.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Commission Calculator",
+      "short_name": "Commission",
+      "description": "Calculate real estate commission",
+      "url": "/?tab=commission", 
+      "icons": [
+        {
+          "src": "logo.fw.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+} 

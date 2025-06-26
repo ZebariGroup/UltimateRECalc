@@ -1,7 +1,11 @@
-const CACHE_NAME = 'housemath-v1.0.0';
+const CACHE_NAME = 'housemath-v1.0.1';
 const urlsToCache = [
   '/',
   '/index.html',
+  '/manifest.json',
+  '/browserconfig.xml',
+  '/logo.fw.png',
+  '/logo.jpg',
   'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js',
@@ -98,8 +102,8 @@ function doBackgroundSync() {
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data ? event.data.text() : 'New real estate market update!',
-    icon: '/icon-192.png',
-    badge: '/badge-72.png',
+    icon: '/logo.fw.png',
+    badge: '/logo.fw.png',
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
@@ -109,12 +113,12 @@ self.addEventListener('push', (event) => {
       {
         action: 'explore',
         title: 'Open HouseMath',
-        icon: '/icon-72.png'
+        icon: '/logo.fw.png'
       },
       {
         action: 'close',
         title: 'Close',
-        icon: '/icon-close.png'
+        icon: '/logo.fw.png'
       }
     ]
   };
