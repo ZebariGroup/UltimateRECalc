@@ -2446,29 +2446,24 @@
         }
     </style>
 
-    <!-- Header with Custom Logo -->
-    <header style="background: var(--primary-color); padding: 15px 0; text-align: center; color: white; box-shadow: 0 2px 10px rgba(30,64,175,0.2);">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 12px;">
-            <!-- Custom Logo -->
-            <div id="header-logo" style="position: relative; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s ease; border-radius: 8px; padding: 4px;" title="Go to Dashboard">
-                <img src="logo.fw.png" alt="HouseMath Logo" style="width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); border-radius: 8px;" />
-        </div>
-            <div>
-                <h1 id="app-title" style="margin: 0; font-size: 1.8rem; font-weight: 700; cursor: pointer; user-select: none; letter-spacing: -0.5px; transition: opacity 0.2s ease; border-radius: 4px; padding: 4px 8px;" title="Go to Dashboard">HouseMath.app</h1>
-                <p style="margin: 2px 0 0 0; font-size: 0.85rem; opacity: 0.9; font-weight: 300;">Professional Real Estate Calculator Suite</p>
+    <!-- Consolidated Header with Logo, Title, and Menu -->
+    <header style="background: var(--primary-color); padding: 12px 20px; color: white; box-shadow: 0 2px 10px rgba(30,64,175,0.2);">
+        <div style="display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto;">
+            <!-- Left: Logo and Title -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div id="header-logo" style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s ease; border-radius: 8px;" title="Go to Dashboard">
+                    <img src="logo.fw.png" alt="HouseMath Logo" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); border-radius: 8px;" />
+                </div>
+                <h1 id="app-title" style="margin: 0; font-size: 1.4rem; font-weight: 700; cursor: pointer; user-select: none; letter-spacing: -0.5px; transition: opacity 0.2s ease;" title="Go to Dashboard">HouseMath.app</h1>
             </div>
-        </div>
-    </header>
-
-    <!-- Navigation bar -->
-    <nav>
-        <div class="nav-content">
-            <button class="mobile-menu-button" id="mobile-menu-toggle">
-                <i class="fas fa-calculator"></i>
-                <span>Calculators</span>
-            </button>
-        
-        <div class="actions">
+            
+            <!-- Right: Menu Actions -->
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="mobile-menu-button" id="mobile-menu-toggle">
+                    <i class="fas fa-calculator"></i>
+                    <span>Calculators</span>
+                </button>
+                
                 <div class="actions-menu">
                     <button class="actions-menu-btn" id="actions-menu-toggle" title="App Actions">
                         <i class="fas fa-cog"></i>
@@ -2517,8 +2512,11 @@
                     </div>
                 </div>
             </div>
-            </div>
-            
+        </div>
+    </header>
+    
+    <!-- Navigation and Modals -->
+    <nav>
         <!-- Mobile Menu Overlay -->
         <div class="mobile-menu-overlay" id="mobile-menu-overlay">
             <div class="mobile-menu-content">
