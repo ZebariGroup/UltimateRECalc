@@ -5022,9 +5022,14 @@
             // Initialize History Manager
             const historyManager = new HistoryManager();
 
-            // Auto-save calculations when they're performed
+            // Flag to track if calculations should be saved to history
+            let shouldSaveToHistory = false;
+
+            // Auto-save calculations when they're performed by user action
             function autoSaveCalculation(type, inputs, results) {
-                historyManager.addToHistory(type, inputs, results);
+                if (shouldSaveToHistory) {
+                    historyManager.addToHistory(type, inputs, results);
+                }
             }
 
             // Modal Management
@@ -6185,6 +6190,9 @@
             setTimeout(() => {
                 if (typeof Chart !== 'undefined') {
                     try {
+                        // Disable history saving during initialization
+                        shouldSaveToHistory = false;
+                        
                         initializeCharts();
                         calculateMortgage();
                         calculateInvestment();
@@ -6198,12 +6206,19 @@
                         calculateHELOC();
                         calculateFlip();
                         calculateBRRRR();
+                        
+                        // Enable history saving after initialization is complete
+                        setTimeout(() => {
+                            shouldSaveToHistory = true;
+                        }, 500);
                     } catch (error) {
                         console.error('Chart initialization error:', error);
                         // Charts failed to load, but app should still work
+                        shouldSaveToHistory = true; // Enable history saving even if charts fail
                     }
                 } else {
                     console.warn('Chart.js not loaded, charts will not be available');
+                    shouldSaveToHistory = true; // Enable history saving even if charts aren't available
                 }
             }, 100);
             
@@ -6855,6 +6870,10 @@
                     if (selectedCalculator) {
                         selectedCalculator.classList.remove('hidden');
                     }
+                    
+                    // Always scroll to top when switching calculators
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    hapticFeedback('light');
                 });
             });
 
@@ -6894,6 +6913,10 @@
                     if (selectedCalculator) {
                         selectedCalculator.classList.remove('hidden');
                     }
+                    
+                    // Always scroll to top when switching calculators
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    hapticFeedback('medium');
                 });
             });
             
@@ -7246,6 +7269,10 @@
             
             // Reinitialize charts when theme changes
             function reinitializeCharts() {
+                // Temporarily disable history saving during chart reinitialization
+                const originalSaveState = shouldSaveToHistory;
+                shouldSaveToHistory = false;
+                
                 // Destroy existing charts
                 if (paymentChart) paymentChart.destroy();
                 if (amortizationChart) amortizationChart.destroy();
@@ -7271,6 +7298,9 @@
                 calculateHELOC();
                 calculateFlip();
                 calculateBRRRR();
+                
+                // Restore history saving state
+                shouldSaveToHistory = originalSaveState;
             }
             
             // Calculate mortgage
@@ -8608,11 +8638,10 @@
                             selectedCalculator.classList.remove('hidden');
                         }
                         
+                        // Always scroll to top when switching calculators
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                         hapticFeedback('medium');
                         closeMobileMenu();
-                        
-                        // Scroll to top of content
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
                     });
                 });
 
