@@ -325,39 +325,7 @@
             align-items: center;
         }
         
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .toggle-wrapper {
-            position: relative;
-            width: 48px;
-            height: 24px;
-            background-color: #e5e7eb;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-        
-        .toggle-dot {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background-color: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-        
-        .dark .toggle-dot {
-            transform: translateX(24px);
-        }
-        
-        .dark .toggle-wrapper {
-            background-color: #4b5563;
-        }
+
         
         /* Dropdown styles */
         .dropdown {
@@ -1410,6 +1378,134 @@
             margin: 0;
         }
 
+        /* Settings Modal Styles */
+        .large-modal .modal-content {
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .settings-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .settings-section h4 {
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .setting-item {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .setting-item label {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .setting-item select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--background-color);
+            color: var(--text-color);
+            min-width: 140px;
+        }
+
+        .setting-item input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+
+        .settings-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .settings-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: var(--background-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            width: 100%;
+            color: var(--text-color);
+        }
+
+        .settings-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .about-info {
+            padding: 15px;
+            background: var(--background-secondary);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .about-info p {
+            margin: 5px 0;
+        }
+
+        .settings-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .privacy-content, .terms-content {
+            line-height: 1.6;
+        }
+
+        .privacy-content h4, .terms-content h4 {
+            color: var(--primary-color);
+            margin: 20px 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .privacy-content ul, .terms-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .privacy-content li, .terms-content li {
+            margin: 5px 0;
+        }
+
+        /* Theme icon animation */
+        #theme-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .dark #theme-icon {
+            transform: rotate(180deg);
+        }
+
         /* PWA Install Banner */
         .pwa-install-banner {
             position: fixed;
@@ -1577,6 +1673,26 @@
             
             .item-date {
                 font-size: 0.75rem;
+            }
+
+            /* Settings Modal Mobile Styles */
+            .large-modal .modal-content {
+                max-width: 95vw;
+                margin: 20px auto;
+            }
+            
+            .settings-actions {
+                flex-direction: column;
+            }
+            
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .setting-item select {
+                width: 100%;
             }
         }
 
@@ -1992,14 +2108,14 @@
                     <i class="fas fa-star"></i>
                     <span class="action-text">Favorites</span>
                 </button>
-
-            <div class="theme-toggle">
-                <i class="far fa-sun"></i>
-                <div class="toggle-wrapper" id="theme-toggle">
-                    <div class="toggle-dot"></div>
-                </div>
-                <i class="far fa-moon"></i>
-                </div>
+                <button id="theme-toggle" title="Toggle Dark/Light Mode" class="btn-primary">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                    <span class="action-text">Theme</span>
+                </button>
+                <button id="settings-btn" title="Settings & Privacy" class="btn-primary">
+                    <i class="fas fa-cog"></i>
+                    <span class="action-text">Settings</span>
+                </button>
             </div>
             </div>
             
@@ -2190,6 +2306,192 @@
                             <i class="fas fa-star"></i>
                             <p>No favorite calculations yet. Save calculations to favorites to access them quickly!</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-cog"></i> Settings & Privacy</h3>
+                    <button class="modal-close" id="settings-modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-section">
+                        <h4><i class="fas fa-palette"></i> Appearance</h4>
+                        <div class="setting-item">
+                            <label for="theme-selector">Theme:</label>
+                            <select id="theme-selector">
+                                <option value="light">Light Mode</option>
+                                <option value="dark">Dark Mode</option>
+                                <option value="auto">Auto (System)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h4><i class="fas fa-calculator"></i> Calculator Preferences</h4>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="auto-save-enabled" checked>
+                                Auto-save calculations
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="haptic-feedback-enabled" checked>
+                                Haptic feedback (mobile)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h4><i class="fas fa-shield-alt"></i> Privacy & Legal</h4>
+                        <div class="settings-links">
+                            <button class="settings-link" id="privacy-policy-btn">
+                                <i class="fas fa-user-shield"></i> Privacy Policy
+                            </button>
+                            <button class="settings-link" id="terms-service-btn">
+                                <i class="fas fa-file-contract"></i> Terms of Service
+                            </button>
+                            <button class="settings-link" id="data-usage-btn">
+                                <i class="fas fa-database"></i> Data Usage
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h4><i class="fas fa-info-circle"></i> About</h4>
+                        <div class="about-info">
+                            <p><strong>HouseMath.app</strong></p>
+                            <p>Version 2.0.0</p>
+                            <p>Professional Real Estate Calculator Suite</p>
+                            <p style="margin-top: 15px;">
+                                <a href="http://www.zebarigroup.com" target="_blank" style="color: var(--primary-color); text-decoration: none;">
+                                    <i class="fas fa-external-link-alt"></i> Powered by Zebari Group IT Services
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <div class="settings-actions">
+                            <button id="reset-app-data" class="btn-red">
+                                <i class="fas fa-trash-restore"></i> Reset All Data
+                            </button>
+                            <button id="export-app-data" class="btn-primary">
+                                <i class="fas fa-download"></i> Export Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy Policy Modal -->
+        <div id="privacy-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content large-modal">
+                <div class="modal-header">
+                    <h3><i class="fas fa-user-shield"></i> Privacy Policy</h3>
+                    <button class="modal-close" id="privacy-modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="privacy-content">
+                        <p><strong>Last updated:</strong> January 2024</p>
+                        
+                        <h4>Data Collection</h4>
+                        <p>HouseMath.app is designed with privacy in mind. We collect minimal data to provide you with the best calculator experience:</p>
+                        <ul>
+                            <li><strong>Local Storage:</strong> Your calculations, favorites, and settings are stored locally on your device</li>
+                            <li><strong>No Personal Data:</strong> We do not collect names, emails, or personal information</li>
+                            <li><strong>No Tracking:</strong> We do not use analytics or tracking cookies</li>
+                        </ul>
+                        
+                        <h4>Data Usage</h4>
+                        <p>All calculation data remains on your device and is never transmitted to our servers. Your privacy is our priority.</p>
+                        
+                        <h4>Local Storage</h4>
+                        <p>We use your browser's local storage to:</p>
+                        <ul>
+                            <li>Save your calculation history</li>
+                            <li>Remember your favorite calculations</li>
+                            <li>Store your theme and app preferences</li>
+                        </ul>
+                        
+                        <h4>Third-Party Services</h4>
+                        <p>This app uses:</p>
+                        <ul>
+                            <li><strong>CDN Services:</strong> For fonts and icons (Google Fonts, Font Awesome)</li>
+                            <li><strong>No Analytics:</strong> We do not use Google Analytics or similar services</li>
+                        </ul>
+                        
+                        <h4>Data Control</h4>
+                        <p>You have full control over your data:</p>
+                        <ul>
+                            <li>Clear history and favorites anytime</li>
+                            <li>Export your data</li>
+                            <li>Reset all app data from settings</li>
+                        </ul>
+                        
+                        <h4>Contact</h4>
+                        <p>For privacy questions, contact us through <a href="http://www.zebarigroup.com" target="_blank" style="color: var(--primary-color);">Zebari Group IT Services</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms of Service Modal -->
+        <div id="terms-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content large-modal">
+                <div class="modal-header">
+                    <h3><i class="fas fa-file-contract"></i> Terms of Service</h3>
+                    <button class="modal-close" id="terms-modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="terms-content">
+                        <p><strong>Last updated:</strong> January 2024</p>
+                        
+                        <h4>Acceptance of Terms</h4>
+                        <p>By using HouseMath.app, you agree to these Terms of Service. If you do not agree, please do not use the application.</p>
+                        
+                        <h4>Description of Service</h4>
+                        <p>HouseMath.app provides real estate calculation tools for:</p>
+                        <ul>
+                            <li>Mortgage calculations</li>
+                            <li>Investment property analysis</li>
+                            <li>Cash flow projections</li>
+                            <li>Commission calculations</li>
+                            <li>Closing cost estimates</li>
+                        </ul>
+                        
+                        <h4>Disclaimer</h4>
+                        <p><strong>Important:</strong> This application provides estimates and calculations for informational purposes only. Results should not be considered as:</p>
+                        <ul>
+                            <li>Professional financial advice</li>
+                            <li>Legal advice</li>
+                            <li>Investment recommendations</li>
+                            <li>Guaranteed loan terms</li>
+                        </ul>
+                        
+                        <h4>Accuracy</h4>
+                        <p>While we strive for accuracy, calculations are estimates based on provided inputs. Always consult with qualified professionals for important financial decisions.</p>
+                        
+                        <h4>Limitation of Liability</h4>
+                        <p>HouseMath.app and its developers are not liable for any decisions made based on calculations from this application.</p>
+                        
+                        <h4>Use License</h4>
+                        <p>You may use this application for personal and professional purposes. You may not redistribute or resell the application.</p>
+                        
+                        <h4>Updates</h4>
+                        <p>We may update these terms occasionally. Continued use of the application constitutes acceptance of updated terms.</p>
                     </div>
                 </div>
             </div>
@@ -5911,6 +6213,12 @@
                 const isDark = document.body.classList.contains('dark');
                 currentTheme = isDark ? 'dark' : 'light';
                 
+                // Update theme icon
+                const themeIcon = document.getElementById('theme-icon');
+                if (themeIcon) {
+                    themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+                }
+                
                 // Try to save to localStorage if available
                 try {
                     localStorage.setItem('theme', currentTheme);
@@ -5919,7 +6227,235 @@
                 }
                 
                 reinitializeCharts();
+                hapticFeedback('light');
             });
+
+            // Initialize theme icon on page load
+            const themeIcon = document.getElementById('theme-icon');
+            if (themeIcon) {
+                themeIcon.className = currentTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            // Settings Modal functionality
+            const settingsBtn = document.getElementById('settings-btn');
+            const settingsModal = document.getElementById('settings-modal');
+            const settingsModalClose = document.getElementById('settings-modal-close');
+            const privacyModal = document.getElementById('privacy-modal');
+            const termsModal = document.getElementById('terms-modal');
+
+            // Settings modal handlers
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', () => {
+                    settingsModal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                    hapticFeedback('light');
+                    
+                    // Update settings form with current values
+                    updateSettingsForm();
+                });
+            }
+
+            if (settingsModalClose) {
+                settingsModalClose.addEventListener('click', () => {
+                    settingsModal.style.display = 'none';
+                    document.body.style.overflow = '';
+                });
+            }
+
+            // Close settings modal when clicking overlay
+            if (settingsModal) {
+                settingsModal.addEventListener('click', (e) => {
+                    if (e.target === settingsModal) {
+                        settingsModal.style.display = 'none';
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+
+            // Privacy Policy modal
+            const privacyPolicyBtn = document.getElementById('privacy-policy-btn');
+            const privacyModalClose = document.getElementById('privacy-modal-close');
+            
+            if (privacyPolicyBtn) {
+                privacyPolicyBtn.addEventListener('click', () => {
+                    privacyModal.style.display = 'flex';
+                    settingsModal.style.display = 'none';
+                    hapticFeedback('light');
+                });
+            }
+
+            if (privacyModalClose) {
+                privacyModalClose.addEventListener('click', () => {
+                    privacyModal.style.display = 'none';
+                    settingsModal.style.display = 'flex';
+                });
+            }
+
+            // Terms of Service modal
+            const termsServiceBtn = document.getElementById('terms-service-btn');
+            const termsModalClose = document.getElementById('terms-modal-close');
+            
+            if (termsServiceBtn) {
+                termsServiceBtn.addEventListener('click', () => {
+                    termsModal.style.display = 'flex';
+                    settingsModal.style.display = 'none';
+                    hapticFeedback('light');
+                });
+            }
+
+            if (termsModalClose) {
+                termsModalClose.addEventListener('click', () => {
+                    termsModal.style.display = 'none';
+                    settingsModal.style.display = 'flex';
+                });
+            }
+
+            // Settings form handlers
+            function updateSettingsForm() {
+                try {
+                    // Theme selector
+                    const themeSelector = document.getElementById('theme-selector');
+                    if (themeSelector) {
+                        themeSelector.value = currentTheme;
+                    }
+
+                    // Auto-save setting
+                    const autoSaveEnabled = document.getElementById('auto-save-enabled');
+                    if (autoSaveEnabled) {
+                        const autoSaveSetting = localStorage.getItem('autoSaveEnabled') !== 'false';
+                        autoSaveEnabled.checked = autoSaveSetting;
+                    }
+
+                    // Haptic feedback setting
+                    const hapticEnabled = document.getElementById('haptic-feedback-enabled');
+                    if (hapticEnabled) {
+                        const hapticSetting = localStorage.getItem('hapticEnabled') !== 'false';
+                        hapticEnabled.checked = hapticSetting;
+                    }
+                } catch (e) {
+                    // Handle localStorage restrictions
+                }
+            }
+
+            // Theme selector change handler
+            const themeSelector = document.getElementById('theme-selector');
+            if (themeSelector) {
+                themeSelector.addEventListener('change', (e) => {
+                    const selectedTheme = e.target.value;
+                    
+                    if (selectedTheme === 'auto') {
+                        // Use system preference
+                        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        currentTheme = prefersDark ? 'dark' : 'light';
+                    } else {
+                        currentTheme = selectedTheme;
+                    }
+                    
+                    // Apply theme
+                    if (currentTheme === 'dark') {
+                        document.body.classList.add('dark');
+                    } else {
+                        document.body.classList.remove('dark');
+                    }
+                    
+                    // Update theme icon
+                    const themeIcon = document.getElementById('theme-icon');
+                    if (themeIcon) {
+                        themeIcon.className = currentTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                    }
+                    
+                    try {
+                        localStorage.setItem('theme', selectedTheme);
+                    } catch (e) {
+                        // Handle localStorage restrictions
+                    }
+                    
+                    reinitializeCharts();
+                    hapticFeedback('light');
+                });
+            }
+
+            // Settings checkboxes
+            const autoSaveCheckbox = document.getElementById('auto-save-enabled');
+            const hapticCheckbox = document.getElementById('haptic-feedback-enabled');
+
+            if (autoSaveCheckbox) {
+                autoSaveCheckbox.addEventListener('change', (e) => {
+                    try {
+                        localStorage.setItem('autoSaveEnabled', e.target.checked);
+                    } catch (err) {
+                        // Handle localStorage restrictions
+                    }
+                    hapticFeedback('light');
+                });
+            }
+
+            if (hapticCheckbox) {
+                hapticCheckbox.addEventListener('change', (e) => {
+                    try {
+                        localStorage.setItem('hapticEnabled', e.target.checked);
+                    } catch (err) {
+                        // Handle localStorage restrictions
+                    }
+                    hapticFeedback('light');
+                });
+            }
+
+            // Data usage button (placeholder)
+            const dataUsageBtn = document.getElementById('data-usage-btn');
+            if (dataUsageBtn) {
+                dataUsageBtn.addEventListener('click', () => {
+                    alert('Data Usage: All data is stored locally on your device. No data is transmitted to external servers.');
+                    hapticFeedback('light');
+                });
+            }
+
+            // Reset app data
+            const resetAppDataBtn = document.getElementById('reset-app-data');
+            if (resetAppDataBtn) {
+                resetAppDataBtn.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to reset all app data? This will clear your history, favorites, and settings.')) {
+                        try {
+                            localStorage.clear();
+                            location.reload();
+                        } catch (e) {
+                            alert('Unable to reset data in this environment.');
+                        }
+                    }
+                });
+            }
+
+            // Export app data
+            const exportAppDataBtn = document.getElementById('export-app-data');
+            if (exportAppDataBtn) {
+                exportAppDataBtn.addEventListener('click', () => {
+                    try {
+                        const data = {
+                            history: JSON.parse(localStorage.getItem('calculationHistory') || '[]'),
+                            favorites: JSON.parse(localStorage.getItem('favoriteCalculations') || '[]'),
+                            settings: {
+                                theme: localStorage.getItem('theme') || 'dark',
+                                autoSave: localStorage.getItem('autoSaveEnabled') !== 'false',
+                                haptic: localStorage.getItem('hapticEnabled') !== 'false'
+                            }
+                        };
+                        
+                        const dataStr = JSON.stringify(data, null, 2);
+                        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                        const url = URL.createObjectURL(dataBlob);
+                        
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = `housemath-data-${new Date().toISOString().split('T')[0]}.json`;
+                        link.click();
+                        
+                        URL.revokeObjectURL(url);
+                        hapticFeedback('medium');
+                    } catch (e) {
+                        alert('Unable to export data in this environment.');
+                    }
+                });
+            }
 
             // Save/Load button event handlers
             document.getElementById('save-calc').addEventListener('click', () => {
