@@ -4440,7 +4440,7 @@
     
     <script>
         // Chart variables
-                    let paymentChart, amortizationChart, investmentChart, expenseChart, commissionChart, comparisonChart, closingChart, helocChart, flipChart, brrrrChart;
+                    let paymentChart, amortizationChart, investmentChart, expenseChart, commissionChart, comparisonChart, closingChart, helocChart, flipChart, brrrrChart, buyerChart, rentbuyChart, reportChart;
         
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -6054,6 +6054,7 @@
                         calculateHELOC();
                         calculateFlip();
                         calculateBRRRR();
+                        generateReport();
                         
                         // Enable history saving after initialization is complete
                         setTimeout(() => {
@@ -6831,6 +6832,7 @@
             document.getElementById('calculate-heloc').addEventListener('click', calculateHELOC);
             document.getElementById('calculate-flip').addEventListener('click', calculateFlip);
             document.getElementById('calculate-brrrr').addEventListener('click', calculateBRRRR);
+            document.getElementById('generate-report').addEventListener('click', generateReport);
 
             
             // Initialize charts
@@ -7109,6 +7111,63 @@
                     },
                     options: defaultOptions
                 });
+
+                // Buyer Cost Chart
+                const buyerCtx = document.getElementById('buyer-chart').getContext('2d');
+                buyerChart = new Chart(buyerCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Down Payment', 'Points Cost', 'Prepaid Interest', 'Other Costs'],
+                        datasets: [{
+                            data: [50000, 2500, 800, 2500],
+                            backgroundColor: ['#3b82f6', '#7c3aed', '#ec4899', '#f59e0b']
+                        }]
+                    },
+                    options: pieOptions
+                });
+
+                // Rent vs Buy Chart
+                const rentbuyCtx = document.getElementById('rentbuy-chart').getContext('2d');
+                rentbuyChart = new Chart(rentbuyCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Year 1', 'Year 3', 'Year 5', 'Year 7', 'Year 10'],
+                        datasets: [
+                            {
+                                label: 'Total Cost of Renting',
+                                data: [24000, 75000, 130000, 188000, 275000],
+                                borderColor: '#ef4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                tension: 0.1,
+                                fill: false
+                            },
+                            {
+                                label: 'Total Cost of Buying',
+                                data: [75000, 95000, 118000, 142000, 185000],
+                                borderColor: '#10b981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                tension: 0.1,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: defaultOptions
+                });
+
+                // Generated Report Chart
+                const reportCtx = document.getElementById('report-chart').getContext('2d');
+                reportChart = new Chart(reportCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Monthly Payment', 'Cash Flow', 'ROI', 'Total Investment'],
+                        datasets: [{
+                            label: 'Financial Overview ($)',
+                            data: [2500, 650, 8500, 75000],
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#7c3aed']
+                        }]
+                    },
+                    options: defaultOptions
+                });
                 } catch (error) {
                     console.error('Chart initialization failed:', error);
                     // Individual chart errors won't break the entire app
@@ -7132,6 +7191,9 @@
                 if (helocChart) helocChart.destroy();
                 if (flipChart) flipChart.destroy();
                 if (brrrrChart) brrrrChart.destroy();
+                if (buyerChart) buyerChart.destroy();
+                if (rentbuyChart) rentbuyChart.destroy();
+                if (reportChart) reportChart.destroy();
                 
                 // Initialize new charts
                 initializeCharts();
@@ -7143,9 +7205,12 @@
                 calculateClosing();
                 calculateBuyer();
                 calculateCommission();
+                calculateComparison();
+                calculateRentBuy();
                 calculateHELOC();
                 calculateFlip();
                 calculateBRRRR();
+                generateReport();
                 
                 // Restore history saving state
                 shouldSaveToHistory = originalSaveState;
@@ -7508,6 +7573,17 @@
                 if (buyerInterestElement) buyerInterestElement.textContent = '$' + Math.round(prepaidInterest).toLocaleString();
                 if (buyerOtherCostsElement) buyerOtherCostsElement.textContent = '$' + Math.round(otherCosts).toLocaleString();
 
+                // Update buyer cost chart
+                if (buyerChart) {
+                    buyerChart.data.datasets[0].data = [
+                        Math.round(downPayment),
+                        Math.round(pointsCost),
+                        Math.round(prepaidInterest),
+                        Math.round(otherCosts)
+                    ];
+                    buyerChart.update();
+                }
+
                 // Auto-scroll to results on mobile devices
                 autoScrollToResults('buyer');
             }
@@ -7741,6 +7817,43 @@
                     document.getElementById('rent-security').textContent = '$' + Math.round(securityDeposit).toLocaleString();
                     document.getElementById('rent-investment-growth').textContent = '$' + Math.round(investmentGrowth).toLocaleString();
                     document.getElementById('rent-net-cost').textContent = '$' + Math.round(rentingNetCost).toLocaleString();
+
+                    // Update rent vs buy chart
+                    if (rentbuyChart) {
+                        // Create data points for each year
+                        const yearLabels = [];
+                        const rentCosts = [];
+                        const buyCosts = [];
+                        
+                        let cumulativeRentCost = securityDeposit;
+                        let currentRentAmount = monthlyRent;
+                        let cumulativeBuyCost = downPayment;
+                        
+                        for (let year = 1; year <= analysisPeriod; year++) {
+                            yearLabels.push(`Year ${year}`);
+                            
+                            // Add annual rent (with increases)
+                            cumulativeRentCost += currentRentAmount * 12;
+                            currentRentAmount *= (1 + (rentIncrease / 100));
+                            rentCosts.push(Math.round(cumulativeRentCost));
+                            
+                            // Add annual buy costs (mortgage + taxes + maintenance)
+                            cumulativeBuyCost += totalMonthlyPayment * 12;
+                            buyCosts.push(Math.round(cumulativeBuyCost));
+                        }
+                        
+                        // Subtract investment growth for renting and home appreciation for buying
+                        const finalRentCost = cumulativeRentCost - investmentGrowth;
+                        const finalBuyCost = cumulativeBuyCost - (futureHomeValue - homePrice);
+                        
+                        rentCosts[rentCosts.length - 1] = Math.round(finalRentCost);
+                        buyCosts[buyCosts.length - 1] = Math.round(finalBuyCost);
+                        
+                        rentbuyChart.data.labels = yearLabels;
+                        rentbuyChart.data.datasets[0].data = rentCosts;
+                        rentbuyChart.data.datasets[1].data = buyCosts;
+                        rentbuyChart.update();
+                    }
 
                     // Auto-scroll to results on mobile devices
                     autoScrollToResults('rentbuy');
@@ -8066,6 +8179,96 @@
 
                 } catch (error) {
                     console.error('BRRRR calculation error:', error);
+                }
+            }
+
+            // Generate comprehensive report
+            function generateReport() {
+                try {
+                    // Get report criteria from inputs
+                    const reportPropertyType = document.getElementById('report-property-type').value;
+                    const reportPropertyPrice = parseFloat(document.getElementById('report-property-price').value) || 400000;
+                    const reportDownPayment = parseFloat(document.getElementById('report-down-payment').value) || 20;
+                    const reportInterestRate = parseFloat(document.getElementById('report-interest-rate').value) || 4.5;
+                    const reportRentAmount = parseFloat(document.getElementById('report-rent-amount').value) || 2500;
+                    const reportHoldingPeriod = parseInt(document.getElementById('report-holding-period').value) || 10;
+
+                    // Calculate key metrics for the report
+                    const downPaymentAmount = reportPropertyPrice * (reportDownPayment / 100);
+                    const loanAmount = reportPropertyPrice - downPaymentAmount;
+                    const monthlyInterestRate = reportInterestRate / 100 / 12;
+                    const numberOfPayments = 30 * 12; // 30 year loan
+                    
+                    // Monthly mortgage payment
+                    const monthlyPayment = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments) / 
+                        (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+                    
+                    // Add property tax and insurance estimates
+                    const monthlyPropertyTax = (reportPropertyPrice * 0.015) / 12; // 1.5% annual property tax
+                    const monthlyInsurance = (reportPropertyPrice * 0.005) / 12; // 0.5% annual insurance
+                    const totalMonthlyPayment = monthlyPayment + monthlyPropertyTax + monthlyInsurance;
+                    
+                    // Calculate cash flow (if rental)
+                    const netCashFlow = reportRentAmount - totalMonthlyPayment - (reportRentAmount * 0.15); // 15% for management/maintenance/vacancy
+                    
+                    // Calculate ROI
+                    const annualCashFlow = netCashFlow * 12;
+                    const cashOnCashROI = (annualCashFlow / downPaymentAmount) * 100;
+                    
+                    // Total investment for holding period
+                    const totalInvestmentValue = reportPropertyPrice * Math.pow(1 + 0.03, reportHoldingPeriod); // 3% appreciation
+                    
+                    // Update report display elements
+                    document.getElementById('report-total-investment').textContent = '$' + Math.round(downPaymentAmount).toLocaleString();
+                    document.getElementById('report-total-return').textContent = '$' + Math.round(totalInvestmentValue).toLocaleString();
+                    
+                    // Update breakdown details
+                    document.getElementById('report-principal-interest').textContent = '$' + Math.round(monthlyPayment).toLocaleString();
+                    document.getElementById('report-property-tax').textContent = '$' + Math.round(monthlyPropertyTax).toLocaleString();
+                    document.getElementById('report-home-insurance').textContent = '$' + Math.round(monthlyInsurance).toLocaleString();
+                    document.getElementById('report-hoa').textContent = '$0';
+                    document.getElementById('report-management').textContent = '$' + Math.round(reportRentAmount * 0.08).toLocaleString();
+                    document.getElementById('report-maintenance').textContent = '$' + Math.round(reportRentAmount * 0.05).toLocaleString();
+                    document.getElementById('report-vacancy').textContent = '$' + Math.round(reportRentAmount * 0.02).toLocaleString();
+                    document.getElementById('report-cash-flow').textContent = '$' + Math.round(netCashFlow).toLocaleString();
+
+                    // Update report chart
+                    if (reportChart) {
+                        const roiValue = Math.max(cashOnCashROI * 1000, 0); // Scale for chart display
+                        reportChart.data.datasets[0].data = [
+                            Math.round(totalMonthlyPayment),
+                            Math.round(netCashFlow),
+                            Math.round(roiValue), 
+                            Math.round(downPaymentAmount)
+                        ];
+                        reportChart.data.labels = [
+                            'Monthly Payment',
+                            'Net Cash Flow',
+                            `ROI (${cashOnCashROI.toFixed(1)}%)`,
+                            'Initial Investment'
+                        ];
+                        reportChart.update();
+                    }
+
+                    // Auto-scroll to results on mobile devices
+                    autoScrollToResults('report');
+
+                    // Auto-save to history
+                    autoSaveCalculation('report', {
+                        propertyPrice: reportPropertyPrice,
+                        downPayment: reportDownPayment,
+                        interestRate: reportInterestRate,
+                        rentAmount: reportRentAmount,
+                        holdingPeriod: reportHoldingPeriod
+                    }, {
+                        totalInvestment: Math.round(downPaymentAmount),
+                        totalReturn: Math.round(totalInvestmentValue),
+                        monthlyCashFlow: Math.round(netCashFlow),
+                        roi: cashOnCashROI.toFixed(1)
+                    });
+
+                } catch (error) {
+                    console.error('Report generation error:', error);
                 }
             }
 
