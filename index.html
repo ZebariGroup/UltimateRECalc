@@ -350,6 +350,118 @@
             gap: 15px;
             align-items: center;
         }
+
+        /* Actions Menu Dropdown */
+        .actions-menu {
+            position: relative;
+        }
+
+        .actions-menu-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .actions-menu-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .actions-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            min-width: 280px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .actions-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dropdown-section:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-section h4 {
+            margin: 0 0 12px 0;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.875rem;
+            color: var(--text-color);
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        .dropdown-item:hover {
+            background: var(--background-secondary);
+            transform: translateX(4px);
+        }
+
+        .dropdown-item i {
+            width: 16px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .dropdown-item span {
+            flex: 1;
+            text-align: left;
+        }
+
+        .dropdown-item kbd {
+            background: var(--background-secondary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            font-family: monospace;
+        }
         
 
         
@@ -1883,30 +1995,20 @@
                 font-size: 0.8rem; /* Smaller slider values */
             }
         }
-        /* Additional mobile optimizations for save/load buttons */
+        /* Additional mobile optimizations for menu button */
         @media (max-width: 768px) {
             .action-text {
                 display: none;
             }
             
-            .actions {
-                flex-wrap: nowrap; /* Keep all icons on one line */
-                gap: 6px;
-                overflow-x: auto; /* Allow horizontal scroll if needed */
-                scrollbar-width: none; /* Hide scrollbar on Firefox */
-                -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
-            }
-            
-            .actions::-webkit-scrollbar {
-                display: none; /* Hide scrollbar on Chrome/Safari */
-            }
-            
-            .actions button {
-                padding: 8px 10px;
-                margin-right: 0;
+            .actions-menu-btn {
+                padding: 10px 16px;
                 font-size: 12px;
-                min-width: 40px;
-                flex-shrink: 0; /* Prevent buttons from shrinking */
+            }
+            
+            .actions-dropdown {
+                min-width: 250px;
+                right: -10px;
             }
             
             .nav-content {
@@ -1986,17 +2088,14 @@
         }
         
         @media (max-width: 480px) {
-            .actions button {
-                padding: 6px 8px;
-                margin-right: 0;
+            .actions-menu-btn {
+                padding: 8px 12px;
                 font-size: 11px;
-                min-width: 36px;
-                flex-shrink: 0;
             }
             
-            .actions {
-                gap: 4px;
-                flex-wrap: nowrap;
+            .actions-dropdown {
+                min-width: 220px;
+                right: -15px;
             }
             
             .nav-content {
@@ -2014,16 +2113,16 @@
             }
         }
         
-        /* Extra small screens - keep single line but ultra-compact */
+        /* Extra small screens - ultra-compact */
         @media (max-width: 360px) {
-            .actions button {
-                padding: 5px 6px;
-                min-width: 32px;
+            .actions-menu-btn {
+                padding: 6px 10px;
                 font-size: 10px;
             }
             
-            .actions {
-                gap: 3px;
+            .actions-dropdown {
+                min-width: 200px;
+                right: -20px;
             }
             
             .nav-content {
@@ -2204,34 +2303,53 @@
             </button>
         
         <div class="actions">
-                <button id="save-calc" title="Save Current Calculation (Ctrl+S)" class="btn-primary">
-                    <i class="fas fa-save"></i>
-                    <span class="action-text">Save</span>
-                </button>
-                <button id="load-calc" title="Load Saved Calculation (Ctrl+L)" class="btn-primary">
-                    <i class="fas fa-folder-open"></i>
-                    <span class="action-text">Load</span>
-                </button>
-                <button id="history-btn" title="View Calculation History (Ctrl+H)" class="btn-primary">
-                    <i class="fas fa-history"></i>
-                    <span class="action-text">History</span>
-                </button>
-                <button id="favorites-btn" title="View Favorites (Ctrl+F)" class="btn-primary">
-                    <i class="fas fa-star"></i>
-                    <span class="action-text">Favorites</span>
-                </button>
-                <button id="theme-toggle" title="Toggle Dark/Light Mode" class="btn-primary">
-                    <i class="fas fa-moon" id="theme-icon"></i>
-                    <span class="action-text">Theme</span>
-                </button>
-                <button id="help-btn" title="Help & Guide" class="btn-primary">
-                    <i class="fas fa-question-circle"></i>
-                    <span class="action-text">Help</span>
-                </button>
-                <button id="settings-btn" title="Settings & Privacy" class="btn-primary">
-                    <i class="fas fa-cog"></i>
-                    <span class="action-text">Settings</span>
-                </button>
+                <div class="actions-menu">
+                    <button class="actions-menu-btn" id="actions-menu-toggle" title="App Menu">
+                        <i class="fas fa-ellipsis-h"></i>
+                        <span class="action-text">Menu</span>
+                    </button>
+                    <div class="actions-dropdown" id="actions-dropdown">
+                        <div class="dropdown-section">
+                            <h4>📊 Data Management</h4>
+                            <button id="save-calc" class="dropdown-item">
+                                <i class="fas fa-save"></i>
+                                <span>Save Calculation</span>
+                                <kbd>Ctrl+S</kbd>
+                            </button>
+                            <button id="load-calc" class="dropdown-item">
+                                <i class="fas fa-folder-open"></i>
+                                <span>Load Calculation</span>
+                                <kbd>Ctrl+L</kbd>
+                            </button>
+                            <button id="history-btn" class="dropdown-item">
+                                <i class="fas fa-history"></i>
+                                <span>View History</span>
+                                <kbd>Ctrl+H</kbd>
+                            </button>
+                            <button id="favorites-btn" class="dropdown-item">
+                                <i class="fas fa-star"></i>
+                                <span>Favorites</span>
+                                <kbd>Ctrl+F</kbd>
+                            </button>
+                        </div>
+                        
+                        <div class="dropdown-section">
+                            <h4>⚙️ App Settings</h4>
+                            <button id="theme-toggle" class="dropdown-item">
+                                <i class="fas fa-moon" id="theme-icon"></i>
+                                <span>Toggle Theme</span>
+                            </button>
+                            <button id="help-btn" class="dropdown-item">
+                                <i class="fas fa-question-circle"></i>
+                                <span>Help & Guide</span>
+                            </button>
+                            <button id="settings-btn" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
             </div>
             
@@ -6571,7 +6689,39 @@
                 showSavedCalculations();
             });
 
+            // Actions dropdown menu functionality
+            const actionsMenuToggle = document.getElementById('actions-menu-toggle');
+            const actionsDropdown = document.getElementById('actions-dropdown');
+            
+            if (actionsMenuToggle && actionsDropdown) {
+                // Toggle dropdown
+                actionsMenuToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    actionsDropdown.classList.toggle('show');
+                    hapticFeedback('light');
+                });
 
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!actionsMenuToggle.contains(e.target) && !actionsDropdown.contains(e.target)) {
+                        actionsDropdown.classList.remove('show');
+                    }
+                });
+
+                // Close dropdown when pressing Escape
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && actionsDropdown.classList.contains('show')) {
+                        actionsDropdown.classList.remove('show');
+                    }
+                });
+
+                // Close dropdown when clicking a dropdown item
+                actionsDropdown.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('dropdown-item') || e.target.closest('.dropdown-item')) {
+                        actionsDropdown.classList.remove('show');
+                    }
+                });
+            }
 
             // Contextual Help System
             function showContextualHelp() {
