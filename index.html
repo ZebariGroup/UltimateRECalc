@@ -1801,6 +1801,58 @@
             transform: rotate(180deg);
         }
 
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            font-size: 0.875rem;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            background-color: #10b981;
+        }
+
+        .toast-error {
+            background-color: #ef4444;
+        }
+
+        .toast-info {
+            background-color: #3b82f6;
+        }
+
+        .toast-warning {
+            background-color: #f59e0b;
+        }
+
+        @media (max-width: 480px) {
+            .toast {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                transform: translateY(-100%);
+            }
+            
+            .toast.show {
+                transform: translateY(0);
+            }
+        }
+
         /* PWA Install Banner */
         .pwa-install-banner {
             position: fixed;
@@ -5100,8 +5152,8 @@
                         this.showCalculator(item.type);
                         
                         // Close the history/favorites modal
-                        hideModal('history-modal');
-                        hideModal('favorites-modal');
+                        window.hideModal('history-modal');
+                        window.hideModal('favorites-modal');
                         
                         // Scroll to top
                         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -5292,14 +5344,14 @@
                                 ${this.renderSummary(item)}
                     </div>
                             <div class="item-actions">
-                                <button class="btn-load" onclick="historyManager.loadCalculation('${item.id}')">
+                                <button class="btn-load" onclick="window.historyManager.loadCalculation('${item.id}')">
                                     <i class="fas fa-play"></i> Load
                                 </button>
                                 <button class="${item.isFavorite ? 'btn-unfavorite' : 'btn-favorite'}" 
-                                        onclick="historyManager.toggleFavorite('${item.id}'); historyManager.renderHistory();">
+                                        onclick="window.historyManager.toggleFavorite('${item.id}'); window.historyManager.renderHistory();">
                                     <i class="fas fa-star"></i> ${item.isFavorite ? 'Unfavorite' : 'Favorite'}
                                 </button>
-                                <button class="btn-delete" onclick="historyManager.deleteFromHistory('${item.id}'); historyManager.renderHistory();">
+                                <button class="btn-delete" onclick="window.historyManager.deleteFromHistory('${item.id}'); window.historyManager.renderHistory();">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </div>
@@ -5374,10 +5426,10 @@
                                 ${this.renderSummary(item)}
                             </div>
                             <div class="item-actions">
-                                <button class="btn-load" onclick="historyManager.loadCalculation('${item.id}')">
+                                <button class="btn-load" onclick="window.historyManager.loadCalculation('${item.id}')">
                                     <i class="fas fa-play"></i> Load
                                 </button>
-                                <button class="btn-unfavorite" onclick="historyManager.toggleFavorite('${item.id}'); historyManager.renderFavorites();">
+                                <button class="btn-unfavorite" onclick="window.historyManager.toggleFavorite('${item.id}'); window.historyManager.renderFavorites();">
                                     <i class="fas fa-star"></i> Remove
                                 </button>
                             </div>
@@ -5436,18 +5488,18 @@
             }
 
             // Initialize History Manager
-            const historyManager = new HistoryManager();
+            window.historyManager = new HistoryManager();
             
             // Flag to track if calculations should be saved to history
             let shouldSaveToHistory = true; // Enable immediately after history manager initialization
             
             // Debug: Verify history manager is working
             console.log('History Manager initialized:', {
-                historyCount: historyManager.history.length,
-                favoritesCount: historyManager.favorites.length,
-                hasLoadFunction: typeof historyManager.loadCalculation === 'function',
-                hasToggleFunction: typeof historyManager.toggleFavorite === 'function',
-                hasDeleteFunction: typeof historyManager.deleteFromHistory === 'function',
+                historyCount: window.historyManager.history.length,
+                favoritesCount: window.historyManager.favorites.length,
+                hasLoadFunction: typeof window.historyManager.loadCalculation === 'function',
+                hasToggleFunction: typeof window.historyManager.toggleFavorite === 'function',
+                hasDeleteFunction: typeof window.historyManager.deleteFromHistory === 'function',
                 shouldSaveToHistory: shouldSaveToHistory
             });
 
@@ -5456,7 +5508,7 @@
                 console.log('Testing history functionality...');
                 
                 // Add a test calculation
-                const testItem = historyManager.addToHistory('mortgage', {
+                const testItem = window.historyManager.addToHistory('mortgage', {
                     propertyPrice: 300000,
                     downPaymentPercent: 20,
                     interestRate: 6.5,
@@ -5469,12 +5521,12 @@
                 console.log('Test item added:', testItem);
                 
                 // Test toggle favorite
-                historyManager.toggleFavorite(testItem.id);
+                window.historyManager.toggleFavorite(testItem.id);
                 console.log('Favorite toggled');
                 
                 // Render to check if HTML is generated correctly
-                historyManager.renderHistory();
-                historyManager.renderFavorites();
+                window.historyManager.renderHistory();
+                window.historyManager.renderFavorites();
                 
                 console.log('History test completed. Check browser console for any errors.');
                 
@@ -5482,16 +5534,38 @@
             };
             
             console.log('Run window.testHistory() in console to test history functionality');
+            
+            // Quick test for button functionality
+            window.quickTest = function() {
+                console.log('Running quick test...');
+                
+                // Check if historyManager is available globally
+                if (typeof window.historyManager === 'undefined') {
+                    console.error('❌ historyManager not found on window object');
+                    return false;
+                }
+                
+                console.log('✅ historyManager found on window object');
+                console.log('✅ History count:', window.historyManager.history.length);
+                console.log('✅ Favorites count:', window.historyManager.favorites.length);
+                
+                // Test the show toast function
+                window.historyManager.showToast('Quick test successful!', 'success');
+                
+                return true;
+            };
+            
+            console.log('Run window.quickTest() to verify historyManager is accessible');
 
             // Auto-save calculations when they're performed by user action
             function autoSaveCalculation(type, inputs, results) {
                 if (shouldSaveToHistory) {
-                    historyManager.addToHistory(type, inputs, results);
+                    window.historyManager.addToHistory(type, inputs, results);
                 }
             }
 
             // Modal Management
-            function showModal(modalId) {
+            window.showModal = function(modalId) {
                 const modal = document.getElementById(modalId);
                 if (modal) {
                     modal.style.display = 'flex';
@@ -5506,7 +5580,7 @@
                 }
             }
 
-            function hideModal(modalId) {
+            window.hideModal = function(modalId) {
                 const modal = document.getElementById(modalId);
                 if (modal) {
                     modal.style.display = 'none';
@@ -5516,53 +5590,53 @@
 
             // Event Listeners for History & Favorites
             document.getElementById('history-btn').addEventListener('click', () => {
-                historyManager.renderHistory();
-                showModal('history-modal');
+                window.historyManager.renderHistory();
+                window.showModal('history-modal');
             });
 
             document.getElementById('favorites-btn').addEventListener('click', () => {
-                historyManager.renderFavorites();
-                showModal('favorites-modal');
+                window.historyManager.renderFavorites();
+                window.showModal('favorites-modal');
             });
 
             // Modal Close Handlers
             document.getElementById('history-modal-close').addEventListener('click', () => {
-                hideModal('history-modal');
+                window.hideModal('history-modal');
             });
 
             document.getElementById('favorites-modal-close').addEventListener('click', () => {
-                hideModal('favorites-modal');
+                window.hideModal('favorites-modal');
             });
 
             // Click outside modal to close
             document.addEventListener('click', (e) => {
                 if (e.target.classList.contains('modal-overlay')) {
-                    hideModal('history-modal');
-                    hideModal('favorites-modal');
+                    window.hideModal('history-modal');
+                    window.hideModal('favorites-modal');
                 }
             });
 
             // Control Buttons
             document.getElementById('clear-history').addEventListener('click', () => {
                 if (confirm('Are you sure you want to clear all calculation history?')) {
-                    historyManager.clearHistory();
-                    historyManager.renderHistory();
+                    window.historyManager.clearHistory();
+                    window.historyManager.renderHistory();
                 }
             });
 
             document.getElementById('clear-favorites').addEventListener('click', () => {
                 if (confirm('Are you sure you want to clear all favorites?')) {
-                    historyManager.clearFavorites();
-                    historyManager.renderFavorites();
+                    window.historyManager.clearFavorites();
+                    window.historyManager.renderFavorites();
                 }
             });
 
             document.getElementById('export-history').addEventListener('click', () => {
-                historyManager.exportHistory();
+                window.historyManager.exportHistory();
             });
 
             document.getElementById('export-favorites').addEventListener('click', () => {
-                historyManager.exportHistory();
+                window.historyManager.exportHistory();
             });
 
             // Keyboard Shortcuts
@@ -5571,13 +5645,13 @@
                     switch(e.key.toLowerCase()) {
                         case 'h':
                             e.preventDefault();
-                            historyManager.renderHistory();
-                            showModal('history-modal');
+                            window.historyManager.renderHistory();
+                            window.showModal('history-modal');
                             break;
                         case 'f':
                             e.preventDefault();
-                            historyManager.renderFavorites();
-                            showModal('favorites-modal');
+                            window.historyManager.renderFavorites();
+                            window.showModal('favorites-modal');
                             break;
                     }
                 }
